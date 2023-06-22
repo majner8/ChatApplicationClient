@@ -3,6 +3,7 @@ package FrontEnd;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -123,7 +124,9 @@ public class MainQuickMessage extends JPanel {
 	}
 
 }
-	private class HistorySearchChatPanel extends SearchChatPanel {
+	
+	public JScrollPanel QuickHistoryPanel;
+	public class HistorySearchChatPanel extends SearchChatPanel {
 		
 
 		private ResultPanel result;
@@ -145,14 +148,14 @@ public class MainQuickMessage extends JPanel {
 		//middle class which is result panel
 		//it is card layout, default here is quick user history
 		//when user write something here will be result
-		private class ResultPanel extends JPanel{
+		public class ResultPanel extends JPanel{
 			private JScrollPanel quickHistory,SearchingUserHistory;
 			private CardLayout ResultLayout=new CardLayout();
 			private final static String cardNameQuickMessage="Q";
 			private final static String cardNameSearching="S";
 			public ResultPanel() {
 				super.setLayout(ResultLayout);
-				this.quickHistory=new JScrollPanel(ComponentLanguageName.UserDoNotHaveHistory);
+				QuickHistoryPanel=this.quickHistory=new JScrollPanel(ComponentLanguageName.UserDoNotHaveHistory);
 				this.SearchingUserHistory=new JScrollPanel(ComponentLanguageName.ResultWasNotFind);
 				super.add(this.quickHistory,cardNameQuickMessage);
 				super.add(this.SearchingUserHistory,cardNameSearching);
@@ -230,12 +233,12 @@ public class MainQuickMessage extends JPanel {
 			}
 			
 			private final static DateTimeFormatter QuickFormater = DateTimeFormatter.ofPattern("HH:mm");
-			private static String getQuickMessageText(String chatName,String textMessage, Timestamp timeofreceivedMessage) {
+			public static String getQuickMessageText(String chatName,String textMessage, Timestamp timeofreceivedMessage) {
 				// Use HTML to align the text
 				
-				
 
-				  String time = timeofreceivedMessage.toLocalDateTime().format(QuickFormater);
+				  String time = timeofreceivedMessage==null ?"----":
+				  timeofreceivedMessage.toLocalDateTime().format(QuickFormater);
 				  /*
 				  
 				// Use HTML to align the text
@@ -526,7 +529,7 @@ public class MainQuickMessage extends JPanel {
 		}
 	}
 	
-	private class JScrollPanel extends JScrollPane implements StopSearching{
+	public class JScrollPanel extends JScrollPane implements StopSearching{
 		
 		//if is true it mean that user cancel searching
 		private volatile boolean ScrollPaneEnd=false;
@@ -550,7 +553,13 @@ public class MainQuickMessage extends JPanel {
 			super.revalidate();
 
 		}
-		
+
+		public void addValue(QuickMessageText value) {
+			this.value.addValue(value);
+			super.repaint();
+			super.revalidate();
+
+		}
 		
 		private  class ValueForScrolling extends JPanel{
 			private ComponentLanguageName textNoUserWasFind;
@@ -566,7 +575,7 @@ public class MainQuickMessage extends JPanel {
 			}
 			private GridBagLayout grid=new GridBagLayout();
 			private BoxLayout boxLayout=new BoxLayout(this, BoxLayout.PAGE_AXIS);
-			boolean LayoutManagerIsGridBagLayout=false;
+			private boolean LayoutManagerIsGridBagLayout=false;
 			private GridBagConstraints c = new GridBagConstraints();
 			public static Font defaultFont;
 
@@ -612,7 +621,31 @@ public class MainQuickMessage extends JPanel {
 		
 			/**Metod add new value to top of panel */
 			protected void addValue(QuickMessageText value) {
-				super.add(value);
+	
+				SwingUtilities.invokeLater(()->{
+					//verify if container contain value before
+					//then just remove them and add to previous position
+					//recognize is manage by override toString
+					boolean[] remove= {false};
+					Component[] xx = {null};
+					synchronized(super.getComponents()) {
+						for(Component x:super.getComponents()) {
+		
+							if(x.toString().equals(value.toString())) {
+								remove[0]=true;
+								xx[0]=x;
+							}
+						}
+					}
+					if(remove[0]) {
+						super.remove(xx[0]);
+					}
+					value.setFont(defaultFont);
+					super.add(value,0);
+					super.repaint();
+					super.revalidate();
+				});
+			
 			}
 		
 		}
@@ -638,8 +671,8 @@ public class MainQuickMessage extends JPanel {
 		
 		//singleChat mean that chatUUID is also UUID of owner,
 		//because singleChatUUID has this patern owner1UUID+owner2UUID, order by alphabet
-		public QuickMessageText(String tableName,boolean newChat,ChatPanel ChatPanel,String chatName,String ChatUUID,boolean doesSingleChat) {
-			super(chatName);
+		public QuickMessageText(String tableName,boolean newChat,ChatPanel ChatPanel,String DisplayMessage,String ChatUUID,boolean doesSingleChat) {
+			super(DisplayMessage);
 			this.tableName=tableName;
 			this.newChat=newChat;
 			this.openChat=ChatPanel;
@@ -659,6 +692,10 @@ public class MainQuickMessage extends JPanel {
 			
 			openChat.OpenChat(newChat,chatUUID, true,this.tableName==null?super.getText():this.tableName);
 			
+		}
+		@Override
+		public String toString() {
+			return this.chatUUID;
 		}
 	
 	}

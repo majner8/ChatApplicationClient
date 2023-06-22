@@ -41,7 +41,7 @@ public final class ComunicationPortHandling {
 	//this character is for notification, when a server finish autorization proces
 	//client send this notification, then reader will be interupt and connection would be change
 	//
-	private static final int SoTimeoutOFSocket = 180 * 1000;
+	private static final int SoTimeoutOFSocket = 600 * 1000;
 
 
 
@@ -86,7 +86,7 @@ public final class ComunicationPortHandling {
 	private void CloseTemporary() {
 		System.out.println("I am closing");
 		System.out.println(LocalDateTime.now());
-
+		
 		this.TemporaryClosed=true;
 		try {
 			this.socket.close();
@@ -95,6 +95,7 @@ public final class ComunicationPortHandling {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 		}
+		this.comunication.ConnectionIsEnd();
 	}
 	
 	private void ProblemWithConnection(Exception e) {
@@ -109,6 +110,7 @@ public final class ComunicationPortHandling {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		this.CloseTemporary();
 	}
 
 	/** metod change appropriate comunication interface

@@ -88,7 +88,7 @@ public class ChatManagerMain extends JPanel {
 			MainChatPanel x;
 
 			MainQuickMessage xx=new MainQuickMessage(x=new MainChatPanel());
-
+			x.panel.SetScrollPane(xx.QuickHistoryPanel);
 			//super.add(BorderLayout.EAST,xx);
 			super.add(xx,BorderLayout.EAST);
 
@@ -205,8 +205,10 @@ public class ChatManagerMain extends JPanel {
 			super.setLayout(new BorderLayout());
 			super.addMouseListener(MainQuickMessage.CleanListener);
 		}
+		private ChatPanel panel;
 		public ChatPanel init() {
 			ChatPanel x=new ChatPanel();
+			panel=x;
 			super.add(x,BorderLayout.PAGE_END);
 			return x;
 

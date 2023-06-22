@@ -77,6 +77,7 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 	public void ConnectionIsEnd() {
 		// TODO Auto-generated method stub
 		this.UnConnected=true;
+		Main.stopServer(null);
 	}
 
 	

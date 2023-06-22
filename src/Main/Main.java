@@ -3,8 +3,11 @@ package Main;
 import java.util.Arrays;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
 import Backend.ClientDatabase;
 import CommonPart.SQL.MainSQL.FileLoadException;
+import CommonPart.ThreadManagement.ThreadPoolingManagement;
 import FrontEnd.ComponentLanguageName;
 import FrontEnd.MainJFrame;
 import FrontEnd.MainJFrame.ConnectionLanguageChoosePanel;
@@ -18,10 +21,20 @@ public class Main {
 		return ServerStop;
 	}
 	
-	public static void stopServer(String errorMessage) {
+	public static void stopServer(ReasonToEndMessage mes) {
 		ServerStop=true;
+		if(mes==null) {
+			mes=ReasonToEndMessage.UnKnownException;
+		}
+		  // Display the message in a dialog
+		ThreadPoolingManagement.ShutDown();
+
+        JOptionPane.showMessageDialog(null, mes.toString(), mes.getTitle(), JOptionPane.ERROR_MESSAGE);
+		frame.dispose();
+
 		System.exit(0);
-		ThreadGroup rootGroup = Thread.currentThread().getThreadGroup();
+		/* 
+		 *ThreadGroup rootGroup = Thread.currentThread().getThreadGroup();
 		rootGroup.interrupt();
 		ThreadGroup parentGroup;
 		while ((parentGroup = rootGroup.getParent())!= null) {
@@ -37,7 +50,7 @@ public class Main {
 		for (Thread thread : threads) {
 		    thread.interrupt();
 		}
-
+		 */
 
 
 
@@ -94,5 +107,28 @@ public class Main {
 	//notification when user make logOut
 	public static interface UserLogOut{
 		public void LogOut();
+	}
+	
+	public static enum ReasonToEndMessage{
+		CoouldNotConnectWithServer("Could not connect to server. Check your internet connection and try again later.","Connection error"),
+		EndConnection("I have lost connection with server, please try it again,\n App will be closed after you close this alert","Connection error"),
+		UnKnownException("Unknown exception","Unknown exception"),
+		IntegrityProblem("Cannot load necessary file, please reinstal app.\n"
+				+ "IF problem still persist contact developer","Integrity file problem");
+		
+		String mes;
+		String title;
+		ReasonToEndMessage(String mes,String title){
+			this.mes=mes;
+			this.title=title;
+		}
+		public String getTitle() {
+			return this.title;
+		}
+		public String toString() {
+			return this.mes;
+		}
+		
+		
 	}
 }

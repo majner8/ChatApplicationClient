@@ -118,13 +118,13 @@ public class MainJFrame extends JFrame{
 			stopAnimation=true;
 			if(!connectedSucessful) {
 				//conection was not Succesfull
-				frame.dispose();
-				ThreadPoolingManagement.ShutDown();
-				String message = "Could not connect to server. Check your internet connection and try again later.";
+				//frame.dispose();
+				//ThreadPoolingManagement.ShutDown();
+				//String message = "Could not connect to server. Check your internet connection and try again later.";
 		        
 		        // Display the message in a dialog
-		        JOptionPane.showMessageDialog(null, message, "Connection Error", JOptionPane.ERROR_MESSAGE);
-		        Main.Main.stopServer(null);
+		        //JOptionPane.showMessageDialog(null, message, "Connection Error", JOptionPane.ERROR_MESSAGE);
+		        Main.Main.stopServer(Main.Main.ReasonToEndMessage.CoouldNotConnectWithServer);
 		        return;
 			}
 			//connection was succesfull ask USer To select language

@@ -9,6 +9,7 @@ import java.util.List;
 import CommonPart.SQL.MainSQL;
 import FrontEnd.ComponentLanguageName;
 import FrontEnd.MainJFrame;
+import Main.Main.ReasonToEndMessage;
 
 public class ClientDatabase extends MainSQL{
 
@@ -27,11 +28,14 @@ public class ClientDatabase extends MainSQL{
 	} catch (ClassNotFoundException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-		Main.Main.stopServer(ComponentLanguageName.IntegrityFileProblem.getName(MainJFrame.language).toString());
+		Main.Main.stopServer(ReasonToEndMessage.IntegrityProblem);
+		//Main.Main.stopServer(ComponentLanguageName.IntegrityFileProblem.getName(MainJFrame.language).toString());
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-		Main.Main.stopServer(ComponentLanguageName.IntegrityFileProblem.getName(MainJFrame.language).toString());
+		Main.Main.stopServer(ReasonToEndMessage.IntegrityProblem);
+
+		//Main.Main.stopServer(ComponentLanguageName.IntegrityFileProblem.getName(MainJFrame.language).toString());
 
 	}
 	

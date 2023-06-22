@@ -22,6 +22,7 @@ import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +55,8 @@ import CommonPart.SocketComunication.SocketComunication.OneSocketMessage;
 import CommonPart.SocketComunication.SocketComunication.SimpleResultSet;
 import CommonPart.ThreadManagement.ThreadPoolingManagement;
 import CommonPart.ThreadManagement.ThreadPoolingManagement.ProcessSQLTask;
+import FrontEnd.MainQuickMessage.JScrollPanel;
+import FrontEnd.MainQuickMessage.QuickMessageText;
 import Main.ComunicationWithServer;
 import Main.Main;
 
@@ -63,6 +66,8 @@ public class ChatPanel extends JPanel{
 	private int defaultYLocationOfChat=0;
 	public static ChatPanel panel;
 	public static String UserUUID=ComunicationWithServer.Comunication.comun.getUserUUID();
+	
+	private static JScrollPanel quickPanel;
 	public ChatPanel() {
 		panel=this;
 		super.setPreferredSize(sizeOfChatPanel);
@@ -75,7 +80,9 @@ public class ChatPanel extends JPanel{
 		super.addMouseListener(MainQuickMessage.CleanListener);
 
 	}
-	
+	public void SetScrollPane(JScrollPanel panel) {
+		this.quickPanel=panel;
+	}
 	
 	/**
 	 * @param chatUUID-UUID  of chat
@@ -177,7 +184,7 @@ public class ChatPanel extends JPanel{
 		private ChatPanel panel;
 		private String chatName;
 		private boolean newChat; //when a user open chat with new user, but chat is without interaction-
-		
+		private	boolean doesSingleChat=false;
 		private final Map<String,String> UserNameInChat;
 		public FrontEnd.ChatPanel.Chat.ShownMessage.messageValue messages;
 		public Chat(String chatUUID,boolean newChat,ChatPanel panel,String chatName,
@@ -724,11 +731,16 @@ public class ChatPanel extends JPanel{
 								this.messageOnBottom=this.messageOnBottom+1;
 							}
 						}
-						
+					
+						//add new quickMessage
+						QuickMessageText x=message.makeQuickMessageTextFromMessage(chatName,panel,chatUUID,doesSingleChat);
+						//String chatName,ChatPanel chat,String chatUUID,boolean doesSingleChat
+						quickPanel.addValue(x);
 						//add extra panel, to reach gap between each component
 						//super.add(Box.createRigidArea(this.gapBetweenMessage));
 						super.revalidate();
 						super.repaint();
+					
 					});
 					
 					
@@ -875,6 +887,18 @@ public class ChatPanel extends JPanel{
 					return rs;
 				}
 				
+				/**Metod create quickMessageText from this message 
+				 * Metod have to be call after add message to chat
+				 *@param chatName-default name of this chat */
+				public QuickMessageText makeQuickMessageTextFromMessage(String chatName,ChatPanel chat,String chatUUID,boolean doesSingleChat) {
+					//string chat name textMessage, TimeStamp
+					String mes=String.format("%s: %s",this.SenderName,this.message);
+				String text=	 MainQuickMessage.HistorySearchChatPanel.ResultPanel.getQuickMessageText(
+							chatName, mes.substring(0, mes.length()>30?30:mes.length()),this.timeOfReceived.timeOfMessage==null?null:Timestamp.valueOf(this.timeOfReceived.timeOfMessage) );
+				
+				return new QuickMessageText(chatName,false,chat,text,chatUUID,doesSingleChat);
+				
+				}
 				
 				private class textMessage extends JTextArea{
 					private Font font;
@@ -898,9 +922,10 @@ public class ChatPanel extends JPanel{
 				
 				private class TimeOfReceivedMessage extends JLabel{
 					private String TimeMessage;
-
+					public LocalDateTime timeOfMessage;
 					public TimeOfReceivedMessage(LocalDateTime time) {
 						super.addMouseListener(MainQuickMessage.CleanListener);
+						this.timeOfMessage=time;
 						if(time!=null) {
 							//super.setText(time.toString());
 							super.setText(time.format(ChatManagerMain.formatOfShownDate));
@@ -918,6 +943,7 @@ public class ChatPanel extends JPanel{
 					}
 					private void setNewTimeOfMessage(LocalDateTime messageTime) {
 						final LocalDateTime time=messageTime;
+						this.timeOfMessage=time;
 						messageTime=null;
 						SwingUtilities.invokeLater(()->{
 							super.setText(time.format(ChatManagerMain.formatOfShownDate));
@@ -933,7 +959,7 @@ public class ChatPanel extends JPanel{
 				public void SetSenderName(Map<String,String> mapWithName) {
 					this.senderPanel.SetSenderName(mapWithName.get(SenderUUID));
 				}
-				
+				private String SenderName;
 				private class Sender extends JLabel {
 					
 					public Sender() {
@@ -944,6 +970,7 @@ public class ChatPanel extends JPanel{
 					}
 					public void SetSenderName(String Name) {
 						super.setText(Name);
+						SenderName=Name;
 						super.repaint();
 						super.revalidate();
 					}
