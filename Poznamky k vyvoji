@@ -1,0 +1,34 @@
+Synchronizace, když server zašle task finish-konec synchronizace a 
+konec odeslani udaju o zobrazeni- imlementovat system ktery počka dokud se zpravy nezpracuji
+-navrh, kazda zprava ktera je oznacena Synchronized taskem, bude ukladana do
+Listu, po zpracovani se z listu odstran.
+V připadě že dorazi task finish zkontroluje zdali jsou vsechny task zpracovane
+pote se aktivuje
+
+
+V history chat panelu, přidat rozlišení zdali se jedná o skupinový chat/single chat
+
+
+
+Nacitani historie-
+Dodělat pokud uživatel klikne mimo MainQUickMEssageChat- vyhledavani se resetuje a zobrazi se quick historie
+
+	Udělat zobrazovani historie
+	Zobrazovani historie-
+		vezme si vsechny hodnoty z userQuickTAble, a pomoci tasku union all ziska nejnovejsi zpravu
+			pote vysledek seradi a zobrazi
+	
+	
+	Při vyhledavani novych hracu zamezit navratu UUID chatu s kteryma ma jiz hrac interakci
+		ResultSet navrati X novych hracu, z kazdeho hrace se vytvori jeden dotaz zdali se nachazi/nenachazi,
+		pokud nechazi, system ho vymaze
+			Pote zkontroluje zdali zustalo dostatek hracu, pokud ne pomoci offSet zavola dotaz se stejnymi parametry znova
+			
+				-implementovat offSet do patern Query, nyní ZZZ potřebuje =, nebo !...
+	
+	
+		-- mysql nepodporuje dynamic statement, bude rešeno přes java server, a porovnávání
+		--Vytvorit funkci, ktera navrati true false/zdali se chat nachazi v quickMessage	
+			--funkce bude prijimat parametrb table Name, odkaz na funkci bude přidan
+			--jako podmínka do seraching tasku
+			
