@@ -83,7 +83,7 @@ public class MainQuickMessage extends JPanel {
 		private TaskForSearch UserStopWriting;
 	//private final Runnable TaskForKeyReleasedEvent;
 	protected SearchingPanel(TaskForSearch UserWriteSometingTask,TaskForSearch UserStopWritingTask) {
-		super("Fuck youdasewasdasd");
+		super(ComponentLanguageName.FindNewUserTextField.getName(MainJFrame.language).toString());
 		this.UserWriteSomething=UserWriteSometingTask;
 		this.UserStopWriting=UserStopWritingTask;
 		//this.TaskForKeyReleasedEvent=TaskForKeyReleasedEvent;
@@ -626,6 +626,12 @@ public class MainQuickMessage extends JPanel {
 					//verify if container contain value before
 					//then just remove them and add to previous position
 					//recognize is manage by override toString
+					if(this.LayoutManagerIsGridBagLayout) {
+						super.removeAll();
+						super.setLayout(this.boxLayout);
+						super.setPreferredSize(null);
+						this.LayoutManagerIsGridBagLayout=false;
+					}
 					boolean[] remove= {false};
 					Component[] xx = {null};
 					synchronized(super.getComponents()) {

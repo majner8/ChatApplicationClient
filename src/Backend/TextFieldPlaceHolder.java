@@ -28,10 +28,12 @@ public class TextFieldPlaceHolder implements KeyListener {
 		this.isEmpty=true;
 	}
 	
-	public  class TextField extends JTextField  {
+	private ComponentEmpty cm;
+	public  class TextField extends JTextField implements ComponentEmpty  {
 
 		public TextField() {
 			component=this;
+			cm=this;
 			super.addKeyListener(main);
 			super.setText(StringHolder);
 		}
@@ -45,14 +47,21 @@ public class TextFieldPlaceHolder implements KeyListener {
 		        Matcher matcher = pattern.matcher(super.getText());
 		        return matcher.matches();
 		    }
+		@Override
+		public void Visitible(boolean x) {
+			// TODO Auto-generated method stub
+			
+		}
 
 	}
 
-	public class PasswordTextField extends JPasswordField  {
+	public class PasswordTextField extends JPasswordField implements ComponentEmpty {
 		public PasswordTextField() {
 			component=this;
+			cm=this;
 			super.addKeyListener(main);
 			super.setText(StringHolder);
+			this.Visitible(false);
 
 		}
 		public boolean isSame(PasswordTextField another) {
@@ -66,6 +75,16 @@ public class TextFieldPlaceHolder implements KeyListener {
 		}
 		private boolean isEmpty() {
 			return isEmpty;
+		}
+		@Override
+		public void Visitible(boolean x) {
+			// TODO Auto-generated method stub
+			if(x) {
+				super.setEchoChar('*');
+			}
+			else {
+				super.setEchoChar((char)0);
+			}
 		}
 	}
 
@@ -86,6 +105,8 @@ public class TextFieldPlaceHolder implements KeyListener {
 		if(this.isEmpty) {
 			this.isEmpty=false;
 			component.setText("");
+			this.cm.Visitible(true);
+
 			return;
 		}
 		
@@ -98,10 +119,14 @@ public class TextFieldPlaceHolder implements KeyListener {
 		if(!this.isEmpty&&component.getText().isEmpty()) {
 			this.isEmpty=true;
 			component.setText(this.StringHolder);
+			this.cm.Visitible(false);
 		}
 	}
 
-
+	private static interface ComponentEmpty{
+		public void Visitible(boolean isVisitible);
+	}
+	
 
 }
 

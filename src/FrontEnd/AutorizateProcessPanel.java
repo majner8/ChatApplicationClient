@@ -147,7 +147,7 @@ public class AutorizateProcessPanel extends JPanel{
 			@Override
 			protected PasswordTextField InitPasswordFieldAgain() {
 				// TODO Auto-generated method stub
-				PasswordTextField pas=new TextFieldPlaceHolder("HAHAHAHAHA").new PasswordTextField();		
+				PasswordTextField pas=new TextFieldPlaceHolder(ComponentLanguageName.PasswordText.getName(MainJFrame.language).toString()).new PasswordTextField();		
 				return pas;
 			}
 			
@@ -220,10 +220,10 @@ abstract  class LogginRegisterPanel extends JPanel implements MouseListener{
 			int Y=0;
 			gridCon.gridy = Y;			
 			super.setOpaque(false);
-			this.EmailTextField=(new TextFieldPlaceHolder("tonik.1245@gmail.cz").new TextField());
+			this.EmailTextField=(new TextFieldPlaceHolder(ComponentLanguageName.EmailText.getName(MainJFrame.language).toString()).new TextField());
 			this.EmailTextField.addMouseListener(this);
 			this.addComponent(this.EmailTextField, gridCon);
-			this.PasswordText=(new TextFieldPlaceHolder("HAHAHAHAHA").new PasswordTextField());
+			this.PasswordText=(new TextFieldPlaceHolder(ComponentLanguageName.PasswordText.getName(MainJFrame.language).toString()).new PasswordTextField());
 			this.PasswordText.addMouseListener(this);
 			this.gridCon.gridy++;
 			this.addComponent(this.PasswordText, this.gridCon);
@@ -506,23 +506,23 @@ final class FinishRegistrationPanel extends JPanel implements MouseListener{
 		int y=0;
 		c.gridx=1;
 		c.gridy=y;
-		Name=new TextFieldPlaceHolder("Name").new TextField();
+		Name=new TextFieldPlaceHolder(ComponentLanguageName.Name.getName(MainJFrame.language).toString()).new TextField();
 		this.previousColor=Name.getForeground();
 		this.Name.addMouseListener(this);
 		super.add(Name,c);
 		y++;
 		c.gridy=y;
-		LastName=new TextFieldPlaceHolder("Last Name").new TextField();
+		LastName=new TextFieldPlaceHolder(ComponentLanguageName.LastName.getName(MainJFrame.language).toString()).new TextField();
 		super.add(LastName,c);
 		this.LastName.addMouseListener(this);
 		y++;
 		c.gridy=y;
-		Born=new TextFieldPlaceHolder("Born: DD-MM-YYY").new TextField();
+		Born=new TextFieldPlaceHolder(ComponentLanguageName.Born.getName(MainJFrame.language).toString()).new TextField();
 		super.add(Born,c);
 		this.Born.addMouseListener(this);
 		y++;
 		c.gridy=y;
-		this.FinishRegistration=new FinishRegistration("Finish registration");
+		this.FinishRegistration=new FinishRegistration(ComponentLanguageName.FinishRegistrationButton.getName(MainJFrame.language).toString());
 		this.FinishRegistration.setVisible(true);
 		super.add(this.FinishRegistration,c);
 		

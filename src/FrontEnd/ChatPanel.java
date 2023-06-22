@@ -294,6 +294,8 @@ public class ChatPanel extends JPanel{
 				
 				chatName=NameChat;
 				super.setLayout(new BorderLayout());
+		        super.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Add a border
+
 				super.add(new ChatName(NameChat),BorderLayout.CENTER);
 				super.setVisible(true);
 				super.add(new CloseChatButton(),BorderLayout.EAST);
@@ -306,7 +308,7 @@ public class ChatPanel extends JPanel{
 			private class CloseChatButton extends JButton implements ActionListener{
 				private static ImageIcon icon;
 				static {
-					icon=new ImageIcon("Img\\CloseChatImg.png");
+					icon=new ImageIcon(Main.getFileWithAbsolutePath("Img\\CloseChatImg.png"));
 					icon=new ImageIcon(icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
 					
 				}
@@ -352,6 +354,7 @@ public class ChatPanel extends JPanel{
 				super.setVisible(true);
 				super.setOpaque(true);
 				super.setPreferredSize(DimensionOfChat);
+		        super.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Add a border
 
 				super.setViewportView(new UserWritingPart());
 			}
@@ -550,7 +553,7 @@ public class ChatPanel extends JPanel{
 				super.setViewportView(new messageValue());
 		        super.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		        super.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		        super.setBorder(BorderFactory.createLineBorder(Color.RED)); // Add a border
+		        super.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Add a border
 		        super.getVerticalScrollBar().addAdjustmentListener(new ComListener());
 				super.setVisible(true);
 		        super.setOpaque(true);

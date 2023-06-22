@@ -73,7 +73,7 @@ public static final String path="SQL\\";
 
 		@Override
 		public String toString() {
-			return path+this.URLQuery;
+			return Main.Main.getFileWithAbsolutePath(path+this.URLQuery);
 		}
 	}
 	

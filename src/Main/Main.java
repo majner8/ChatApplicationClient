@@ -1,5 +1,8 @@
 package Main;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -101,6 +104,27 @@ public class Main {
 	public static String getLogginUserDefaultName() {
 		return UserDefaultName;
 		
+	}
+	
+	
+	static {
+		String x;
+		try {
+			String fileURl= Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+			
+			x = Path=(new File(fileURl)).getParent();
+
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			Main.stopServer(null);
+		}
+	}
+	private static String Path;
+	
+	
+	public static String getFileWithAbsolutePath(String path) {
+		return Path+"/"+path;
 	}
 	
 	
