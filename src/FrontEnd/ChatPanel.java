@@ -736,7 +736,7 @@ public class ChatPanel extends JPanel{
 						}
 					
 						//add new quickMessage
-						QuickMessageText x=message.makeQuickMessageTextFromMessage(chatName,panel,chatUUID,doesSingleChat);
+						QuickMessageText x=message.makeQuickMessageTextFromMessage(message.timeOfReceived.timeOfMessage,chatName,panel,chatUUID,doesSingleChat);
 						//String chatName,ChatPanel chat,String chatUUID,boolean doesSingleChat
 						quickPanel.addValue(x);
 						//add extra panel, to reach gap between each component
@@ -893,13 +893,13 @@ public class ChatPanel extends JPanel{
 				/**Metod create quickMessageText from this message 
 				 * Metod have to be call after add message to chat
 				 *@param chatName-default name of this chat */
-				public QuickMessageText makeQuickMessageTextFromMessage(String chatName,ChatPanel chat,String chatUUID,boolean doesSingleChat) {
+				public QuickMessageText makeQuickMessageTextFromMessage(LocalDateTime time,String chatName,ChatPanel chat,String chatUUID,boolean doesSingleChat) {
 					//string chat name textMessage, TimeStamp
 					String mes=String.format("%s: %s",this.SenderName,this.message);
 				String text=	 MainQuickMessage.HistorySearchChatPanel.ResultPanel.getQuickMessageText(
 							chatName, mes.substring(0, mes.length()>30?30:mes.length()),this.timeOfReceived.timeOfMessage==null?null:Timestamp.valueOf(this.timeOfReceived.timeOfMessage) );
 				
-				return new QuickMessageText(chatName,false,chat,text,chatUUID,doesSingleChat);
+				return new QuickMessageText(time,chatName,false,chat,text,chatUUID,doesSingleChat);
 				
 				}
 				

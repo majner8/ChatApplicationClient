@@ -95,14 +95,18 @@ public class TextFieldPlaceHolder implements KeyListener {
 		// TODO Auto-generated method stub
 		
 	}
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
+		
 		if((e.getKeyCode()==KeyEvent.VK_DELETE||e.getKeyCode()==8)&&this.isEmpty) {
 			e.consume();
 			return;
 		}
-		if(this.isEmpty) {
+		char keyChar = e.getKeyChar();
+        
+		if(this.isEmpty&&Character.isDefined(keyChar) && !Character.isISOControl(keyChar)) {
 			this.isEmpty=false;
 			component.setText("");
 			this.cm.Visitible(true);

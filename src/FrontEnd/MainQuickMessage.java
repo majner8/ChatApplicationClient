@@ -20,6 +20,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -209,7 +210,7 @@ public class MainQuickMessage extends JPanel {
 									String ChatUUID=Rs.getString("chatUUID");
 									
 									//in future does single chat have to be change
-									QuickMessageText x=new QuickMessageText(mapWithTableName.get(ChatUUID),false,chatPanel,this.getQuickMessageText(mapWithTableName.get(ChatUUID),message, time),ChatUUID,true);
+									QuickMessageText x=new QuickMessageText(time.toLocalDateTime(),mapWithTableName.get(ChatUUID),false,chatPanel,this.getQuickMessageText(mapWithTableName.get(ChatUUID),message, time),ChatUUID,true);
 									mes.add(x);
 									
 								}
@@ -289,7 +290,7 @@ public class MainQuickMessage extends JPanel {
 							ArrayList<QuickMessageText> messageToAdd=new ArrayList<QuickMessageText>();
 							try {
 								while(Result.next()) {
-									QuickMessageText q=new QuickMessageText(null,false,chatPanel,Result.getString("UserTableName"),
+									QuickMessageText q=new QuickMessageText(null,null,false,chatPanel,Result.getString("UserTableName"),
 									Result.getString("chatUUID"),true);
 									messageToAdd.add(q);
 								}
@@ -449,7 +450,7 @@ public class MainQuickMessage extends JPanel {
 							}
 							for(int i=0;(rowValue=rs.getRowValue(false, i))!=null&&ArriveResponce.getUUIDTask().equals(SetWaitingForResultUUID(null,false));i++) {
 								String ChatUUID=ChatManagerMain.returnChatUUID(rowValue.get(chatUUIDindex));
-								QuickMessageText vl=new QuickMessageText(null,true,chatPanel,rowValue.get(UserTAbleNameIndex),ChatUUID,true);
+								QuickMessageText vl=new QuickMessageText(null,null,true,chatPanel,rowValue.get(UserTAbleNameIndex),ChatUUID,true);
 								//from history always new chat, have to verify on server side, that return result is not in simpleHistory
 								textToAdd.add(vl);
 							}
@@ -613,7 +614,8 @@ public class MainQuickMessage extends JPanel {
 						if(this.defaultFont==null) {
 							this.defaultFont=QuickMe.getFont().deriveFont(20F);
 						}
-						QuickMe.setFont(defaultFont);				
+						QuickMe.setFont(defaultFont);		
+						System.out.println(QuickMe.chatUUID);
 						super.add(QuickMe);
 						return;
 					});
@@ -632,6 +634,8 @@ public class MainQuickMessage extends JPanel {
 						super.setPreferredSize(null);
 						this.LayoutManagerIsGridBagLayout=false;
 					}
+					synchronized(super.getComponents()) {
+					
 					boolean[] remove= {false};
 					Component[] xx = {null};
 					synchronized(super.getComponents()) {
@@ -650,7 +654,9 @@ public class MainQuickMessage extends JPanel {
 					super.add(value,0);
 					super.repaint();
 					super.revalidate();
-				});
+			
+					}
+					});
 			
 			}
 		
@@ -674,11 +680,12 @@ public class MainQuickMessage extends JPanel {
 		private ChatPanel openChat;
 		private final boolean newChat;
 		private String tableName;// if wil be null, as table name will be used text Of JButton
-		
+		private LocalDateTime time;
 		//singleChat mean that chatUUID is also UUID of owner,
 		//because singleChatUUID has this patern owner1UUID+owner2UUID, order by alphabet
-		public QuickMessageText(String tableName,boolean newChat,ChatPanel ChatPanel,String DisplayMessage,String ChatUUID,boolean doesSingleChat) {
+		public QuickMessageText(LocalDateTime time,String tableName,boolean newChat,ChatPanel ChatPanel,String DisplayMessage,String ChatUUID,boolean doesSingleChat) {
 			super(DisplayMessage);
+			this.time=time;
 			this.tableName=tableName;
 			this.newChat=newChat;
 			this.openChat=ChatPanel;
