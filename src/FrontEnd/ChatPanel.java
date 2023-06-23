@@ -425,7 +425,7 @@ public class ChatPanel extends JPanel{
 						String MessageUUID=mes.getUUIDTask();
 						LocalDateTime DateTime=null;
 						
-						ShownMessage.Message GUIMessage=ShownMessage.Message.createNewMessage(SenderUUID, MessageUUID, null,DateTime, Message.trim());
+						ShownMessage.Message GUIMessage=ShownMessage.Message.createNewMessage(SenderUUID, MessageUUID, null,DateTime, Message.trim(),false);
 						SimpleResultSet rs=GUIMessage.makeSimpleResultSetFromMessage(chatUUID);
 						{
 							Query [] q=MainSQL.getQuery(ClientDatabase.databaseTaskType.InsertMessageChatUser, rs, chatUUID);
@@ -669,7 +669,7 @@ public class ChatPanel extends JPanel{
 								if(messageUUID==null) {
 									messageArive=false;
 								}
-								Message mes=Message.createNewMessage(ResultSet.getString("senderUUID"), ResultSet.getString("MessageUUID"),ResultSet.getString("numberOFmessage"),ResultSet.getTimestamp("TimeOfMessage").toLocalDateTime(), ResultSet.getString("message"));
+								Message mes=Message.createNewMessage(ResultSet.getString("senderUUID"), ResultSet.getString("MessageUUID"),ResultSet.getString("numberOFmessage"),ResultSet.getTimestamp("TimeOfMessage").toLocalDateTime(), ResultSet.getString("message"),true);
 							
 								this.newMessageArrive(mes, messageArive, true);
 							}
@@ -735,10 +735,14 @@ public class ChatPanel extends JPanel{
 							}
 						}
 					
-						//add new quickMessage
-						QuickMessageText x=message.makeQuickMessageTextFromMessage(message.timeOfReceived.timeOfMessage,chatName,panel,chatUUID,doesSingleChat);
-						//String chatName,ChatPanel chat,String chatUUID,boolean doesSingleChat
-						quickPanel.addValue(x);
+						if(!message.wasCreatedFromDatabase) {
+
+							//add new quickMessage
+							QuickMessageText x=message.makeQuickMessageTextFromMessage(message.timeOfReceived.timeOfMessage,chatName,panel,chatUUID,doesSingleChat);
+							//String chatName,ChatPanel chat,String chatUUID,boolean doesSingleChat
+							quickPanel.addValue(x);
+								
+						}
 						//add extra panel, to reach gap between each component
 						//super.add(Box.createRigidArea(this.gapBetweenMessage));
 						super.revalidate();
@@ -803,6 +807,7 @@ public class ChatPanel extends JPanel{
 				private String NumberOfMessage;// represent main UUID when user getBackResponce
 				private Sender senderPanel;
 				private String message;
+				private boolean wasCreatedFromDatabase;
 				//is align to left side, in other hand it is align to right
 				
 				/**Metod create new Message object
@@ -811,13 +816,16 @@ public class ChatPanel extends JPanel{
 				 * @param UUIDSender- UUID of sender-if UUID sender is same as UUID User, message will be align to right
 				 * in the other hand, will be align left
 				 * @param NumberOfMessage-number of message, or put null if message was not send to server
-				 * @param message-message to show*/
-				public static Message createNewMessage(String SenderUUID,String MessageUUID,String NumberOfMessage,LocalDateTime timeOfReceived,String message) {
-					return new Message(SenderUUID,MessageUUID,NumberOfMessage,timeOfReceived,message);
+				 * @param message-message to show
+				 * @param wasCreatedFromDatabase*/
+				public static Message createNewMessage(String SenderUUID,String MessageUUID,String NumberOfMessage,LocalDateTime timeOfReceived,String message,boolean wasCreatedFromDatabase) {
+					return new Message(SenderUUID,MessageUUID,NumberOfMessage,timeOfReceived,message,wasCreatedFromDatabase);
+					//wasCreatedFromDatabase-if true send message do not trigger quick message
 				}
 				
-				public Message(String SenderUUID,String messageUUID,String NumberOfMessage,LocalDateTime timeOfReceived,String message) {
+				public Message(String SenderUUID,String messageUUID,String NumberOfMessage,LocalDateTime timeOfReceived,String message,boolean wasCreatedFromDatabase) {
 					super(new GridBagLayout());  // use GridBagLayout for this JPanel
+					this.wasCreatedFromDatabase=wasCreatedFromDatabase;
 					this.SenderUUID=SenderUUID;
 					this.NumberOfMessage=NumberOfMessage;
 					super.setMaximumSize(new Dimension(sizeOfChatPanel.width/3*2,Integer.MAX_VALUE));
@@ -848,13 +856,13 @@ public class ChatPanel extends JPanel{
 					
 				}
 				
-				public static Message createMessageFromSimpleResultSet(SimpleResultSet result) {
+				public static Message createMessageFromSimpleResultSet(SimpleResultSet result,boolean wasCreatedFromDatabase) {
 
 					String SenderUUID=result.getValue("userUUID", false, 0);
 					
 					LocalDateTime timeOfReceived=LocalDateTime.parse(result.getValue("TimeOfMessage", false, 0));
 					String message=result.getValue("message", false, 0);
-					Message x=Message.createNewMessage(SenderUUID, result.getValue("MessageUUID", false, 0),result.getValue("numberOFmessage", false, 0), timeOfReceived, message);
+					Message x=Message.createNewMessage(SenderUUID, result.getValue("MessageUUID", false, 0),result.getValue("numberOFmessage", false, 0), timeOfReceived, message,wasCreatedFromDatabase);
 					return x;
 				}
 				

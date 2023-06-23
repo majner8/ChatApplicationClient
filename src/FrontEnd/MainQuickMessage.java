@@ -195,6 +195,8 @@ public class MainQuickMessage extends JPanel {
 						MainSQL.ClosedStatement(Stm, Res);
 						//process main union task which return message
 						Query [] uninQ=MainSQL.getQuery(ClientDatabase.databaseTaskType.SelectQuickMessageFromDatabase, unionTask, "");
+						
+						System.out.println(uninQ[0].SQLQuery);
 						ThreadPoolingManagement.thread.ProcesSQLTask(uninQ, (St,Rs,Exe)->{
 							if(Exe!=null) {
 								Exe.printStackTrace();
@@ -208,7 +210,7 @@ public class MainQuickMessage extends JPanel {
 									String message=Rs.getString("QuickMessage");
 									Timestamp time=Rs.getTimestamp("TimeOfMessage");
 									String ChatUUID=Rs.getString("chatUUID");
-									
+									System.out.println("XXXX   "+ChatUUID);
 									//in future does single chat have to be change
 									QuickMessageText x=new QuickMessageText(time.toLocalDateTime(),mapWithTableName.get(ChatUUID),false,chatPanel,this.getQuickMessageText(mapWithTableName.get(ChatUUID),message, time),ChatUUID,true);
 									mes.add(x);
@@ -550,15 +552,13 @@ public class MainQuickMessage extends JPanel {
 		 * Do not use if you want to add just one value, or change order */
 		public void addValue(List<QuickMessageText> value) {
 			this.value.addValue(value);
-			super.repaint();
-			super.revalidate();
+	
 
 		}
 
 		public void addValue(QuickMessageText value) {
 			this.value.addValue(value);
-			super.repaint();
-			super.revalidate();
+		
 
 		}
 		
@@ -615,7 +615,6 @@ public class MainQuickMessage extends JPanel {
 							this.defaultFont=QuickMe.getFont().deriveFont(20F);
 						}
 						QuickMe.setFont(defaultFont);		
-						System.out.println(QuickMe.chatUUID);
 						super.add(QuickMe);
 						return;
 					});
