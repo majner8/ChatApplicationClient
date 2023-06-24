@@ -57,7 +57,7 @@ public class ThreadPoolingManagementClient extends ThreadPoolingManagement {
 	@Override
 	public void schedule(Runnable command, long delay, TimeUnit timeUnit) {
 		// TODO Auto-generated method stub
-		ScheduledAndWaitService.scheduleWithFixedDelay(command, delay, delay, timeUnit);
+		ScheduledAndWaitService.schedule(command, delay, timeUnit);
 	}
 	@Override
 	public void Execute(Runnable Command) {

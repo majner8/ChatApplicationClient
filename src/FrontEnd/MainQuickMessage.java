@@ -196,7 +196,6 @@ public class MainQuickMessage extends JPanel {
 						//process main union task which return message
 						Query [] uninQ=MainSQL.getQuery(ClientDatabase.databaseTaskType.SelectQuickMessageFromDatabase, unionTask, "");
 						
-						System.out.println(uninQ[0].SQLQuery);
 						ThreadPoolingManagement.thread.ProcesSQLTask(uninQ, (St,Rs,Exe)->{
 							if(Exe!=null) {
 								Exe.printStackTrace();
@@ -210,7 +209,6 @@ public class MainQuickMessage extends JPanel {
 									String message=Rs.getString("QuickMessage");
 									Timestamp time=Rs.getTimestamp("TimeOfMessage");
 									String ChatUUID=Rs.getString("chatUUID");
-									System.out.println("XXXX   "+ChatUUID);
 									//in future does single chat have to be change
 									QuickMessageText x=new QuickMessageText(time.toLocalDateTime(),mapWithTableName.get(ChatUUID),false,chatPanel,this.getQuickMessageText(mapWithTableName.get(ChatUUID),message, time),ChatUUID,true);
 									mes.add(x);
@@ -697,6 +695,15 @@ public class MainQuickMessage extends JPanel {
 			this.chatUUID=ChatUUID;
 			super.addActionListener(this);
 		}
+		/**Call when message arrive to server, and client get time of received Message
+		 * Metod display new update text and change time */
+		public void MessageArrive(LocalDateTime time,String displayChat) {
+			SwingUtilities.invokeLater(()->{
+				super.setText(displayChat);
+				this.time=time;
+			});
+		}
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub

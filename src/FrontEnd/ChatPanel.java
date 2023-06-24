@@ -627,6 +627,7 @@ public class ChatPanel extends JPanel{
 							else {
 								SwingUtilities.invokeLater(()->{
 									super.removeAll();
+									this.listOFAddedMessage.clear();
 									if(TemporaryRemoved) {
 										CloseChat();
 									}
@@ -653,7 +654,6 @@ public class ChatPanel extends JPanel{
 						//new chat true-mean that chat do not have any history
 						return;
 					}
-					
 					Query x[]=MainSQL.getQuery(ClientDatabase.databaseTaskType.SelectMessageFromChat, null, chatUUID);
 					ThreadPoolingManagement.thread.ProcesSQLTask(x, (Statement,ResultSet,SQLEx)->{
 						if(SQLEx!=null) {
@@ -661,6 +661,7 @@ public class ChatPanel extends JPanel{
 							Main.stopServer(null);
 						}
 						try {
+
 							while(ResultSet.next()) {
 								//    c.numberOFmessage
 							    //c.MessageUUID
@@ -670,7 +671,6 @@ public class ChatPanel extends JPanel{
 									messageArive=false;
 								}
 								Message mes=Message.createNewMessage(ResultSet.getString("senderUUID"), ResultSet.getString("MessageUUID"),ResultSet.getString("numberOFmessage"),ResultSet.getTimestamp("TimeOfMessage").toLocalDateTime(), ResultSet.getString("message"),true);
-							
 								this.newMessageArrive(mes, messageArive, true);
 							}
 						} catch (SQLException e) {
@@ -808,6 +808,7 @@ public class ChatPanel extends JPanel{
 				private Sender senderPanel;
 				private String message;
 				private boolean wasCreatedFromDatabase;
+				private QuickMessageText QuickMessageFromThisMessage;
 				//is align to left side, in other hand it is align to right
 				
 				/**Metod create new Message object
@@ -851,8 +852,12 @@ public class ChatPanel extends JPanel{
 				
 				/**Call when message arrive to server */
 				private void MessageArriveToServer(String UUID,LocalDateTime timeOfArrive) {
-					this.NumberOfMessage=UUID;
-					this.timeOfReceived.setNewTimeOfMessage(timeOfArrive);
+					SwingUtilities.invokeLater(()->{
+						this.NumberOfMessage=UUID;
+						this.timeOfReceived.setNewTimeOfMessage(timeOfArrive);
+						
+						
+					});
 					
 				}
 				
@@ -898,17 +903,20 @@ public class ChatPanel extends JPanel{
 					return rs;
 				}
 				
+				
+				private String generateTextToQuickMessage(String chatName) {
+					//string chat name textMessage, TimeStamp
+					String message=String.format("%s: %s",this.SenderName,this.message);
+				String text=	 MainQuickMessage.HistorySearchChatPanel.ResultPanel.getQuickMessageText(
+							chatName, message.substring(0, message.length()>30?30:message.length()),this.timeOfReceived.timeOfMessage==null?null:Timestamp.valueOf(this.timeOfReceived.timeOfMessage) );
+				return text;
+				}
 				/**Metod create quickMessageText from this message 
 				 * Metod have to be call after add message to chat
 				 *@param chatName-default name of this chat */
 				public QuickMessageText makeQuickMessageTextFromMessage(LocalDateTime time,String chatName,ChatPanel chat,String chatUUID,boolean doesSingleChat) {
-					//string chat name textMessage, TimeStamp
-					String mes=String.format("%s: %s",this.SenderName,this.message);
-				String text=	 MainQuickMessage.HistorySearchChatPanel.ResultPanel.getQuickMessageText(
-							chatName, mes.substring(0, mes.length()>30?30:mes.length()),this.timeOfReceived.timeOfMessage==null?null:Timestamp.valueOf(this.timeOfReceived.timeOfMessage) );
-				
-				return new QuickMessageText(time,chatName,false,chat,text,chatUUID,doesSingleChat);
-				
+					return this.QuickMessageFromThisMessage=new QuickMessageText(time,chatName,false,chat,this.generateTextToQuickMessage(chatName),chatUUID,doesSingleChat);
+					
 				}
 				
 				private class textMessage extends JTextArea{
@@ -956,10 +964,9 @@ public class ChatPanel extends JPanel{
 						final LocalDateTime time=messageTime;
 						this.timeOfMessage=time;
 						messageTime=null;
-						SwingUtilities.invokeLater(()->{
 							super.setText(time.format(ChatManagerMain.formatOfShownDate));
 							this.TimeMessage=super.getText();
-						});
+						
 						
 					}
 					public String toString() {

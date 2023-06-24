@@ -12,6 +12,7 @@ import java.net.SocketTimeoutException;
 import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
 
 import CommonPart.SocketComunication.SocketComunication.SocketComunicationException;
 import CommonPart.ThreadManagement.ThreadPoolingManagement;
@@ -19,6 +20,7 @@ import Main.Main;
 
 public final class ComunicationPortHandling {
 	
+	private static final String VerifyConnectionn="|&qsr";
     private static Random random = new Random();
     private static final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
@@ -43,7 +45,14 @@ public final class ComunicationPortHandling {
 	//
 	private static final int SoTimeoutOFSocket = 600 * 1000;
 
-
+	/** Metod return VerifyConnection patern
+	 * @param escape true- if you want to return with espace character, in order to splitMetod */
+	private static String getVerifyConectionPatern(boolean espace) {
+		if(espace) {
+			return "\\"+ComunicationPortHandling.VerifyConnectionn;
+		}
+		return ComunicationPortHandling.VerifyConnectionn;
+	}
 
 	
 
@@ -163,8 +172,11 @@ public final class ComunicationPortHandling {
 			this.read=read;
 			this.connectionAutorized=connectionAutorized;
 			this.start();
+			//start sending verify connection
 
 		}
+		
+
 		private byte SocketTimeOutTryAmount=0;
 		private static byte MaximumSocketTimeOutTryAmout=3;
 		private boolean connectionAutorized = false;
@@ -172,6 +184,7 @@ public final class ComunicationPortHandling {
 		private static byte MaximumSecuryTry=3;
 		private byte LengSecurityTry=1;
 		private int maximumCharacterOfOneMessage=8000;
+		
 		@Override
 		public void run() {
 			while(!Main.isServerStopped()&&!TemporaryClosed&&!UnConnected) {
@@ -193,6 +206,7 @@ public final class ComunicationPortHandling {
 							return;
 					    }
 					    
+					    
 					    //chech if end by endMessageCharacter
 					    if(sb.length()>=ComunicationPortHandling.EndMessageCharacter.length()) {
 						    String lastMessage=sb.substring(sb.length()-ComunicationPortHandling.EndMessageCharacter.length());
@@ -204,6 +218,12 @@ public final class ComunicationPortHandling {
 					}
 					if(c==-1) {
 				    	System.out.println("closeB");
+
+				    	System.out.println(socket.isClosed());
+				    	System.out.println(socket.isInputShutdown());
+				    	System.out.println(socket.isConnected());
+				    	System.out.println(socket.isOutputShutdown());
+
 
 						CloseTemporary();
 						return;
@@ -243,9 +263,16 @@ public final class ComunicationPortHandling {
 					continue;
 				}
 
-				final String curentMessage = sb.toString().substring(0,sb.length()-ComunicationPortHandling.EndMessageCharacter.length());
 				
-				sb.setLength(0);
+				 String mes = sb.toString().substring(0,sb.length()-ComunicationPortHandling.EndMessageCharacter.length()).trim().replaceAll(ComunicationPortHandling.getVerifyConectionPatern(true), "");
+				 sb.setLength(0);
+				 if(mes.length()==0) {
+					System.out.println("Notification");
+					continue;
+				}
+				final String curentMessage=mes;
+				mes=null;
+				
 				if(!this.connectionAutorized) {
 					if (!curentMessage.equals(AutorizationKey)) {
 						this.SecurityTry++;
@@ -293,9 +320,23 @@ public final class ComunicationPortHandling {
 			this.writer=write;
 			
 			super.start();
-
+			this.SendVerifyMess();
 		}
 
+		
+		private void SendVerifyMess() {
+			ThreadPoolingManagement.thread.schedule(()->{
+				if(UnConnected||TemporaryClosed) {
+					
+					return;
+				}
+				System.out.println("I am sending verification");
+				writeMessage(ComunicationPortHandling.getVerifyConectionPatern(false),true);
+				this.SendVerifyMess();
+			}, 30, TimeUnit.SECONDS);
+
+		}
+		
 		private void close() {
 			try {
 				this.writer.close();
