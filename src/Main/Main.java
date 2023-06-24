@@ -18,6 +18,7 @@ import Main.ComunicationWithServer.UnConnected;
 
 public class Main {
 
+	
 	private volatile static boolean ServerStop=false;
 	public static MainJFrame frame;
 	public static boolean isServerStopped() {
@@ -107,25 +108,9 @@ public class Main {
 	}
 	
 	
-	static {
-		String x;
-		try {
-			String fileURl= Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-			
-			x = Path=(new File(fileURl)).getParent();
-
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			Main.stopServer(null);
-		}
-	}
-	private static String Path;
 	
 	
-	public static String getFileWithAbsolutePath(String path) {
-		return Path+"/"+path;
-	}
+	
 	
 	
 	//notification when user make logOut

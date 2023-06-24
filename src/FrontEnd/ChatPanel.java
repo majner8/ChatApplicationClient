@@ -315,10 +315,11 @@ public class ChatPanel extends JPanel{
 				super.addMouseListener(MainQuickMessage.CleanListener);
 
 			}
+			private static final String closeButtonIcon="Img/CloseChatImg.png";
 			private class CloseChatButton extends JButton implements ActionListener{
 				private static ImageIcon icon;
 				static {
-					icon=new ImageIcon(Main.getFileWithAbsolutePath("Img\\CloseChatImg.png"));
+					icon=new ImageIcon(MainJFrame.loadImage(closeButtonIcon));
 					icon=new ImageIcon(icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
 					
 				}

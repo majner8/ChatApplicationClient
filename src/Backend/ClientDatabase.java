@@ -2,7 +2,6 @@ package Backend;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -22,7 +21,8 @@ public class ClientDatabase extends MainSQL{
 	try {
 		MainSQL.LoadSQLFile=new LoadSQLFile();
 		Class.forName("org.sqlite.JDBC");
-		con=DriverManager.getConnection("jdbc:sqlite:my_database.db");
+		Connection con=DriverManager.getConnection("jdbc:sqlite:my_database.db");
+	
 		con.createStatement().executeQuery("PRAGMA integrity_check;");
 
 	} catch (ClassNotFoundException e) {
@@ -60,7 +60,7 @@ public static final String path="SQL\\";
 		InsertAdministration("InsertOrIgnoreAdministration.sql"),
 		InsertIntoQuickMessageWhenUserWriteNewMessage("InsertIntoQuickMessageWhenUserWriteNewMessage.sql")
 		,InsertIntoAdministrationTableWhenUserSendNewMessage("InsertIntoAdministrationTableWhenUserSendNewMessage.sql")
-		,FindChatInHistory("FindChatInHostory.SQL"),
+		,FindChatInHistory("FindChatInHostory.sql"),
 		SelectFromAdministrationTable("SelectFromAdministrationTable.sql"),
 		SelectQuickMessageFromDatabase("SelectMessageToQuickMessage.sql"),
 		SavedChatMessage("InsertChatMessage.sql");		
@@ -69,11 +69,12 @@ public static final String path="SQL\\";
 		databaseTaskType(String UURL){
 			this.URLQuery=UURL;
 		}
-		public static final String path="SQL\\";
+		public static final String path="SQL/";
 
 		@Override
 		public String toString() {
-			return Main.Main.getFileWithAbsolutePath(path+this.URLQuery);
+			return this.path+this.URLQuery;
+			//return Main.Main.getFileWithAbsolutePath(path+this.URLQuery);
 		}
 	}
 	

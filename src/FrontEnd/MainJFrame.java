@@ -9,14 +9,18 @@ import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -34,8 +38,8 @@ import Main.ComunicationWithServer;
 
 public class MainJFrame extends JFrame{
 
-	public static final String ImgBacgroundURL="Img\\FirstView.jpeg";
-	public static Image ImgBacgtround=MainJFrame.loadImage(Main.Main.getFileWithAbsolutePath(ImgBacgroundURL));
+	public static final String ImgBacgroundURL="Img/FirstView.jpeg";
+	public static Image ImgBacgtround=MainJFrame.loadImage(ImgBacgroundURL);
 	public final static Dimension minimunSize=new Dimension(565,500);
 	public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 	public static TypeLanguage language;
@@ -69,12 +73,33 @@ public class MainJFrame extends JFrame{
        
 	}
 	
+	public static ImageIcon loadImageIcon(String url) {
+		try {
 
+		InputStream x;
+			x = MainJFrame.class.getClassLoader().getSystemResourceAsStream(url);
+		
+		
+			ImageIcon img;
+				img = new ImageIcon(ImageIO.read(x));
+
+			    return img;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+
+	}
+	
 	public static Image loadImage(String url) {
-		File x=new File(url);
+		try {
+
+		InputStream x;
+			x = MainJFrame.class.getClassLoader().getSystemResourceAsStream(url);
+		
 		
 		    Image img;
-			try {
 				img = ImageIO.read(x);
 			    if(img==null) {
 
