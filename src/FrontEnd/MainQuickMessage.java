@@ -195,7 +195,6 @@ public class MainQuickMessage extends JPanel {
 						MainSQL.ClosedStatement(Stm, Res);
 						//process main union task which return message
 						Query [] uninQ=MainSQL.getQuery(ClientDatabase.databaseTaskType.SelectQuickMessageFromDatabase, unionTask, "");
-						
 						ThreadPoolingManagement.thread.ProcesSQLTask(uninQ, (St,Rs,Exe)->{
 							if(Exe!=null) {
 								Exe.printStackTrace();
@@ -676,14 +675,14 @@ public class MainQuickMessage extends JPanel {
 		public final boolean doesSingleChat;
 		private ChatPanel openChat;
 		private final boolean newChat;
-		private String tableName;// if wil be null, as table name will be used text Of JButton
+		public String ChatName;// if wil be null, as table name will be used text Of JButton
 		private LocalDateTime time;
 		//singleChat mean that chatUUID is also UUID of owner,
 		//because singleChatUUID has this patern owner1UUID+owner2UUID, order by alphabet
 		public QuickMessageText(LocalDateTime time,String tableName,boolean newChat,ChatPanel ChatPanel,String DisplayMessage,String ChatUUID,boolean doesSingleChat) {
 			super(DisplayMessage);
 			this.time=time;
-			this.tableName=tableName;
+			this.ChatName=tableName;
 			this.newChat=newChat;
 			this.openChat=ChatPanel;
 			super.setMargin(new Insets(0,0,0,0));
@@ -699,8 +698,11 @@ public class MainQuickMessage extends JPanel {
 		 * Metod display new update text and change time */
 		public void MessageArrive(LocalDateTime time,String displayChat) {
 			SwingUtilities.invokeLater(()->{
+
 				super.setText(displayChat);
 				this.time=time;
+				super.revalidate();
+				super.repaint();
 			});
 		}
 		
@@ -709,7 +711,7 @@ public class MainQuickMessage extends JPanel {
 			// TODO Auto-generated method stub
 			//open new chat
 			
-			openChat.OpenChat(newChat,chatUUID, true,this.tableName==null?super.getText():this.tableName);
+			openChat.OpenChat(newChat,chatUUID, true,this.ChatName==null?super.getText():this.ChatName);
 			
 		}
 		@Override

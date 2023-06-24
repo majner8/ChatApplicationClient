@@ -92,18 +92,28 @@ public class ChatPanel extends JPanel{
 	public synchronized Chat OpenChat(boolean newChat,String chatUUID,boolean OpenInPrior,String chatName) {
 		// verify if a component was not added before
 		{
-
+	
 			synchronized (super.getComponents()) {
-				for (Component x : super.getComponents()) {
-					if (x.toString().equals(chatUUID)) {
-						if(OpenInPrior) {
-							//change order
-							super.add(x,0);
-							return (Chat)x;
-						}
-
-						return (Chat)x;
-					}
+				int indexToRemove=-1;
+				for (int i = 0; i < super.getComponents().length; i++) {
+				    Component x = super.getComponents()[i];
+				    if (x.toString().equals(chatUUID)) {
+				        if (OpenInPrior) {
+				        	indexToRemove=i;
+				           break;
+				        }
+				        return (Chat) x;
+				    }
+				}
+				if(indexToRemove==0) {
+					// chat is on top
+					return (Chat)super.getComponent(0);
+				}
+				if(indexToRemove!=-1) {
+					Component x=super.getComponent(indexToRemove); 
+					super.remove(indexToRemove);
+			            super.add(x, 0);
+			            return (Chat) x;
 				}
 
 			}
@@ -852,13 +862,10 @@ public class ChatPanel extends JPanel{
 				
 				/**Call when message arrive to server */
 				private void MessageArriveToServer(String UUID,LocalDateTime timeOfArrive) {
-					SwingUtilities.invokeLater(()->{
-						this.NumberOfMessage=UUID;
-						this.timeOfReceived.setNewTimeOfMessage(timeOfArrive);
-						
-						
-					});
-					
+					this.NumberOfMessage=UUID;
+					this.timeOfReceived.setNewTimeOfMessage(timeOfArrive);
+					String QuickText=this.generateTextToQuickMessage(this.QuickMessageFromThisMessage.ChatName);
+					this.QuickMessageFromThisMessage.MessageArrive(timeOfArrive, QuickText);				
 				}
 				
 				public static Message createMessageFromSimpleResultSet(SimpleResultSet result,boolean wasCreatedFromDatabase) {
@@ -961,12 +968,13 @@ public class ChatPanel extends JPanel{
 						
 					}
 					private void setNewTimeOfMessage(LocalDateTime messageTime) {
-						final LocalDateTime time=messageTime;
-						this.timeOfMessage=time;
-						messageTime=null;
-							super.setText(time.format(ChatManagerMain.formatOfShownDate));
-							this.TimeMessage=super.getText();
-						
+						this.timeOfMessage=messageTime;
+						this.TimeMessage=messageTime.format(ChatManagerMain.formatOfShownDate);
+						SwingUtilities.invokeLater(()->{
+									super.setText(this.TimeMessage);
+								
+								
+						});
 						
 					}
 					public String toString() {
@@ -1014,6 +1022,7 @@ public class ChatPanel extends JPanel{
 		public static class ChatWasNotCreatedRunnTimeException extends RuntimeException{
 			
 		}
+
 	}
 
 	@Override

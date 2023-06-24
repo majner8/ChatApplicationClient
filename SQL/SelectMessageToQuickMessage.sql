@@ -10,7 +10,7 @@ SELECT
     ||":  "||m.message, 1, 30) as "QuickMessage"
 FROM 
     (SELECT * FROM chatXXX WHERE TimeOfMessage = 
-        (SELECT MAX(TimeOfMessage) FROM chatXXX)) as m
+        (SELECT MAX(TimeOfMessage) FROM chatXXX) limit 1) as m
 	-F	UNION ALL -F %
 );
-order by TimeOfMessage desc;
+order by TimeOfMessage ASC;

@@ -36,13 +36,13 @@ public class MainJFrame extends JFrame{
 
 	public static final String ImgBacgroundURL="Img\\FirstView.jpeg";
 	public static Image ImgBacgtround=MainJFrame.loadImage(Main.Main.getFileWithAbsolutePath(ImgBacgroundURL));
-	public final static Dimension minimunSize=new Dimension(300,300);
+	public final static Dimension minimunSize=new Dimension(565,500);
 	public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 	public static TypeLanguage language;
 	public static volatile boolean AutorizationFinish=false;
 	public MainJFrame() {
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		super.setMinimumSize(new Dimension(500,400));
+		super.setMinimumSize(minimunSize);
         super.setLayout(new BorderLayout());
         this.frame=this;
         frame.setVisible(true);
