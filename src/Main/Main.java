@@ -2,7 +2,12 @@ package Main;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -30,6 +35,7 @@ public class Main {
 		if(mes==null) {
 			mes=ReasonToEndMessage.UnKnownException;
 		}
+		
 		  // Display the message in a dialog
 		ThreadPoolingManagement.ShutDown();
 
@@ -62,6 +68,21 @@ public class Main {
 
 
 
+	}
+	
+	public static void stopServer(ReasonToEndMessage mes,Exception e) {
+		ServerStop=true;
+		if(mes==null) {
+			mes=ReasonToEndMessage.UnKnownException;
+		}
+		  // Display the message in a dialog
+		ThreadPoolingManagement.ShutDown();
+
+        JOptionPane.showMessageDialog(null, mes.getString(e), mes.getTitle(), JOptionPane.ERROR_MESSAGE);
+		frame.dispose();
+
+		System.exit(0);
+		
 	}
 	
 	private static void init() {
@@ -101,6 +122,26 @@ public class Main {
 		x.initDatabase();
 		
 	}
+	
+	/**Metod make instalation of database and return Working path of this database */
+	public static String MakeInstalationOfDatabase() throws IOException {
+		 // Get the current directory.
+        String currentDirectory = System.getProperty("user.dir");
+        currentDirectory=currentDirectory.replace('\\', '/');
+        // Define the path where you want to store the database file.
+        Path dbFile = Paths.get(currentDirectory, "my_database.db");
+
+	        // Check if the file already exists.
+	        if (!Files.exists(dbFile)) {
+	        	Files.createFile(dbFile);
+
+	        	// Get an InputStream to the database file.
+	            InputStream dbFileStream = Main.class.getClassLoader().getResourceAsStream("my_database.db");
+	            // Copy the database file from the InputStream to the defined path.
+	            Files.copy(dbFileStream, dbFile, StandardCopyOption.REPLACE_EXISTING);
+	        }
+	        return dbFile.toString();
+	}
 	private static String UserDefaultName;
 	public static String getLogginUserDefaultName() {
 		return UserDefaultName;
@@ -134,6 +175,11 @@ public class Main {
 		public String getTitle() {
 			return this.title;
 		}
+		/**Metod return String text with exception message */
+		public String getString(Exception Ex) {
+			return this.mes+"\n"+Ex.toString();
+		}
+		
 		public String toString() {
 			return this.mes;
 		}

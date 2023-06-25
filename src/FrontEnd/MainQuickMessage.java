@@ -596,13 +596,13 @@ public class MainQuickMessage extends JPanel {
 					}
 					notFind.setFont(defaultFont);
 					super.add(notFind,c);
-					return;
 				}
-				if(this.LayoutManagerIsGridBagLayout) {
-					super.setLayout(this.boxLayout);
-					super.setPreferredSize(null);
-					this.LayoutManagerIsGridBagLayout=false;
-				}
+				else {
+					if(this.LayoutManagerIsGridBagLayout) {
+						super.setLayout(this.boxLayout);
+						super.setPreferredSize(null);
+						this.LayoutManagerIsGridBagLayout=false;
+					}
 			
 					value.forEach((QuickMe)->{
 						if(ScrollPaneEnd) {
@@ -613,8 +613,11 @@ public class MainQuickMessage extends JPanel {
 						}
 						QuickMe.setFont(defaultFont);		
 						super.add(QuickMe);
-						return;
 					});
+					
+				}
+				super.revalidate();
+				super.repaint();
 			}
 		
 			/**Metod add new value to top of panel */

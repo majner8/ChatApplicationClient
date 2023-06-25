@@ -55,10 +55,8 @@ public static LoadSQLFile LoadSQLFile;
 		
 		public String ReadText(String URL) throws FileLoadException {
 			StringBuilder text = new StringBuilder();
-			 System.out.println("Attempting to load: " + URL);
 			    InputStream is = getClass().getClassLoader().getSystemResourceAsStream(URL);
 			    if (is == null) {
-			        System.out.println("Failed to load: " + URL);
 			        throw new FileLoadException("Failed to load file: " + URL);
 			        
 			    }	try (BufferedReader rd = new BufferedReader(new InputStreamReader(is))) {

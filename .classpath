@@ -11,11 +11,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="Package/commons-text-1.10.0.jar">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="Resources"/>
+	<classpathentry kind="lib" path="Package/commons-text-1.10.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

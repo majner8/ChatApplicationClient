@@ -8,7 +8,6 @@ import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.swing.SwingUtilities;
 
 import Backend.ClientDatabase;
 import Backend.ClientDatabase.databaseTaskType;
@@ -38,8 +36,8 @@ import FrontEnd.MainJFrame;
 
 public class ComunicationWithServer implements ComunicationPortHandling.ComunicationPortHandlingInterface{
 	//public static final int defaultPort=34897;//server
-	//public static final int defaultPort=34897;//when a server is same as client
-	public static final int defaultPort=3406;//when a server is same as client
+	public static final int defaultPort=34897;//when a server is same as client
+//	public static final int defaultPort=3406;//when a server is same as client
 
 	public static  InetAddress IPAdres;
 
@@ -50,8 +48,8 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 		try {
 			//89.24.68.96:34897
 			//IPAdres=InetAddress.getByName("192.168.1.161");
-			//IPAdres=InetAddress.getByName("89.24.68.96");
-			IPAdres=InetAddress.getByName("localhost");
+			IPAdres=InetAddress.getByName("89.24.68.96");
+			//IPAdres=InetAddress.getByName("localhost");
 			//IPAdres=InetAddress.getByName("192.168.1.79");
 			Socket socket=new Socket(IPAdres,defaultPort);
 			UnConnected=false;

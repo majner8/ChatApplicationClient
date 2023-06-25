@@ -1,5 +1,6 @@
 package Backend;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -19,24 +20,31 @@ public class ClientDatabase extends MainSQL{
 	public static Connection con;
 	static {
 	try {
+		
+		String curentDirectory=Main.Main.MakeInstalationOfDatabase();
 		MainSQL.LoadSQLFile=new LoadSQLFile();
+		
 		Class.forName("org.sqlite.JDBC");
-		Connection con=DriverManager.getConnection("jdbc:sqlite:my_database.db");
-	
+		con=DriverManager.getConnection("jdbc:sqlite:"+curentDirectory);
+
 		con.createStatement().executeQuery("PRAGMA integrity_check;");
 
 	} catch (ClassNotFoundException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-		Main.Main.stopServer(ReasonToEndMessage.IntegrityProblem);
+		Main.Main.stopServer(ReasonToEndMessage.IntegrityProblem, e);
 		//Main.Main.stopServer(ComponentLanguageName.IntegrityFileProblem.getName(MainJFrame.language).toString());
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
-		Main.Main.stopServer(ReasonToEndMessage.IntegrityProblem);
+		Main.Main.stopServer(ReasonToEndMessage.IntegrityProblem, e);
 
 		//Main.Main.stopServer(ComponentLanguageName.IntegrityFileProblem.getName(MainJFrame.language).toString());
 
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		Main.Main.stopServer(ReasonToEndMessage.IntegrityProblem, e);
 	}
 	
 	}

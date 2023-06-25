@@ -267,7 +267,6 @@ public final class ComunicationPortHandling {
 				 String mes = sb.toString().substring(0,sb.length()-ComunicationPortHandling.EndMessageCharacter.length()).trim().replaceAll(ComunicationPortHandling.getVerifyConectionPatern(true), "");
 				 sb.setLength(0);
 				 if(mes.length()==0) {
-					System.out.println("Notification");
 					continue;
 				}
 				final String curentMessage=mes;
@@ -330,7 +329,6 @@ public final class ComunicationPortHandling {
 					
 					return;
 				}
-				System.out.println("I am sending verification");
 				writeMessage(ComunicationPortHandling.getVerifyConectionPatern(false),true);
 				this.SendVerifyMess();
 			}, 30, TimeUnit.SECONDS);
