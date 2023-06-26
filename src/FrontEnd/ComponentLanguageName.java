@@ -6,28 +6,34 @@ import javax.swing.JComponent;
 
 
 public enum ComponentLanguageName {
+	UnknownException("", ""),
+	IntegrityFileProblem("", ""),
+	SearchingChatButton("", ""),
+	FindNewUserToChat("Najít nové uživatele", "Find new user"),
+	SearchingBackToHistoryButton("Zpět k historii", "Back to history"),
+	SearchingNewUserButton("Vyhledat", "Start searching"),
+	ResultWasNotFound("<html>Nenašel jsem žádné výsledky</html>", "<html>No result was found</html>"),
+	UserDoesNotHaveHistory("<html>Zacni chatovat s uživateli!</html>", "<html>Start chatting with the user!</html>"),
+	AuthorizeProcessLoginButton("Login", "Login"),
+	AuthorizeProcessBackButton("Zpět", "Back"),
+	InvalidEmail("Nesprávný email", "Invalid email"),
+	IncorrectEmailOrPassword("Heslo, nebo email se neshoduji", "Password or email is not correct"),
+	PasswordsDoNotMatch("Zadané hesla se neshodují", "Passwords are not the same"),
+	EmailIsUsed("Zadaný email je jiz registrovan, použij jiný", "Email address is already registered, use another one"),
+	IncorrectPassword("", ""),
+	RegisterButton("Registrace", "Register"),
+	LoginButton("Prihlaseni", "Login"),
+	IncorrectDateFormat("Zadejte datum narození ve zprávném formátu DD-MM-YYYY(10-08-1902)", "Enter the date of birth in the correct format DD-MM-YYYY(10-08-1902)"),
+	SynchronizationProgress("<html>Provádím Synchronizaci %s <div style='text-align: center;'><br> Prosím vyčkejte</div></html>", "<html>Synchronizing %s <div style='text-align: center;'><br> Please wait</div></html>"),
+	UserTitleJFrame("Přihlášený uživatel: ", "Logged in user: "),
+	FindNewUserTextField("Pro vyhledani, napis jmeno", "For searching, type the name"),
+	PasswordText("Zadej heslo", "Enter Password"),
+	EmailText("Emailová adresa", "Email address"),
+	Born("Datum narozeni DD-MM-YYYY", "Birth date DD-MM-YYYY"),
+	Name("Krestni jmeno", "First name"),
+	LastName("Prijmeni", "Last name"),
+	FinishRegistrationButton("Dokonči registraci", "Complete registration");
 
-	UnKnownException("",""),IntegrityFileProblem("",""),SearingChatButton("",""),FindnewUserTochat("Najít nové uživatele","Find new user"),
-	SearchingBackToHistoryButton("Zpět k historii","Back to history"),
-	SearchingnewUserButton("Vyhledat","Start searching"),
-	ResultWasNotFind("<html>Nenašel jsem žádné výsledky</html>","<html>I was not find result</html>"),
-	UserDoNotHaveHistory("<html>Zacni chatovat s uživateli!</html>","<html>Start chatting with user!</html>"),
-	AutorizeProcesLogginButton("Login","Login"),
-	AutorizeProcesBackButton("Zpět","Back"),UnValidEmail("Nesprávný email","Invalid email"),WrongEmailPassword("Heslo, nebo email se neshoduji","Password, or email is not correct"),
-	PasswordIsNotEqual("Zadané hesla se neshodují","Passwords are not same"),EmailIsUsed("Zadaný email je jiz registrovan, použij jiný","Email adres has alredy registred, use another one"),WrongEmail("",""),WrongPassword("",""),
-	RegisterButton("Registrace","Register"),LogginButton("Prihlaseni","Login"),
-	UnCorectDateFormat("Zadejte datum narození ve zprávném formátu DD-MM-YYYY(10-08-1902)","Put born date in correct form DD-MM-YYYY(10-08-1902)"),
-	SynchronizationProgress("<html>Provádím Synchronizaci %s <div style='text-align: center;'><br> Prosím vyčkejte</div></html>",
-			"<html>I am making synchronization %s <div style='text-align: center;'><br> Please wait</div></html>"),
-	UserTitleJFrame("Přihlášený uživatel: ","Login user: "),
-	FindNewUserTextField("Pro vyhledani, napis jmeno","Write name to search"),
-	PasswordText("Zadej heslo","Add Password"),
-	EmailText("Emailová adresa","Email adress"),
-	Born("Datum narozeni DD-MM-YYYY","Born date DD-MM-YYYY"),
-	Name("Krestni jmeno","First name"),LastName("Prijmeni","Last name"),
-	FinishRegistrationButton("Dokonči registraci","Complete registration");
-	
-	
 	private String czech;
 	private String English;
 	 ComponentLanguageName(String czecz,String english) {
