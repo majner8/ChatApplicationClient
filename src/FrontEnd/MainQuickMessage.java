@@ -156,8 +156,8 @@ public class MainQuickMessage extends JPanel {
 			private final static String cardNameSearching="S";
 			public ResultPanel() {
 				super.setLayout(ResultLayout);
-				QuickHistoryPanel=this.quickHistory=new JScrollPanel(ComponentLanguageName.UserDoNotHaveHistory);
-				this.SearchingUserHistory=new JScrollPanel(ComponentLanguageName.ResultWasNotFind);
+				QuickHistoryPanel=this.quickHistory=new JScrollPanel(ComponentLanguageName.UserDoesNotHaveHistory);
+				this.SearchingUserHistory=new JScrollPanel(ComponentLanguageName.ResultWasNotFound);
 				super.add(this.quickHistory,cardNameQuickMessage);
 				super.add(this.SearchingUserHistory,cardNameSearching);
 				this.quickHistory.addValue(new ArrayList<QuickMessageText>());
@@ -332,7 +332,7 @@ public class MainQuickMessage extends JPanel {
 
 		private class ChatButton extends ButtonForScrolPane implements ActionListener{
 			public ChatButton() {
-				super(ComponentLanguageName.FindnewUserTochat.getName(MainJFrame.language).toString());
+				super(ComponentLanguageName.FindNewUserToChat.getName(MainJFrame.language).toString());
 				super.addActionListener(this);
 			}
 
@@ -367,7 +367,7 @@ public class MainQuickMessage extends JPanel {
 			super.setVisible(true);
 			super.setLayout(new BorderLayout());
 			
-			this.scrolPanel=new JScrollPanel(ComponentLanguageName.ResultWasNotFind);
+			this.scrolPanel=new JScrollPanel(ComponentLanguageName.ResultWasNotFound);
 			super.add(new SearingPanelWithButton(),BorderLayout.PAGE_START);
 			super.add(this.scrolPanel,BorderLayout.CENTER);
 			super.add(new BackButton(),BorderLayout.PAGE_END);
@@ -396,7 +396,7 @@ public class MainQuickMessage extends JPanel {
 			private class FindNewUserButton extends ButtonForScrolPane implements ActionListener{
 
 				public FindNewUserButton() {
-					super(ComponentLanguageName.SearchingnewUserButton.getName(MainJFrame.language).toString());
+					super(ComponentLanguageName.SearchingNewUserButton.getName(MainJFrame.language).toString());
 					// TODO Auto-generated constructor stub
 					super.addActionListener(this);
 				}

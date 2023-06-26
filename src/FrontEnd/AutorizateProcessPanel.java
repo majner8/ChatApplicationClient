@@ -162,7 +162,7 @@ public class AutorizateProcessPanel extends JPanel{
 			@Override
 			protected JButton InitLogginRegisterButton() {
 				// TODO Auto-generated method stub
-				JButton But=new JButton(ComponentLanguageName.LogginButton.getName(MainJFrame.language).toString());
+				JButton But=new JButton(ComponentLanguageName.LoginButton.getName(MainJFrame.language).toString());
 				But.addActionListener((ActionEvent)->{
 					super.makeLoggin();
 				});
@@ -234,7 +234,7 @@ abstract  class LogginRegisterPanel extends JPanel implements MouseListener{
 			}
 			gridCon.gridy++;
 			gridCon.gridwidth = 1;
-			this.BackButton=new JButton(ComponentLanguageName.AutorizeProcesBackButton.getName(MainJFrame.language).toString());
+			this.BackButton=new JButton(ComponentLanguageName.AuthorizeProcessBackButton.getName(MainJFrame.language).toString());
 			this.BackButton.setVisible(true);
 			super.add(this.BackButton,this.gridCon);
 			this.BackButton.addActionListener((ActionEvet)->{
@@ -271,7 +271,7 @@ abstract  class LogginRegisterPanel extends JPanel implements MouseListener{
 						//email is not valid
 						//noticife user
 						this.HighlightTextField(false);
-						this.wrongPanel.ShowWrongText(ComponentLanguageName.UnValidEmail);
+						this.wrongPanel.ShowWrongText(ComponentLanguageName.InvalidEmail);
 						return;
 					}
 					if(!this.PasswordText.isSame(this.PasswordTextAgain)) {
@@ -279,7 +279,7 @@ abstract  class LogginRegisterPanel extends JPanel implements MouseListener{
 						if(this.PasswordTextAgain!=null) {
 							this.PasswordTextAgain.setForeground(Color.RED);
 						}
-						this.wrongPanel.ShowWrongText(ComponentLanguageName.PasswordIsNotEqual);
+						this.wrongPanel.ShowWrongText(ComponentLanguageName.PasswordsDoNotMatch);
 					}
 					
 				
@@ -328,7 +328,7 @@ abstract  class LogginRegisterPanel extends JPanel implements MouseListener{
 					//email is not valid
 					//noticife user
 					this.HighlightTextField(false);
-					this.wrongPanel.ShowWrongText(ComponentLanguageName.UnValidEmail);
+					this.wrongPanel.ShowWrongText(ComponentLanguageName.InvalidEmail);
 					return;
 				}
 				
@@ -356,7 +356,7 @@ abstract  class LogginRegisterPanel extends JPanel implements MouseListener{
 						String UUID;
 						if((UUID=result.getValue("UUIDUser", false, 0)).equals("null")) {
 							//uncorect password/orEmail
-							this.wrongPanel.ShowWrongText(ComponentLanguageName.WrongEmailPassword);
+							this.wrongPanel.ShowWrongText(ComponentLanguageName.IncorrectEmailOrPassword);
 							this.HighlightTextField(true);
 							this.LogginRegistrationProcess=false;
 							return;
@@ -415,7 +415,7 @@ abstract  class LogginRegisterPanel extends JPanel implements MouseListener{
 				}							
 				BoxLayout x=new BoxLayout(this, BoxLayout.PAGE_AXIS);
 				super.setLayout(x);
-				this.WrongText=new WrongTextJLabel(ComponentLanguageName.WrongEmail);
+				this.WrongText=new WrongTextJLabel(ComponentLanguageName.InvalidEmail);
 				super.add(WrongText);
 				this.previousColor=this.WrongText.getForeground();
 				
@@ -556,7 +556,7 @@ final class FinishRegistrationPanel extends JPanel implements MouseListener{
 			catch(DateTimeParseException ex) {
 				//unSuport dataTimeFormater
 				Born.setForeground(Color.RED);
-				wrongPanel.ShowWrongText(ComponentLanguageName.UnCorectDateFormat.UnCorectDateFormat);
+				wrongPanel.ShowWrongText(ComponentLanguageName.IncorrectDateFormat);
 				return;
 			}
 			//DateTimeFormater is valid,
