@@ -734,13 +734,14 @@ public class ChatPanel extends JPanel{
 									messageArive=false;
 								}
 								 mes=Message.createNewMessage(ResultSet.getString("senderUUID"), ResultSet.getString("MessageUUID"),ResultSet.getString("numberOFmessage"),ResultSet.getTimestamp("TimeOfMessage").toLocalDateTime(), ResultSet.getString("message"),true);
-								
 							}
 							while(ResultSet.next());
+							
+						
+							//mes.wasCreatedFromDatabase=false;
+							
 							//make last quickMEssage from last message
-							this.newMessageArrive(mes, messageArive, false);
-{
-							}
+							this.newMessageArrive(mes, messageArive, true);
 						} catch (SQLException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();

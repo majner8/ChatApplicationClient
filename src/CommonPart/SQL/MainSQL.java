@@ -413,9 +413,12 @@ return "U" + sb.toString();
 		
 		TableName("XXX"),Value("ZZZ"),
 		BeginQuery("BBB"),
-		EndQuery("CCC"),MultipleValue("%"),
-		EndInsertValueQuerz("III"),
-		MultipleValueSeparator("-F"),MultipleYYYvalue("YYY");
+		EndQuery("CCC"),
+		//special character represent begin of Union ALL part
+		MultipleValue("%"),
+		// character represent part of Union All code, which is used as connector between each Union Query
+		// --  for example Union ALL
+		MultipleValueSeparator("-F");
 		private String type;
 		DatabaseCharacter(String type){
 			this.type=type;
@@ -426,6 +429,7 @@ return "U" + sb.toString();
 	}
 	
 	
+	//enum represent type of database for each query
 	public static enum TypeOfDatabase{
 		user("user"),UserQuickChat("UserQuickChat"),SQLite("SQLite"),Chat("Chat");
 		private String nameOfDatabase;

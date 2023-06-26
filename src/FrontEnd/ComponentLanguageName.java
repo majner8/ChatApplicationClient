@@ -13,7 +13,7 @@ public enum ComponentLanguageName {
 	SearchingBackToHistoryButton("Zpět k historii", "Back to history"),
 	SearchingNewUserButton("Vyhledat", "Start searching"),
 	ResultWasNotFound("<html>Nenašel jsem žádné výsledky</html>", "<html>No result was found</html>"),
-	UserDoesNotHaveHistory("<html>Zacni chatovat s uživateli!</html>", "<html>Start chatting with the user!</html>"),
+	UserDoesNotHaveHistory("<html>Zacni chatovat s novými uživateli!</html>", "<html>Start chatting with new users!</html>"),
 	AuthorizeProcessLoginButton("Login", "Login"),
 	AuthorizeProcessBackButton("Zpět", "Back"),
 	InvalidEmail("Nesprávný email", "Invalid email"),
