@@ -100,7 +100,7 @@ public class AutorizateProcessPanel extends JPanel{
 			c.gridwidth=1;
 			c.gridx=0;
 			c.gridy=0;
-			this.Loggin = new JButton("Loggin");
+			this.Loggin = new JButton("Login");
 			this.Loggin.setOpaque(false);
 			super.add(this.Loggin,c);
 

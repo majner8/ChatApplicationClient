@@ -14,8 +14,9 @@ public enum ComponentLanguageName {
 	UserDoNotHaveHistory("<html>Zacni chatovat s uživateli!</html>","<html>Start chatting with user!</html>"),
 	AutorizeProcesLogginButton("Login","Login"),
 	AutorizeProcesBackButton("Zpět","Back"),UnValidEmail("Nesprávný email","Invalid email"),WrongEmailPassword("Heslo, nebo email se neshoduji","Password, or email is not correct"),
-	PasswordIsNotEqual("Zadané hesla se neshodují","Passwords are not same"),EmailIsUsed("Zadaný email je jiz registrovan, použij jiný","Email adres has alredy registred, use another one"),WrongEmail("",""),WrongPassword("",""),RegisterButton("Registrace","Register"),LogginButton("Prihlaseni","Loggin"),
-	UnCorectDateFormat("Zadejte datum narození ve zprávném formátu","Put born date in correct form"),
+	PasswordIsNotEqual("Zadané hesla se neshodují","Passwords are not same"),EmailIsUsed("Zadaný email je jiz registrovan, použij jiný","Email adres has alredy registred, use another one"),WrongEmail("",""),WrongPassword("",""),
+	RegisterButton("Registrace","Register"),LogginButton("Prihlaseni","Login"),
+	UnCorectDateFormat("Zadejte datum narození ve zprávném formátu DD-MM-YYYY(10-08-1902)","Put born date in correct form DD-MM-YYYY(10-08-1902)"),
 	SynchronizationProgress("<html>Provádím Synchronizaci %s <div style='text-align: center;'><br> Prosím vyčkejte</div></html>",
 			"<html>I am making synchronization %s <div style='text-align: center;'><br> Please wait</div></html>"),
 	UserTitleJFrame("Přihlášený uživatel: ","Login user: "),
@@ -24,7 +25,7 @@ public enum ComponentLanguageName {
 	EmailText("Emailová adresa","Email adress"),
 	Born("Datum narozeni DD-MM-YYYY","Born date DD-MM-YYYY"),
 	Name("Krestni jmeno","First name"),LastName("Prijmeni","Last name"),
-	FinishRegistrationButton("Dokonči registrace","Complete registration");
+	FinishRegistrationButton("Dokonči registraci","Complete registration");
 	
 	
 	private String czech;

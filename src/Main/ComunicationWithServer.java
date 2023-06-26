@@ -63,6 +63,15 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 
 	}
 	
+	@Override
+	public void ConnectionIsEnd(Exception e) {
+		// TODO Auto-generated method stub
+		
+		this.UnConnected=true;
+		Main.stopServer(null,e);
+
+	}
+	
 	public ComunicationPortHandling comun;
 	public ComunicationWithServer(BufferedReader read, BufferedWriter write, Socket socket) {
 		this.comun=new ComunicationPortHandling(true,this,read, write, socket);
@@ -71,12 +80,6 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 	}
 	
 
-	@Override
-	public void ConnectionIsEnd() {
-		// TODO Auto-generated method stub
-		this.UnConnected=true;
-		Main.stopServer(null);
-	}
 
 	
 	@Override
@@ -141,7 +144,6 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 			}
 			});
 			
-			
 			value.add(UserTableName[0]);//UserTableNameFrom Message
 		
 			SimpleResultSet res=new SimpleResultSet(column,null);
@@ -157,7 +159,7 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 		ThreadPoolingManagement.thread.ProcesSQLTask(x, (Stm,Rs,Ex)->{
 			if(Ex!=null) {
 				Ex.printStackTrace();
-				Main.stopServer(null);
+				Main.stopServer(null,Ex);
 				return;
 			}
 			MainSQL.ClosedStatement(Stm, Rs);
@@ -165,7 +167,7 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 		});
 	
 	} 
-	/**@param UserTableName-if you put null, name will be loaded from database */
+	/**@param chatName- name of chat, if you put null will be load from database */
 	private void ReceivedMessage(SocketComunication message) {
 		
 		
@@ -177,7 +179,7 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 				(Stm,Rs,Ex)->{
 					if(Ex!=null) {
 						Ex.printStackTrace();
-						Main.stopServer(null);
+						Main.stopServer(null,Ex);
 						return;
 					}
 					MainSQL.ClosedStatement(Stm, Rs);
@@ -185,6 +187,7 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 					Chat x=ChatPanel.panel.OpenChat(false, message.getUUIDRecipient(), false,null );
 					//if return null chat will be loaded from database with saved message
 					if(x!=null) {
+						
 						x.messages.newMessageArrive(mes, true, false);
 					}
 				
@@ -254,7 +257,7 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 			ThreadPoolingManagement.thread.ProcesSQLTask(createUserQuickMessageTask, (Statement,ResultSet,SQLException)->{
 				if(SQLException!=null) {
 					SQLException.printStackTrace();
-					Main.stopServer(null);
+					Main.stopServer(null,SQLException);
 					return;
 					
 				}
@@ -310,7 +313,7 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 				ThreadPoolingManagement.thread.ProcesSQLTask(tasks, (stm,res,SQL)->{
 					if(SQL!=null) {
 						SQL.printStackTrace();
-						Main.stopServer(null);
+						Main.stopServer(null,SQL);
 						return;
 					}
 					//table was succesfully created,
@@ -330,7 +333,7 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 			ThreadPoolingManagement.thread.ProcesSQLTask(qurt, (Statement,ResultSet,SQLTask)->{
 				if(SQLTask!=null) {
 					SQLTask.printStackTrace();
-					Main.stopServer(null);
+					Main.stopServer(null,SQLTask);
 					return;
 				}
 				
@@ -353,7 +356,7 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-					Main.stopServer(null);
+					Main.stopServer(null,e1);
 					return;
 				}
 				MainSQL.ClosedStatement(Statement, ResultSet);
@@ -363,7 +366,7 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 				ThreadPoolingManagement.thread.ProcesSQLTask(xx, (STM,RS,SQLEx)->{
 					if(SQLEx!=null) {
 						SQLEx.printStackTrace();
-						Main.stopServer(null);
+						Main.stopServer(null,SQLEx);
 						return;
 					}
 					String lastKnownMessageTime = null;
@@ -381,7 +384,7 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 						e.printStackTrace();
-						Main.stopServer(null);
+						Main.stopServer(null,e);
 						return;
 					}
 					//send last knownMessage time to server, as synchronization
@@ -408,7 +411,7 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 					ThreadPoolingManagement.thread.ProcesSQLTask(qur, (Statement,ResultSet,SQLException)->{
 						if(SQLException!=null) {
 							SQLException.printStackTrace();
-							Main.stopServer(null);
+							Main.stopServer(null,SQLException);
 							return;
 						}
 						MainSQL.ClosedStatement(Statement, ResultSet);
@@ -439,7 +442,7 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 			ThreadPoolingManagement.thread.ProcesSQLTask(qur, (Statement,ResultSet,SQLException)->{
 					if(SQLException!=null) {
 						SQLException.printStackTrace();
-						Main.stopServer(null);
+						Main.stopServer(null,SQLException);
 						return;
 					}
 					MainSQL.ClosedStatement(Statement, ResultSet);
@@ -492,6 +495,8 @@ public class ComunicationWithServer implements ComunicationPortHandling.Comunica
 	public static interface MakeTaskAfterResponce{
 		public void makeTask(SocketComunication arriveResponce);
 	}
+
+
 
 	
 }

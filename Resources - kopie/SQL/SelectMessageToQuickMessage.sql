@@ -12,5 +12,5 @@ FROM
     (SELECT * FROM chatXXX WHERE TimeOfMessage = 
         (SELECT MAX(TimeOfMessage) FROM chatXXX) limit 1) as m
 	-F	UNION ALL -F %
-)
-order by TimeOfMessage DESC;
+);
+order by TimeOfMessage ASC;

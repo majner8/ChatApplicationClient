@@ -30,7 +30,7 @@ public class Main {
 		return ServerStop;
 	}
 	
-	public static void stopServer(ReasonToEndMessage mes) {
+	private static void stopServer(ReasonToEndMessage mes) {
 		ServerStop=true;
 		if(mes==null) {
 			mes=ReasonToEndMessage.UnKnownException;
@@ -71,10 +71,15 @@ public class Main {
 	}
 	
 	public static void stopServer(ReasonToEndMessage mes,Exception e) {
+		if(e==null) {
+			stopServer(mes);
+			return;
+		}
 		ServerStop=true;
 		if(mes==null) {
 			mes=ReasonToEndMessage.UnKnownException;
 		}
+		
 		  // Display the message in a dialog
 		ThreadPoolingManagement.ShutDown();
 
@@ -120,6 +125,7 @@ public class Main {
 		ThreadPoolingManagementClient x=new ThreadPoolingManagementClient();
 		init();
 		x.initDatabase();
+		
 		
 	}
 	

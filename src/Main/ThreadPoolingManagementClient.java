@@ -1,5 +1,6 @@
 package Main;
 
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,7 +31,7 @@ public class ThreadPoolingManagementClient extends ThreadPoolingManagement {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				Main.stopServer(null);
+				Main.stopServer(null,e);
 			}
 		
 	}

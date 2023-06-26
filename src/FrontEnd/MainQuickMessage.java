@@ -175,7 +175,7 @@ public class MainQuickMessage extends JPanel {
 				ThreadPoolingManagement.thread.ProcesSQLTask(userTableTask, (Stm,Res,Ex)->{
 					if(Ex!=null) {
 						Ex.printStackTrace();
-						Main.stopServer(null);
+						Main.stopServer(null,Ex);
 						return;
 					}
 				 HashMap<String,String> mapWithTableName=new HashMap<String,String>();
@@ -195,10 +195,12 @@ public class MainQuickMessage extends JPanel {
 						MainSQL.ClosedStatement(Stm, Res);
 						//process main union task which return message
 						Query [] uninQ=MainSQL.getQuery(ClientDatabase.databaseTaskType.SelectQuickMessageFromDatabase, unionTask, "");
+						
+						
 						ThreadPoolingManagement.thread.ProcesSQLTask(uninQ, (St,Rs,Exe)->{
 							if(Exe!=null) {
 								Exe.printStackTrace();
-								Main.stopServer(null);
+								Main.stopServer(null,Exe);
 								return;
 							}
 							try {
@@ -218,14 +220,14 @@ public class MainQuickMessage extends JPanel {
 							} catch (SQLException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
-								Main.stopServer(null);
+								Main.stopServer(null,e);
 							}
 							
 						});
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-						Main.stopServer(null);
+						Main.stopServer(null,e);
 					}
 					
 				});
@@ -283,7 +285,7 @@ public class MainQuickMessage extends JPanel {
 						ThreadPoolingManagement.thread.ProcesSQLTask(x, (Statement,Result,SQLEx)->{
 							if(SQLEx!=null) {
 								SQLEx.printStackTrace();
-								Main.stopServer(null);
+								Main.stopServer(null,SQLEx);
 								return;
 							}
 							ArrayList<QuickMessageText> messageToAdd=new ArrayList<QuickMessageText>();
@@ -300,7 +302,7 @@ public class MainQuickMessage extends JPanel {
 							} catch (SQLException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
-								Main.stopServer(null);
+								Main.stopServer(null,e);
 								return;
 							}
 							

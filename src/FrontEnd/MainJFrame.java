@@ -149,7 +149,7 @@ public class MainJFrame extends JFrame{
 		        
 		        // Display the message in a dialog
 		        //JOptionPane.showMessageDialog(null, message, "Connection Error", JOptionPane.ERROR_MESSAGE);
-		        Main.Main.stopServer(Main.Main.ReasonToEndMessage.CoouldNotConnectWithServer);
+		        Main.Main.stopServer(Main.Main.ReasonToEndMessage.CoouldNotConnectWithServer,null);
 		        return;
 			}
 			//connection was succesfull ask USer To select language

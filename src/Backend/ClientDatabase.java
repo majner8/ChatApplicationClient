@@ -71,7 +71,8 @@ public static final String path="SQL\\";
 		,FindChatInHistory("FindChatInHostory.sql"),
 		SelectFromAdministrationTable("SelectFromAdministrationTable.sql"),
 		SelectQuickMessageFromDatabase("SelectMessageToQuickMessage.sql"),
-		SavedChatMessage("InsertChatMessage.sql");		
+		SavedChatMessage("InsertChatMessage.sql"),
+		SelectChatName("SelectChatName.sql");		
 		
 		private String URLQuery;
 		databaseTaskType(String UURL){

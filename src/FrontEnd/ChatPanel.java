@@ -73,7 +73,7 @@ public class ChatPanel extends JPanel{
 		super.setPreferredSize(sizeOfChatPanel);
 		super.setVisible(true);
 		super.setOpaque(false);
-		super.setBackground(Color.blue);
+		//super.setBackground(Color.blue);
 		super.setLayout(new FlowLayout());
 		super.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 	
@@ -88,7 +88,8 @@ public class ChatPanel extends JPanel{
 	 * @param chatUUID-UUID  of chat
 	 * @param OpenInPrior-if Chat Open user, chat is put as first in order in the
 	 *                       other hand, chat is put into queue
-	 *@param newChat true-if User just open new UserChat without previous chat interaction */
+	 *@param newChat true-if User just open new UserChat without previous chat interaction 
+	 *@param chatName- if you put null chat name will be load from databaze*/
 	public synchronized Chat OpenChat(boolean newChat,String chatUUID,boolean OpenInPrior,String chatName) {
 		// verify if a component was not added before
 		{
@@ -113,10 +114,13 @@ public class ChatPanel extends JPanel{
 					Component x=super.getComponent(indexToRemove); 
 					super.remove(indexToRemove);
 			            super.add(x, 0);
+			            super.repaint();
+			            super.revalidate();
 			            return (Chat) x;
 				}
 
 			}
+		
 			//if newChat is true, default other UserName is same as table name
 			if(newChat) {
 				HashMap<String,String>map=new HashMap<String,String>();
@@ -131,40 +135,82 @@ public class ChatPanel extends JPanel{
 				super.repaint();
 				return x;
 			}
-			else {
-				//have to load from database
-				Query q[]=MainSQL.getQuery(ClientDatabase.databaseTaskType.SelectFromAdministrationTable, new SimpleResultSet(new ArrayList<String>(),null), chatUUID);
-				ThreadPoolingManagement.thread.ProcesSQLTask(q,(Stm,Rs,Ex)->{
+
+			
+			if(chatName==null) {
+				//load ChatNameOfChat
+				SimpleResultSet xx=new SimpleResultSet(new ArrayList<String>(),null);
+				xx.addNewColumn("chatUUID", false);
+				ArrayList<String>xxx=new ArrayList<String>();
+				xxx.add(chatUUID);
+				xx.addValue(xxx, false);
+				Query[] dd=MainSQL.getQuery(ClientDatabase.databaseTaskType.SelectChatName, xx, ComunicationWithServer.Comunication.comun.getUserUUID());
+				
+				ThreadPoolingManagement.thread.ProcesSQLTask(dd, (Stm,Rs,Ex)->{
 					if(Ex!=null) {
 						Ex.printStackTrace();
+						Main.stopServer(null, Ex);
 						return;
 					}
-					//metod loadaed all data
+					String chatN=null;
 					try {
-						HashMap<String,String>map=new HashMap<String,String>();
-						while(Rs.next()) {
-							String userUUID=Rs.getString("userUUID");
-							String userChatName=Rs.getString("chatName");
-							map.put(userUUID, userChatName);
-						
+						Rs.next();
+						chatN=Rs.getString("UserTableName");
+						if(chatN==null) {
+							Exception ee=new NullPointerException("value for UserTableName cannot be null");
+							ee.printStackTrace();
+							Main.stopServer(null, ee);
+							return;
 						}
-						MainSQL.ClosedStatement(Stm, Rs);
-						Chat x=new Chat(chatUUID,newChat,this,chatName,map);
-						super.add(x, OpenInPrior ? 0 : super.getComponentCount());
-						super.repaint();
-						super.revalidate();
-					
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-						MainSQL.ClosedStatement(Stm, Rs);
+						Main.stopServer(null, Ex);
 						return;
 					}
+					this.LoadChatFromDatabase(chatUUID, newChat, OpenInPrior, chatN);
+
+					return;
+					
 				});
 			}
+			else {
+			this.LoadChatFromDatabase(chatUUID, newChat, OpenInPrior, chatName);
+		}}
+		return null;
+	}
+	
+	private void LoadChatFromDatabase(String chatUUID,boolean newChat,boolean openInPrior,String chatName) {
+		//have to load from database
+		Query q[]=MainSQL.getQuery(ClientDatabase.databaseTaskType.SelectFromAdministrationTable, new SimpleResultSet(new ArrayList<String>(),null), chatUUID);
+		ThreadPoolingManagement.thread.ProcesSQLTask(q,(Stm,Rs,Ex)->{
+			if(Ex!=null) {
+				Ex.printStackTrace();
+				return;
+			}
+			//metod loadaed all data
+			try {
+				HashMap<String,String>map=new HashMap<String,String>();
+				while(Rs.next()) {
+					String userUUID=Rs.getString("userUUID");
+					String userChatName=Rs.getString("chatName");
+					map.put(userUUID, userChatName);
+				
+				}
+				MainSQL.ClosedStatement(Stm, Rs);
+				Chat x=new Chat(chatUUID,newChat,this,chatName,map);
+				super.add(x, openInPrior ? 0 : super.getComponentCount());
+				super.repaint();
+				super.revalidate();
 			
-	return null;
-		}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				MainSQL.ClosedStatement(Stm, Rs);
+				return;
+			}
+		});
+
 	}
 	
 	/**Metod just manage that new user value will be loaded */
@@ -179,6 +225,7 @@ public class ChatPanel extends JPanel{
 			}
 		}
 	}
+	
 	
 	public void removeChat(Chat chatToRemove) {
 		super.remove(chatToRemove);
@@ -216,10 +263,10 @@ public class ChatPanel extends JPanel{
 		}
 		
 		private void UpdateChatName() {
-			ThreadPoolingManagement.thread.ProcesSQLTask(MainSQL.getQuery(ClientDatabase.databaseTaskType.SelectFromAdministrationTable, new SimpleResultSet(new ArrayList<String>(),null), chatName), (Stm,Res,Ex)->{
+			ThreadPoolingManagement.thread.ProcesSQLTask(MainSQL.getQuery(ClientDatabase.databaseTaskType.SelectFromAdministrationTable, new SimpleResultSet(new ArrayList<String>(),null), chatUUID), (Stm,Res,Ex)->{
 				if(Ex!=null) {
 					Ex.printStackTrace();
-					Main.stopServer(null);
+					Main.stopServer(null,Ex);
 					return;
 				}
 				try {
@@ -233,7 +280,7 @@ public class ChatPanel extends JPanel{
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-					Main.stopServer(null);
+					Main.stopServer(null,e);
 				}
 			});
 		}
@@ -443,7 +490,7 @@ public class ChatPanel extends JPanel{
 							ThreadPoolingManagement.thread.ProcesSQLTask(q, (Stm,RS,EX)->{
 								if(EX!=null) {
 									EX.printStackTrace();
-									Main.stopServer(null);
+									Main.stopServer(null,EX);
 									return;
 								}
 								MainSQL.ClosedStatement(Stm, RS);
@@ -481,7 +528,7 @@ public class ChatPanel extends JPanel{
 								ThreadPoolingManagement.thread.ProcesSQLTask(MainSQL.getQuery(ClientDatabase.databaseTaskType.InsertIntoAdministrationTableWhenUserSendNewMessage, Responce.getMessage(1).getSimpleResultSet(), Responce.getUUIDRecipient()), (Stat,Ress,Ex)->{
 									if(Ex!=null) {
 										Ex.printStackTrace();
-										Main.stopServer(null);
+										Main.stopServer(null,Ex);
 										return;
 									}
 									MainSQL.ClosedStatement(Stat, Ress);
@@ -669,25 +716,35 @@ public class ChatPanel extends JPanel{
 					ThreadPoolingManagement.thread.ProcesSQLTask(x, (Statement,ResultSet,SQLEx)->{
 						if(SQLEx!=null) {
 							SQLEx.printStackTrace();
-							Main.stopServer(null);
+							Main.stopServer(null,SQLEx);
 						}
 						try {
+							Message mes=null;
+							boolean messageArive=true;
+							do {
+								if(mes!=null) {
+									this.newMessageArrive(mes, messageArive, true);
 
-							while(ResultSet.next()) {
-								//    c.numberOFmessage
+								}
+//							    c.numberOFmessage
 							    //c.MessageUUID
 								String messageUUID=ResultSet.getString("numberOFmessage");
-								boolean messageArive=true;
+								 messageArive=true;
 								if(messageUUID==null) {
 									messageArive=false;
 								}
-								Message mes=Message.createNewMessage(ResultSet.getString("senderUUID"), ResultSet.getString("MessageUUID"),ResultSet.getString("numberOFmessage"),ResultSet.getTimestamp("TimeOfMessage").toLocalDateTime(), ResultSet.getString("message"),true);
-								this.newMessageArrive(mes, messageArive, true);
+								 mes=Message.createNewMessage(ResultSet.getString("senderUUID"), ResultSet.getString("MessageUUID"),ResultSet.getString("numberOFmessage"),ResultSet.getTimestamp("TimeOfMessage").toLocalDateTime(), ResultSet.getString("message"),true);
+								
+							}
+							while(ResultSet.next());
+							//make last quickMEssage from last message
+							this.newMessageArrive(mes, messageArive, false);
+{
 							}
 						} catch (SQLException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
-							Main.stopServer(null);
+							Main.stopServer(null,e);
 						}
 					});
 						
@@ -731,16 +788,6 @@ public class ChatPanel extends JPanel{
 							}
 							else {
 
-								/*
-								for(Component x:super.getComponents()) {
-									if(x instanceof MessageWithSpaceAround) {
-										System.out.println("true");
-										continue;
-									}
-									super.remove(x);
-									System.out.println("false");
-
-								}*/
 								super.add(newMessage);
 								this.messageOnBottom=this.messageOnBottom+1;
 							}
@@ -1026,6 +1073,7 @@ public class ChatPanel extends JPanel{
 
 	}
 
+	
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
