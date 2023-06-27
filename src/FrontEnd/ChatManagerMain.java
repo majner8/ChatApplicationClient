@@ -41,7 +41,6 @@ import Main.ComunicationWithServer;
 
 public class ChatManagerMain extends JPanel {
 
-//	public static String defaultUserName="ahoj";
 	
 	private static BorderLayout layout;
 	private boolean SynchronizationProgress=false;
@@ -180,19 +179,13 @@ public class ChatManagerMain extends JPanel {
 		}
 		@Override
 		protected void paintComponent(Graphics g) {
-			if(MainJFrame.ImgBacgtround==null) {
-				//try to load
-			}
+			
 
 			g.drawImage(MainJFrame.ImgBacgtround, 0, 0, super.getWidth(), super.getHeight(), this);
 		}
 		
 		
-		/*
-		@Override
-		protected void paintComponent(Graphics g) {
-			g.drawImage(MainJFrame.ImgBacgtround, 0, 0, super.getWidth(), super.getHeight(), this);
-		}*/		
+		
 	}
 	
 
@@ -215,10 +208,7 @@ public class ChatManagerMain extends JPanel {
 		}
 		@Override
 		protected void paintComponent(Graphics g) {
-			if(MainJFrame.ImgBacgtround==null) {
-				//try to load
-			}
-
+		
 			g.drawImage(MainJFrame.ImgBacgtround, 0, 0, super.getWidth(), super.getHeight(), this);
 		}
 	}

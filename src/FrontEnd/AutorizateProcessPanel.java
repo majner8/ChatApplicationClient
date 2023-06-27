@@ -55,8 +55,6 @@ public class AutorizateProcessPanel extends JPanel{
 		super.add(new Register(this),TypeOFCard.Register.name());
 		super.add(new Loggin(this),TypeOFCard.Loggin.name());
 
-		//	super.add(new LogginRegisterPanel(this.language,this, false,socket),this.nameLoggin);
-	//super.add(new LogginRegisterPanel(this.language,this,true,socket),this.nameRegister);
 		this.changePanel(TypeOFCard.EntryPanel,null);
 	}
 	

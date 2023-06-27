@@ -43,24 +43,7 @@ public class Main {
 		frame.dispose();
 
 		System.exit(0);
-		/* 
-		 *ThreadGroup rootGroup = Thread.currentThread().getThreadGroup();
-		rootGroup.interrupt();
-		ThreadGroup parentGroup;
-		while ((parentGroup = rootGroup.getParent())!= null) {
-		    rootGroup = parentGroup;
-		}
-		
-		int estimatedSize = rootGroup.activeCount() * 2;
-		Thread[] threads = new Thread[estimatedSize];
-		int actualSize = rootGroup.enumerate(threads);
-		threads = Arrays.copyOf(threads, actualSize);
-
-		// Now you can interrupt all threads
-		for (Thread thread : threads) {
-		    thread.interrupt();
-		}
-		 */
+	
 
 
 

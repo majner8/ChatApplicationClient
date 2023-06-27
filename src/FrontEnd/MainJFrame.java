@@ -116,7 +116,6 @@ public class MainJFrame extends JFrame{
 	
 	SwingUtilities.invokeLater(()->{
 		Main.Main.setFrameTitle(userName.getOneValue(), true);
-			//super.setTitle(ComponentLanguageName.UserTitleJFrame.getName(language).toString()+userName.getOneValue());
 			this.AutorizationFinish=true;
 			super.getContentPane().removeAll();
 			super.add(new ChatManagerMain(),BorderLayout.CENTER);
@@ -142,14 +141,7 @@ public class MainJFrame extends JFrame{
 		public static void Connected(boolean connectedSucessful) {
 			stopAnimation=true;
 			if(!connectedSucessful) {
-				//conection was not Succesfull
-				//frame.dispose();
-				//ThreadPoolingManagement.ShutDown();
-				//String message = "Could not connect to server. Check your internet connection and try again later.";
-		        
-		        // Display the message in a dialog
-		        //JOptionPane.showMessageDialog(null, message, "Connection Error", JOptionPane.ERROR_MESSAGE);
-		        Main.Main.stopServer(Main.Main.ReasonToEndMessage.CoouldNotConnectWithServer,null);
+				  Main.Main.stopServer(Main.Main.ReasonToEndMessage.CoouldNotConnectWithServer,null);
 		        return;
 			}
 			//connection was succesfull ask USer To select language
@@ -177,10 +169,7 @@ public class MainJFrame extends JFrame{
 		        	languageComboBox.addItem(x.name());
 		        }
 	
-		        // Add more languages as needed...
-
-		        // Add a label and the JComboBox to the panel
-		        c.gridx=0;
+		      c.gridx=0;
 		        Panel.add(languageComboBox,c);
 		        JButton Continue=new JButton("Continue");
 		        Continue.addActionListener((ActionListener)->{
@@ -194,8 +183,8 @@ public class MainJFrame extends JFrame{
 		        });
 		        c.gridx = 0;
 		        c.gridy = 1;
-		        c.gridheight = 1; // Span one row
-		        c.gridwidth = 1; // Span two columns
+		        c.gridheight = 1; 
+		        c.gridwidth = 1; 
 		        super.add(Continue,c);
 		        super.repaint();
 		        super.revalidate();

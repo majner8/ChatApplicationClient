@@ -87,9 +87,6 @@ public class MainQuickMessage extends JPanel {
 		super(ComponentLanguageName.FindNewUserTextField.getName(MainJFrame.language).toString());
 		this.UserWriteSomething=UserWriteSometingTask;
 		this.UserStopWriting=UserStopWritingTask;
-		//this.TaskForKeyReleasedEvent=TaskForKeyReleasedEvent;
-		//	super(ComponentLanguageName.SearingChatButton.getName(MainJFrame.language).toString(), false);
-		// TODO Auto-generated constructor stub
 		this.field=new TextField();
 	}
 	private TextField field;
@@ -107,17 +104,14 @@ public class MainQuickMessage extends JPanel {
 		if(!this.field.PlaceHolderIsEmpty()&&this.UserWriteSomething!=null) {
 			//start searing
 			this.UserWriteSomething.run(this.getJTextField().getText());
-			//ThreadPoolingManagement.thread.Execute(this.UserWriteSomething);
 			
 			return;
 		}
 		if(this.UserStopWriting!=null) {
-		//ThreadPoolingManagement.thread.Execute(this.UserStopWriting);
 			this.UserStopWriting.run(this.getJTextField().getText());
 
 		}
 		
-		//when user release key, init process of searing
 	}
 
 	public static interface TaskForSearch{
@@ -134,7 +128,6 @@ public class MainQuickMessage extends JPanel {
 		public HistorySearchChatPanel() {
 			super.setVisible(true);
 			super.setLayout(new BorderLayout());
-			//runnable which is call when user make interact
 			this.result=new ResultPanel();
 			this.searchPanel= new SearchingPanel(this.result.new StartSearching(),this.result.new StopSearching());
 			
@@ -146,9 +139,7 @@ public class MainQuickMessage extends JPanel {
 
 			
 		}
-		//middle class which is result panel
-		//it is card layout, default here is quick user history
-		//when user write something here will be result
+		
 		public class ResultPanel extends JPanel{
 			private JScrollPanel quickHistory,SearchingUserHistory;
 			private CardLayout ResultLayout=new CardLayout();
@@ -167,7 +158,6 @@ public class MainQuickMessage extends JPanel {
 		
 			
 			private void LoadNewQuickData() {
-				//have to call task which return all table from userTable
 				
 				Query [] userTableTask=MainSQL.getQuery(ClientDatabase.databaseTaskType.SelectChatUUIDFromQuickMessage, 
 						new SimpleResultSet(new ArrayList<String>(),null), ComunicationWithServer.Comunication.comun.getUserUUID());
@@ -241,23 +231,13 @@ public class MainQuickMessage extends JPanel {
 
 				  String time = timeofreceivedMessage==null ?"----":
 				  timeofreceivedMessage.toLocalDateTime().format(QuickFormater);
-				  /*
-				  
-				// Use HTML to align the text
-				// Use HTML to align the text
-				    String labelText = "<html><table width='100%'>" +
-				        "<tr><td>" + chatName+"</td>" +
-				        "<td style='text-align: left;'>" + textMessage + "</td>" +
-				        "<td style='text-align: right;'>" + time + "</td></tr>" +
-				        "</table></html>";
-					*/
+				
 				    String labelText = "<html>" +
 				            chatName + "<br>" +
 				            "<p style='width: 100px; font-size: 0.6em;'>" + textMessage + "</p>" +
 				            "<p style='width: 100px; font-size: 0.4em; text-align: left;'>" + time + "</p>" +
 				            "</html>";
 					    return labelText;
-				    //</tr>
 
 			}
 			public void changePanel(String name) {
@@ -306,10 +286,7 @@ public class MainQuickMessage extends JPanel {
 								return;
 							}
 							
-							// QuickMessageText(boolean newChat,ChatPanel ChatPanel,
-							//String chatName,String ChatUUID,boolean doesSingleChat) {
-
-						});
+							});
 					});
 				}
 				}
@@ -361,7 +338,7 @@ public class MainQuickMessage extends JPanel {
 		
 		
 		//is string UUID, when a client send message to get new value
-		// set this value and not sending message is not avaiable until value become null again
+		// set this value and sending new message is not avaiable until value become null again
 
 		public FindNewUserChat() {
 			super.setVisible(true);

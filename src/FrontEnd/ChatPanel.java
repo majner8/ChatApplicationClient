@@ -73,7 +73,6 @@ public class ChatPanel extends JPanel{
 		super.setPreferredSize(sizeOfChatPanel);
 		super.setVisible(true);
 		super.setOpaque(false);
-		//super.setBackground(Color.blue);
 		super.setLayout(new FlowLayout());
 		super.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 	
@@ -338,7 +337,6 @@ public class ChatPanel extends JPanel{
 			}
 
 			
-			//chatUUID,ChatEnd,UserTableName
 			
 
 		}
@@ -431,6 +429,7 @@ public class ChatPanel extends JPanel{
 				}
 
 				/**Metod process request to send message
+				 * this metod can be call only for process User-ToUserChat
 				 *@param text-raw message
 				 *@param nameOfSenderInChat-Nick in this chat, if nick was not set, put null and will be use default name */
 				private void ProcessSendMessageUser(String text) {
