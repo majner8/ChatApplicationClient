@@ -39,7 +39,7 @@ import Main.ComunicationWithServer;
 public class MainJFrame extends JFrame{
 
 	public static final String ImgBacgroundURL="Img/FirstView.jpeg";
-	public static Image ImgBacgtround=MainJFrame.loadImage(ImgBacgroundURL);
+	public static Image ImgBacgtrounds=MainJFrame.loadImage(ImgBacgroundURL);
 	public final static Dimension minimunSize=new Dimension(565,500);
 	public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 	public static TypeLanguage language;
