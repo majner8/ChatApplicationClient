@@ -31,7 +31,7 @@ import Logger.Log4j2;
 import PathProperties.AuthorizationPath;
 import Properties.AuthorizationProperties;
 import Security.CustomUserDetails;
-import Validation.AutorizationRequestValidator;
+import Validation.AutorizationRequestDTOValidator;
 import Validation.ChangeUserDetailsRequestValidator;
 import jwt.JwtTokenInterface;
 
@@ -62,7 +62,7 @@ public class AuthorizationControler {
 	@Transactional
 	@PostMapping(AuthorizationPath.registerPath)
 	public ResponseEntity<TokenDTO> register(
-			@RequestBody @AutorizationRequestValidator AutorizationRequestDTO value,
+			@RequestBody @AutorizationRequestDTOValidator AutorizationRequestDTO value,
 			HttpServletRequest request
 			){
 		
@@ -102,6 +102,7 @@ public class AuthorizationControler {
 		
 		logAuthorization log=this.logDevice(newEntity, value.getDeviceID(), request);
 		value.setDeviceID(log.getDevice().getDeviceID());
+		
 		TokenDTO token=this.JWTtoken.generateToken(newEntity.getUserId(), newEntity.getVersion(), value.getDeviceID(), false, this.autProperties.TokenValidUntil(),log.getCurrentLogId());
 		return ResponseEntity.status(HttpStatus.CREATED).body(token);
 		}
@@ -109,7 +110,7 @@ public class AuthorizationControler {
 	@Transactional
 	@PostMapping(AuthorizationPath.loginPath)
 	public ResponseEntity<TokenDTO> login(
-			@RequestBody @AutorizationRequestValidator AutorizationRequestDTO value,
+			@RequestBody @AutorizationRequestDTOValidator AutorizationRequestDTO value,
 			HttpServletRequest request
 			){		
 		Optional<UserEntity> opPassword=this.userRepo.findByEmailOrPhoneAndCountryPreflix(value.getEmail(), value.getCountryPreflix(), value.getPhone());
@@ -151,7 +152,7 @@ public class AuthorizationControler {
 		if(userFinish.isEmpty()) {
 			//user by id was not find
 			Log4j2.log.error(this.marker,String.format("Finish operation was not sucessfull"+System.lineSeparator()
-			+"Id %d was not found in database"),userDetails.getUserId());
+			+"Id %s was not found in database"),userDetails.getUsername());
 			return ResponseEntity.badRequest().build();
 		}
 		UserFinishAuthorization user=userFinish.get();
@@ -177,7 +178,7 @@ public class AuthorizationControler {
 		return ResponseEntity.status(httpStatus).body(token);
 	}
 
-	private logAuthorization logDevice(UserEntity user,String deviceId,
+	private logAuthorization logDevice(UserEntity user,int deviceId,
 			HttpServletRequest request) {
 		logAuthorization x=new logAuthorization();
 		x.setDevice(this.device.DeviceIdGeneration(user, deviceId));

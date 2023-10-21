@@ -21,7 +21,7 @@ public class DeviceIdEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="device_id")
-	private String deviceID;
+	private int deviceID;
 
 	@ManyToOne
 	@JoinColumn(name=UserEntity.userIdName)
@@ -33,7 +33,7 @@ public class DeviceIdEntity {
 	 private List<LoginActivityEntity> activity = new ArrayList<>();
 
 
-	public String getDeviceID() {
+	public int getDeviceID() {
 		return deviceID;
 	}
 
@@ -41,7 +41,7 @@ public class DeviceIdEntity {
 		return user;
 	}
 
-	public void setDeviceID(String deviceID) {
+	public void setDeviceID(int deviceID) {
 		this.deviceID = deviceID;
 	}
 

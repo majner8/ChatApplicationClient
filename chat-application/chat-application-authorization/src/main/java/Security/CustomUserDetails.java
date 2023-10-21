@@ -13,19 +13,18 @@ public class CustomUserDetails implements UserDetails{
 	
 	private Collection<? extends GrantedAuthority> autority;
 	private long DatabaseVersion;
-	private int userId;
-	private String StringUserID;
-	private String deviceId;
+	private String userID;
+	private int deviceId;
 	private long logId;
 	
-	public String getDeviceId() {
+	public int getDeviceId() {
 		return deviceId;
 	}
 
 	/**Metod create new CustomUserDetails object
 	 *  @return null if autority equal null, or userId is not an Integer */
 	public static CustomUserDetails createCustomUserDetails(long databaseVersion,Collection<? extends GrantedAuthority> autority, String userId
-			,String deviceId,Long logId) {
+			,Integer deviceId,Long logId) {
 		if(autority==null) {
 			Log4j2.log.warn(Log4j2.LogMarker.Security.getMarker(),"Authority collection could not be null");
 			return null;
@@ -38,28 +37,20 @@ public class CustomUserDetails implements UserDetails{
 			Log4j2.log.warn(Log4j2.LogMarker.Security.getMarker(),"logId could not be null");
 			return null;
 		}
-		int converUserId;
-		try {
-		converUserId=Integer.parseInt(userId);
-		}
-		catch(NumberFormatException e) {
-			Log4j2.log.warn(Log4j2.LogMarker.Security.getMarker(),"userId have to be instance of Integer");
-			return null;
-		}
+		
 		Log4j2.log.debug(Log4j2.LogMarker.Security.getMarker(),"CustomUserDetails was created");
-		return new CustomUserDetails(autority,databaseVersion,converUserId,deviceId,logId);
+		return new CustomUserDetails(autority,databaseVersion,userId,deviceId,logId);
 
 		
 	
 		
 	}
 	
-	protected CustomUserDetails(Collection<? extends GrantedAuthority> autority, long databaseVersion, int userId,
-		 String deviceId,long logId) {
+	protected CustomUserDetails(Collection<? extends GrantedAuthority> autority, long databaseVersion, String userId,
+		 int deviceId,long logId) {
 		this.autority = autority;
 		this.DatabaseVersion = databaseVersion;
-		this.userId = userId;
-		this.StringUserID=String.valueOf(this.userId);
+		this.userID = userId;
 		this.deviceId = deviceId;
 		this.logId=logId;
 	}
@@ -82,7 +73,7 @@ public class CustomUserDetails implements UserDetails{
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
-		return this.StringUserID;
+		return this.userID;
 	}
 
 	@Override
@@ -125,12 +116,5 @@ public class CustomUserDetails implements UserDetails{
 		return logId;
 	}
 
-	public int getUserId() {
-		return userId;
-	}
-
-	public String getStringUserID() {
-		return StringUserID;
-	}
 	
 }

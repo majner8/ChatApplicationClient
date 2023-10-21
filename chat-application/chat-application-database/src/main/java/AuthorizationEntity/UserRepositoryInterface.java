@@ -60,7 +60,7 @@ public interface UserRepositoryInterface extends JpaRepository<UserEntity,Intege
 	}
 	
 	public static interface UserFinishAuthorization{
-		public int getUserId();
+		public String getUserId();
 		public long getVersion();
 	}
 	

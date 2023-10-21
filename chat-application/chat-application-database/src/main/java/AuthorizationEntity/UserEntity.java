@@ -41,7 +41,7 @@ public class UserEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name=userIdName)
-	private int userId;
+	private String userId;
 	@Column(name=serNameName)
 	private String serName;
 	@Column(name=lastnameName)
@@ -74,7 +74,7 @@ public class UserEntity {
 		return phone;
 	}
 
-	public int getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
@@ -118,7 +118,7 @@ public class UserEntity {
 		this.phone = phone;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 

@@ -61,7 +61,7 @@ public class JwtTokenFilter extends OncePerRequestFilter{
 		if(Boolean.valueOf(userIsActive.asString())==true) {
 			//user is active
 			autority.add(new SimpleGrantedAuthority(SecurityConfiguration.userIsActiveRole));
-			user=CustomUserDetails.createCustomUserDetails(version,autority, jwt.getClaim(SecurityConfiguration.userIdClaimName).asString(),jwt.getSubject()
+			user=CustomUserDetails.createCustomUserDetails(version,autority, jwt.getClaim(SecurityConfiguration.userIdClaimName).asString(),Integer.parseInt(jwt.getSubject())
 					,jwt.getClaim(SecurityConfiguration.loginIdClaimName).asLong()
 					);
 			
@@ -69,7 +69,7 @@ public class JwtTokenFilter extends OncePerRequestFilter{
 		else {
 			//user is not active
 			autority.add(new SimpleGrantedAuthority(SecurityConfiguration.userIsNotActiveRole));
-			user=CustomUserDetails.createCustomUserDetails(version,autority, jwt.getClaim(SecurityConfiguration.userIdClaimName).asString(),jwt.getSubject(),
+			user=CustomUserDetails.createCustomUserDetails(version,autority, jwt.getClaim(SecurityConfiguration.userIdClaimName).asString(),Integer.parseInt(jwt.getSubject()),
 					jwt.getClaim(SecurityConfiguration.loginIdClaimName).asLong());
 			
 		}

@@ -11,7 +11,7 @@ public class SecurityConfiguration {
 	public static final String	VersionClaimName="version";
 	public static final String	DeviceIdClaimName="deviceId";
 	public static final String 	userIdClaimName="userId";
-	public static final String hashTokenPassword="";
+	public static final String hashTokenPassword="dsaewaas";
 	
 	//each login has own id
 	public static final String loginIdClaimName="LoginId";

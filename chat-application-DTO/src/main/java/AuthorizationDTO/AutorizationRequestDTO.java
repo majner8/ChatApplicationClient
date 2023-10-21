@@ -8,7 +8,7 @@ public class AutorizationRequestDTO {
 	private String countryPreflix;
 	private String phone;
 	private String password;
-	private String deviceID;
+	private int deviceID;
 	private Boolean isDeviceNew;
 	
 	
@@ -42,10 +42,10 @@ public class AutorizationRequestDTO {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getDeviceID() {
+	public int getDeviceID() {
 		return deviceID;
 	}
-	public void setDeviceID(String deviceID) {
+	public void setDeviceID(int deviceID) {
 		this.deviceID = deviceID;
 	}
 

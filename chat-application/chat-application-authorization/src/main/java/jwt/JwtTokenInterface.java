@@ -31,7 +31,7 @@ public interface JwtTokenInterface {
 	 *@param deviceID -id of device, should not be null,
 	 *@return Metod generate token and return them as DTO
 	 **/
-	default TokenDTO generateToken(int userId,Long Version,String deviceID,boolean isUserActive,Duration tokenValidity,long logId) {
+	default TokenDTO generateToken(String userId,Long Version,int deviceID,boolean isUserActive,Duration tokenValidity,long logId) {
 		
 		
 		Calendar validUntil=Calendar.getInstance();
@@ -43,7 +43,7 @@ public interface JwtTokenInterface {
 		validUntil.add(Calendar.SECOND, (int)(tokenValidity.getSeconds()-minute*60));
 
 		JWTCreator.Builder jwtBuilder= JWT.create()
-				.withSubject(deviceID)
+				.withSubject(String.valueOf(deviceID))
 				.withClaim(SecurityConfiguration.userIsActiveClaimName,String.valueOf(isUserActive) )
 				.withClaim(SecurityConfiguration.userIdClaimName, String.valueOf(userId))
 				//claim contain logId
@@ -78,13 +78,21 @@ public interface JwtTokenInterface {
         .verify(header);
       DecodedJWT jwt=JWT.decode(header);
       String sub=jwt.getSubject();
-      String active=jwt.getClaim(SecurityConfiguration.userIsActiveClaimName).asString();
+      Boolean active=jwt.getClaim(SecurityConfiguration.userIsActiveClaimName).asBoolean();
       String userID= jwt.getClaim(SecurityConfiguration.userIdClaimName).asString();
       Long logId=jwt.getClaim(SecurityConfiguration.loginIdClaimName).asLong();
       if(logId==null||sub==null||active==null||userID==null) {
 		Log4j2.log.warn(Log4j2.LogMarker.Security.getMarker(),"UnSupportedJwtException, token do not contain appropriate claim");
     	throw new UnsupportedJwtException(null);
 
+      }
+      try {
+    	  Integer.parseInt(sub);
+      }
+      catch(NumberFormatException e) {
+    	  Log4j2.log.warn(Log4j2.LogMarker.Security.getMarker(),"UnSupportedJwtException, token do not contain appropriate claim");
+      	throw new UnsupportedJwtException(null);
+ 
       }
 		Log4j2.log.debug(Log4j2.LogMarker.Security.getMarker(),"Verification of token was sucesfull");
 

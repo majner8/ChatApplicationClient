@@ -12,7 +12,7 @@ import javax.validation.ConstraintValidatorContext;
 import javax.validation.Payload;
 
 @Documented
-@Constraint(validatedBy = AutorizationRequestValidator.AutorizationRequestProvider.class)
+@Constraint(validatedBy = ChangeUserDetailsRequestValidator.ChangeUserDetailsRequestValidatorProvider.class)
 @Target({ ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ChangeUserDetailsRequestValidator {
