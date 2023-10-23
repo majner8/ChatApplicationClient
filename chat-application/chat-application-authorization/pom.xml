@@ -12,17 +12,13 @@
   <groupId>chat-application-authorization</groupId>
   <artifactId>chat-application-authorization</artifactId>
   <dependencies>
+	  
   	<dependency>
   		<groupId>chat-application-database</groupId>
   		<artifactId>chat-application-database</artifactId>
   		<version>1</version>
   	</dependency>
-  	<dependency>
-  		<groupId>chat-application-starter</groupId>
-  		<artifactId>chat-application-starter</artifactId>
-  		  		<version>1</version>
 
-  	</dependency>
 
   </dependencies>
 </project>

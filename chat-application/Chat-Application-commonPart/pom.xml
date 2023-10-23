@@ -5,16 +5,5 @@
     <artifactId>chat-application</artifactId>
     <version>1</version>
   </parent>
-  <groupId>chat-application-database</groupId>
-  <artifactId>chat-application-database</artifactId>
-  <dependencies>
-
-  <dependency>
-  	<groupId>chat-application</groupId>
-  	<artifactId>Chat-Application-commonPart</artifactId>
-  	<version>1</version>
-  </dependency>
-  </dependencies>
-  
-  
+  <artifactId>Chat-Application-commonPart</artifactId>
 </project>

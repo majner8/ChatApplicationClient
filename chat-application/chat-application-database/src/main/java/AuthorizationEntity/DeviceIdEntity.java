@@ -17,7 +17,6 @@ public class DeviceIdEntity {
 
 	public static final String DeviceIdEntityName="";
 	
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="device_id")

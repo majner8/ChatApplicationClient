@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import Logger.Log4j2;
 
 
+
 // device id will be generated on user by autoIncreament
 public interface DeviceIdEntityRepositoryInterface  extends JpaRepository<DeviceIdEntity,Integer> { 	
 	/**Metod verify if id exist in database, otherwise return new generated ID */

@@ -16,7 +16,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.6.1</version>
-        <relativePath/> <!-- lookup parent from repository, not from local file system -->
+        
     </parent>
     
     <dependencyManagement>
@@ -25,7 +25,15 @@
   		<groupId>chat-application</groupId>
   		<artifactId>chat-application-authorization</artifactId>
   		<version>1</version>
+  		
   	</dependency>
+		
+  <dependency>
+  	<groupId>chat-application</groupId>
+  	<artifactId>Chat-Application-commonPart</artifactId>
+  	<version>1</version>
+  </dependency>
+  
 		
 		<dependency>
   		<groupId>chat-application</groupId>
@@ -43,6 +51,26 @@
     
     <dependencies>
 		
+	
+		<!-- Exclude the default Spring Boot's logging (Logback) -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter</artifactId>
+    <exclusions>
+        <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+
+
+<!-- Include Log4j2 Dependency -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-log4j2</artifactId>
+</dependency>
+
 		
   	<dependency>
   		<groupId>chat-application</groupId>
@@ -125,7 +153,11 @@
     <artifactId>jjwt-jackson</artifactId>
     <version>0.11.2</version> <!-- Adjust to the latest or desired version -->
 </dependency>
-
+   <!-- TomcatStarter-->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
 
 
 	</dependencies>
@@ -146,6 +178,7 @@
        	<module>chat-application-database</module>
        	<module>chat-application-starter</module>
        	<module>chat-application-authorization</module>
+       	<module>Chat-Application-commonPart</module>
        </modules>
   
 </project>

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import Authorization.HttpServletRequestInetAdress;
 import AuthorizationDTO.AutorizationRequestDTO;
 import AuthorizationDTO.ChangeUserDetailsDTO;
 import AuthorizationDTO.TokenDTO;
@@ -26,7 +27,6 @@ import AuthorizationEntity.LoginActivityEntityInterface;
 import AuthorizationEntity.UserEntity;
 import AuthorizationEntity.UserRepositoryInterface;
 import AuthorizationEntity.UserRepositoryInterface.UserFinishAuthorization;
-import Bean.HttpServletRequestInetAdress;
 import Logger.Log4j2;
 import PathProperties.AuthorizationPath;
 import Properties.AuthorizationProperties;
@@ -57,7 +57,8 @@ public class AuthorizationControler {
 
 	 private Marker marker=Log4j2.LogMarker.Security.getMarker();	
 	 
-	 
+	 public AuthorizationControler() {
+	 }
 	 
 	@Transactional
 	@PostMapping(AuthorizationPath.registerPath)
