@@ -7,6 +7,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @Configuration
 public class AuthorizationBeanConfig {
 
+	
+	
 
 	 @Bean
 	 public BCryptPasswordEncoder bCryptPasswordEncoder() {
