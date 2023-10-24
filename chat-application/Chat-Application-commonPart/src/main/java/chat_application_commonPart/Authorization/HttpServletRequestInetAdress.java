@@ -1,4 +1,4 @@
-package Authorization;
+package chat_application_commonPart.Authorization;
 
 import javax.servlet.http.HttpServletRequest;
 

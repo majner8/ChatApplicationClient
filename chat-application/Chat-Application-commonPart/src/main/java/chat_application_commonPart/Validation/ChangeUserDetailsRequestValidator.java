@@ -1,4 +1,4 @@
-package Validation;
+package chat_application_commonPart.Validation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

@@ -1,4 +1,4 @@
-package Validation;
+package chat_application_commonPart.Validation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import AuthorizationDTO.AutorizationRequestDTO;
-import Logger.Log4j2;
+import chat_application_commonPart.Logger.Log4j2;
 
 
 

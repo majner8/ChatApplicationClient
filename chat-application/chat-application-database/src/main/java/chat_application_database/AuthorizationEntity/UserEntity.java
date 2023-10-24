@@ -1,4 +1,4 @@
-package AuthorizationEntity;
+package chat_application_database.AuthorizationEntity;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,7 +20,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 public class UserEntity {
 
-	public static final String userEntityName="user";
+	public static final String userEntityName="userName";
 	public static final String emailName="email";
 	public static final String country_preflixName="country_preflix";
 	public static final String phoneName="phone";
@@ -58,7 +58,7 @@ public class UserEntity {
 	@Version
 	private long version;
 
-	 @OneToMany(mappedBy = "user")
+	 @OneToMany(mappedBy = DeviceIdEntity.userName)
 	 private List<DeviceIdEntity> devices = new ArrayList<>();
 
 

@@ -1,4 +1,4 @@
-package Config;
+package chat_application_commonPart.Config;
 
 public class SecurityConfiguration {
 

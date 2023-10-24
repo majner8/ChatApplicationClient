@@ -8,16 +8,25 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+                <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
     </properties>
     
     
    <!-- Spring Boot Starter Parent -->
-    <parent>
+    <!-- <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.6.1</version>
         
     </parent>
+    -->
+    <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.5.5</version>
+  </parent>
+    
     
     <dependencyManagement>
 		<dependencies>
@@ -32,9 +41,7 @@
   	<groupId>chat-application</groupId>
   	<artifactId>Chat-Application-commonPart</artifactId>
   	<version>1</version>
-  </dependency>
-  
-		
+  </dependency>		
 		<dependency>
   		<groupId>chat-application</groupId>
   		<artifactId>chat-application-database</artifactId>
@@ -51,7 +58,7 @@
     
     <dependencies>
 		
-	
+
 		<!-- Exclude the default Spring Boot's logging (Logback) -->
 <dependency>
     <groupId>org.springframework.boot</groupId>
@@ -77,10 +84,6 @@
   		<artifactId>chat-application-DTO</artifactId>
   		<version>1</version>
   	</dependency>		
-<dependency>
-    <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-config</artifactId>
-</dependency>
 		<dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-test</artifactId>
@@ -90,12 +93,6 @@
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-api</artifactId>
 </dependency>
-<dependency>
-    <groupId>org.springframework.security</groupId>
-    <artifactId>spring-security-core</artifactId>
-</dependency>
-
-
 
 <dependency>
     <groupId>org.apache.logging.log4j</groupId>
@@ -110,10 +107,6 @@
     <groupId>javax.persistence</groupId>
     <artifactId>javax.persistence-api</artifactId>
 </dependency>
-<dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-webmvc</artifactId>
-</dependency>
 
 <dependency>
     <groupId>javax.servlet</groupId>
@@ -127,12 +120,8 @@
 </dependency>
 
 <dependency>
-    <groupId>org.hibernate</groupId>
-    <artifactId>hibernate-core</artifactId>
-</dependency>
-<dependency>
-    <groupId>org.springframework.data</groupId>
-    <artifactId>spring-data-jpa</artifactId>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
 </dependency>
 
 
@@ -153,7 +142,14 @@
     <artifactId>jjwt-jackson</artifactId>
     <version>0.11.2</version> <!-- Adjust to the latest or desired version -->
 </dependency>
-   <!-- TomcatStarter-->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-web</artifactId>

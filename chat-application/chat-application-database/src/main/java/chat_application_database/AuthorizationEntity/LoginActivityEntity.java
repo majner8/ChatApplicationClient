@@ -1,4 +1,4 @@
-package AuthorizationEntity;
+package chat_application_database.AuthorizationEntity;
 
 import java.time.LocalDateTime;
 
@@ -15,15 +15,17 @@ public class LoginActivityEntity {
 
 	public static final String loginActivityEntityName="";
 	
-	public static final String inetAdressName="";
+	public static final String inetAdressName="ip_adress";
 	
-	public static final String loginTimeName="";
+	public static final String loginTimeName="login_Time";
 	
-	public static final String logoutTimeName="";
+	public static final String logoutTimeName="logout_Time";
 	
 
-	public static final String PrimaryKeyName="";
+	public static final String PrimaryKeyName="primary_key";
 
+	public static final String deviceIdName="device";
+	
 	@Column(name=inetAdressName)
 	private String inetAdress;
 	@Column(name=loginTimeName)
@@ -36,9 +38,8 @@ public class LoginActivityEntity {
 	@Column(name=PrimaryKeyName)
 	private int primaryKey;
 
-	@ManyToOne
-	@JoinColumn(name=DeviceIdEntity.DeviceIdEntityName)
-	@Column(name=DeviceIdEntity.DeviceIdEntityName)
+	@JoinColumn(name=DeviceIdEntity.activityName)
+	@Column(name=deviceIdName)
 	private DeviceIdEntity device;
 	
 	

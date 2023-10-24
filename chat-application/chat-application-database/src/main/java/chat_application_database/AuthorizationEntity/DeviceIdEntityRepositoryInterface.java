@@ -1,11 +1,11 @@
-package AuthorizationEntity;
+package chat_application_database.AuthorizationEntity;
 
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import Logger.Log4j2;
+import chat_application_commonPart.Logger.Log4j2;
 
 
 

@@ -1,12 +1,11 @@
-package Security;
+package chat_application_authorization.Security;
 
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import Logger.Log4j2;
-
+import chat_application_commonPart.Logger.Log4j2;
 
 public class CustomUserDetails implements UserDetails{
 

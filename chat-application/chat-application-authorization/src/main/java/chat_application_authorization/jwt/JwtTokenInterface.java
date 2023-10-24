@@ -1,7 +1,6 @@
-package jwt;
+package chat_application_authorization.jwt;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,6 +9,7 @@ import java.util.TimeZone;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
@@ -17,10 +17,11 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import AuthorizationDTO.TokenDTO;
-import Config.SecurityConfiguration;
-import Logger.Log4j2;
+import chat_application_commonPart.Config.SecurityConfiguration;
+import chat_application_commonPart.Logger.Log4j2;
 import io.jsonwebtoken.UnsupportedJwtException;
 
+@Component
 public interface JwtTokenInterface {
 
 	/** 
@@ -99,6 +100,9 @@ public interface JwtTokenInterface {
       return jwt;
 	}
 
-
+	@Component
+	public static class justEmptyClassForInterface implements JwtTokenInterface{
+		
+	}
 }
 

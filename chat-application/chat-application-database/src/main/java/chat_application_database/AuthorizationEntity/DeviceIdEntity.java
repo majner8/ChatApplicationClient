@@ -1,4 +1,4 @@
-package AuthorizationEntity;
+package chat_application_database.AuthorizationEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,26 +9,27 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity(name=DeviceIdEntity.DeviceIdEntityName)
 public class DeviceIdEntity {
 
-	public static final String DeviceIdEntityName="";
+	public static final String DeviceIdEntityName="device_id";
+	public static final String activityName="userActivity";
+	public static final String userName="user";
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="device_id")
+	@Column(name=DeviceIdEntityName)
 	private int deviceID;
 
-	@ManyToOne
 	@JoinColumn(name=UserEntity.userIdName)
-	@Column(name=UserEntity.userIdName)
+	@Column(name=userName)
 	private UserEntity user;
 
 	
-	 @OneToMany(mappedBy = DeviceIdEntity.DeviceIdEntityName)
+	 @OneToMany(mappedBy = LoginActivityEntity.deviceIdName)
+	 @Column(name=activityName)
 	 private List<LoginActivityEntity> activity = new ArrayList<>();
 
 

@@ -1,4 +1,4 @@
-package Controler;
+package chat_application_authorization.Controler;
 
 import java.util.Optional;
 
@@ -17,23 +17,23 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import Authorization.HttpServletRequestInetAdress;
 import AuthorizationDTO.AutorizationRequestDTO;
 import AuthorizationDTO.ChangeUserDetailsDTO;
 import AuthorizationDTO.TokenDTO;
-import AuthorizationEntity.DeviceIdEntity;
-import AuthorizationEntity.DeviceIdEntityRepositoryInterface;
-import AuthorizationEntity.LoginActivityEntityInterface;
-import AuthorizationEntity.UserEntity;
-import AuthorizationEntity.UserRepositoryInterface;
-import AuthorizationEntity.UserRepositoryInterface.UserFinishAuthorization;
-import Logger.Log4j2;
-import PathProperties.AuthorizationPath;
-import Properties.AuthorizationProperties;
-import Security.CustomUserDetails;
-import Validation.AutorizationRequestDTOValidator;
-import Validation.ChangeUserDetailsRequestValidator;
-import jwt.JwtTokenInterface;
+import chat_application_authorization.Security.CustomUserDetails;
+import chat_application_authorization.jwt.JwtTokenInterface;
+import chat_application_commonPart.Authorization.HttpServletRequestInetAdress;
+import chat_application_commonPart.Logger.Log4j2;
+import chat_application_commonPart.PathProperties.AuthorizationPath;
+import chat_application_commonPart.Properties.AuthorizationProperties;
+import chat_application_commonPart.Validation.AutorizationRequestDTOValidator;
+import chat_application_commonPart.Validation.ChangeUserDetailsRequestValidator;
+import chat_application_database.AuthorizationEntity.DeviceIdEntity;
+import chat_application_database.AuthorizationEntity.DeviceIdEntityRepositoryInterface;
+import chat_application_database.AuthorizationEntity.LoginActivityEntityInterface;
+import chat_application_database.AuthorizationEntity.UserEntity;
+import chat_application_database.AuthorizationEntity.UserRepositoryInterface;
+import chat_application_database.AuthorizationEntity.UserRepositoryInterface.UserFinishAuthorization;
 
 @Component
 public class AuthorizationControler {

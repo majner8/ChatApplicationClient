@@ -18,14 +18,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import Authorization.HttpServletRequestInetAdress;
 import AuthorizationDTO.AutorizationRequestDTO;
-import AuthorizationEntity.DeviceIdEntityRepositoryInterface;
-import AuthorizationEntity.LoginActivityEntityInterface;
-import AuthorizationEntity.UserRepositoryInterface;
-import PathProperties.AuthorizationPath;
-import Properties.AuthorizationProperties;
-import jwt.JwtTokenInterface;
+import chat_application_authorization.jwt.JwtTokenInterface;
+import chat_application_commonPart.Authorization.HttpServletRequestInetAdress;
+import chat_application_commonPart.PathProperties.AuthorizationPath;
+import chat_application_commonPart.Properties.AuthorizationProperties;
+import chat_application_database.AuthorizationEntity.DeviceIdEntityRepositoryInterface;
+import chat_application_database.AuthorizationEntity.LoginActivityEntityInterface;
+import chat_application_database.AuthorizationEntity.UserRepositoryInterface;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuthorizationControlerTest {

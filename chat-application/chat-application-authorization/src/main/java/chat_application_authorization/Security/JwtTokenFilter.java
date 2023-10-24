@@ -1,4 +1,4 @@
-package Security;
+package chat_application_authorization.Security;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,10 +21,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-import Config.SecurityConfiguration;
-import Logger.Log4j2;
-import PathProperties.AuthorizationPath;
-import jwt.JwtTokenInterface;
+import chat_application_authorization.jwt.JwtTokenInterface;
+import chat_application_commonPart.Config.SecurityConfiguration;
+import chat_application_commonPart.Logger.Log4j2;
+import chat_application_commonPart.PathProperties.AuthorizationPath;
 
 
 /**

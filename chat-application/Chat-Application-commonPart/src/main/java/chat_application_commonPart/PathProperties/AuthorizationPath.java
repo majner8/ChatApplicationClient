@@ -1,4 +1,4 @@
-package PathProperties;
+package chat_application_commonPart.PathProperties;
 
 public class AuthorizationPath {
 	public static final String authorizationPreflix="/authorization";

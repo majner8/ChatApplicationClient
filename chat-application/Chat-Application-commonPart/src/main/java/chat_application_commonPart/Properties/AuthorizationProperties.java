@@ -1,4 +1,4 @@
-package Properties;
+package chat_application_commonPart.Properties;
 
 import java.time.Duration;
 

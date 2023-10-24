@@ -1,4 +1,4 @@
-package AuthorizationEntity;
+package chat_application_database.AuthorizationEntity;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import Logger.Log4j2;
+import chat_application_commonPart.Logger.Log4j2;
 
 public interface LoginActivityEntityInterface extends JpaRepository<LoginActivityEntity,Integer>  	 
 {
