@@ -15,7 +15,8 @@ public class Log4j2 {
 	
 	public static enum LogMarker{
 		
-		Security(MarkerManager.getMarker("")),Database(MarkerManager.getMarker(""))
+		Security(MarkerManager.getMarker("")),Database(MarkerManager.getMarker("")
+	),Validation(MarkerManager.getMarker(""))
 	
 		;
 		

@@ -31,3 +31,4 @@ public interface DeviceIdEntityRepositoryInterface  extends JpaRepository<Device
 	
 	
 }
+

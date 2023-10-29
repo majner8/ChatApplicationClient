@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 import chat_application_commonPart.Logger.Log4j2;
 
@@ -16,7 +17,7 @@ import chat_application_commonPart.Logger.Log4j2;
 
 
 
-@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
+@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 @ComponentScan(basePackages = {"Main","Bean","chat_application_authorization","chat_application_commonPart"
 		,"chat_application_database"})
 @EntityScan(basePackages={"chat_application_database"})

@@ -13,7 +13,7 @@ public interface UserRepositoryInterface extends JpaRepository<UserEntity,Intege
 
 	Optional<UserEntity> findByEmail(String email);
     
-    Optional<UserEntity> findByCountryPrefixAndPhone(String countryPrefix, String phone);
+    Optional<UserEntity> findByCountryPreflixAndPhone(String countryPrefix, String phone);
     
     Optional<UserFinishAuthorization> findById(int id);
     
@@ -23,7 +23,7 @@ public interface UserRepositoryInterface extends JpaRepository<UserEntity,Intege
     		return this.findByEmail(email);
     	}
     	else if(countryPrefix!=null&&phone!=null) {
-    		return this.findByCountryPrefixAndPhone(countryPrefix, phone);
+    		return this.findByCountryPreflixAndPhone(countryPrefix, phone);
     	}
     	Log4j2.log.error("email, phone and phone preflix could not be null at the same time");
     	throw new NullPointerException();
@@ -42,6 +42,7 @@ public interface UserRepositoryInterface extends JpaRepository<UserEntity,Intege
    		 return this.existsByPhoneAndCountryPreflix(phone, countryPreflix);
 
     	}
+    	
     	
     	Log4j2.log.error("email, phone and phone preflix could not be null at the same time");
     	throw new NullPointerException();

@@ -20,7 +20,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 public class UserEntity {
 
-	public static final String userEntityName="userName";
+	public static final String userEntityName="user_name";
 	public static final String emailName="email";
 	public static final String country_preflixName="country_preflix";
 	public static final String phoneName="phone";
@@ -39,7 +39,6 @@ public class UserEntity {
 	@Column(name=phoneName)
 	private String phone;
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name=userIdName)
 	private String userId;
 	@Column(name=serNameName)

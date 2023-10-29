@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,8 +33,11 @@ import chat_application_commonPart.PathProperties.AuthorizationPath;
  * The filter does not verify paths meant for authorization, specifically server login and registration requests.
  */
 @Component
-public class JwtTokenFilter extends OncePerRequestFilter{
+public class JwtTokenFilter extends OncePerRequestFilter  {
 
+	
+	public JwtTokenFilter() {
+	}
 	@Autowired
 	private JwtTokenInterface tokenValidation;
 	@Override
@@ -41,11 +45,12 @@ public class JwtTokenFilter extends OncePerRequestFilter{
 			throws ServletException, IOException {
 		
         // If the request URI is for authorization (login or registration), skip JWT verification
-		if(request.getRequestURI().equals(AuthorizationPath.loginPath)
-			||request.getRequestURI().equals(AuthorizationPath.registerPath)	) {
+		if(request.getRequestURI().equals(AuthorizationPath.authorizationPreflix+AuthorizationPath.loginPath)
+			||request.getRequestURI().equals(AuthorizationPath.authorizationPreflix+AuthorizationPath.registerPath)	) {
 			filterChain.doFilter(request, response);
 			return;
 		}
+		
 		
 		
 		CustomUserDetails user;
@@ -96,4 +101,7 @@ public class JwtTokenFilter extends OncePerRequestFilter{
 		}
 		return claimValue;
 		}
+
+
+	
 }

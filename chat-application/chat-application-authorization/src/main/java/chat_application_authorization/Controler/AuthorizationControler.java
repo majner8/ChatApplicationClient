@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.persistence.OptimisticLockException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.apache.logging.log4j.Marker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import AuthorizationDTO.AutorizationRequestDTO;
 import AuthorizationDTO.ChangeUserDetailsDTO;
@@ -35,7 +39,9 @@ import chat_application_database.AuthorizationEntity.UserEntity;
 import chat_application_database.AuthorizationEntity.UserRepositoryInterface;
 import chat_application_database.AuthorizationEntity.UserRepositoryInterface.UserFinishAuthorization;
 
-@Component
+@RestController
+@Validated
+@RequestMapping(AuthorizationPath.authorizationPreflix)
 public class AuthorizationControler {
 
 
@@ -47,7 +53,7 @@ public class AuthorizationControler {
 	@Autowired
 	private DeviceIdEntityRepositoryInterface device;
 	@Autowired
-	private LoginActivityEntityInterface activity;
+	private LoginActivityEntityInterface LoginActivity;
 	@Autowired
 	private HttpServletRequestInetAdress inetAdress;
 	 @Autowired
@@ -60,18 +66,20 @@ public class AuthorizationControler {
 	 public AuthorizationControler() {
 	 }
 	 
-	@Transactional
+	
 	@PostMapping(AuthorizationPath.registerPath)
 	public ResponseEntity<TokenDTO> register(
-			@RequestBody @AutorizationRequestDTOValidator AutorizationRequestDTO value,
+		 @RequestBody @Valid @AutorizationRequestDTOValidator AutorizationRequestDTO value,
 			HttpServletRequest request
 			){
 		
+		
 		if(this.userRepo.existsByEmailOrPhoneAndCountryPreflix(value.getEmail(), value.getPhone(), value.getCountryPreflix())) {
-			Log4j2.log.info(this.marker,String.format("Registration was not successful, email or phone has been already registred"
+			Log4j2.log.info(this.marker,String.format("Registration was not successful, email or phone has been already registred."
 					+ System.lineSeparator()+" email %s phone_preflix %s phone %s ", value.getEmail(),value.getCountryPreflix(),value.getPhone()));
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}	
+		
 		//email or password is not registred
 		UserEntity newEntity=new UserEntity();
 		newEntity.setEmail(value.getEmail());
@@ -90,8 +98,7 @@ public class AuthorizationControler {
 			 return ResponseEntity.status(HttpStatus.CONFLICT).build();		
 		 }
 		catch(Exception e) {
-			Log4j2.log.error(this.marker,String.format("Registration was not successful, email or phone has been already registred"
-					+ System.lineSeparator()+" email %s phone_preflix %s phone %s ", value.getEmail(),value.getCountryPreflix(),value.getPhone()));
+			Log4j2.log.error(e);
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		
@@ -108,7 +115,6 @@ public class AuthorizationControler {
 		return ResponseEntity.status(HttpStatus.CREATED).body(token);
 		}
 	
-	@Transactional
 	@PostMapping(AuthorizationPath.loginPath)
 	public ResponseEntity<TokenDTO> login(
 			@RequestBody @AutorizationRequestDTOValidator AutorizationRequestDTO value,
@@ -118,15 +124,16 @@ public class AuthorizationControler {
 		if(opPassword.isEmpty()) {
 			Log4j2.log.info(this.marker,String.format("Loggin was not successful, email/phone was not found"
 					+ System.lineSeparator()+" email %s phone_preflix %s phone %s ", value.getEmail(),value.getCountryPreflix(),value.getPhone()));
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
+		
 		UserEntity user=opPassword.get();
 		
 		if(!this.BCryptEncoder.matches(value.getPassword(), user.getPassword())) {
 			Log4j2.log.info(this.marker,String.format("Loggin was not successful password was not same"
 					+ System.lineSeparator()+" email %s phone_preflix %s phone %s password %s ", value.getEmail(),value.getCountryPreflix(),value.getPhone(),value.getPassword()));
 			
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		}
 		
 		Log4j2.log.info(this.marker,String.format("Loggin was not successful password was sucessfull"
@@ -143,7 +150,7 @@ public class AuthorizationControler {
 			token);
 	}
 	
-	@Transactional
+	
 	@PostMapping(AuthorizationPath.finishRegistrationPath)
 	public ResponseEntity<TokenDTO> finishRegistration(
 			@ChangeUserDetailsRequestValidator ChangeUserDetailsDTO value,
@@ -183,7 +190,7 @@ public class AuthorizationControler {
 			HttpServletRequest request) {
 		logAuthorization x=new logAuthorization();
 		x.setDevice(this.device.DeviceIdGeneration(user, deviceId));
-		x.setCurrentLogId(this.activity.savedNewActivity(x.getDevice(), this.inetAdress.getInetAdress(request)));;
+		x.setCurrentLogId(this.LoginActivity.savedNewActivity(x.getDevice(), this.inetAdress.getInetAdress(request)));;
 		return x;
 	}
 	
