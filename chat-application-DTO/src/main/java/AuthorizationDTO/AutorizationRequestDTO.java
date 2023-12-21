@@ -1,3 +1,4 @@
+
 package AuthorizationDTO;
 
 
@@ -8,16 +9,9 @@ public class AutorizationRequestDTO {
 	private String countryPreflix;
 	private String phone;
 	private String password;
-	private int deviceID;
-	private Boolean isDeviceNew;
+	private String deviceID;
 	
 	
-	public Boolean getIsDeviceNew() {
-		return isDeviceNew;
-	}
-	public void setIsDeviceNew(Boolean isDeviceNew) {
-		this.isDeviceNew = isDeviceNew;
-	}
 	public String getEmail() {
 		return email;
 	}
@@ -42,10 +36,10 @@ public class AutorizationRequestDTO {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public int getDeviceID() {
+	public String getDeviceID() {
 		return deviceID;
 	}
-	public void setDeviceID(int deviceID) {
+	public void setDeviceID(String deviceID) {
 		this.deviceID = deviceID;
 	}
 
