@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.NamedNativeQuery;
-import javax.persistence.OneToOne;
 
 import chatAPP_DTO.Message.MessageDTO;
 

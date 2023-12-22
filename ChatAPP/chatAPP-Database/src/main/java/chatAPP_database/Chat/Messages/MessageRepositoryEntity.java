@@ -32,4 +32,5 @@ public interface MessageRepositoryEntity extends CustomJpaRepository<MessageEnti
     	return null;
     }
 	Optional<MessageEntity> findByChatIDAndOrder(String chatID,long order);
+	
 }

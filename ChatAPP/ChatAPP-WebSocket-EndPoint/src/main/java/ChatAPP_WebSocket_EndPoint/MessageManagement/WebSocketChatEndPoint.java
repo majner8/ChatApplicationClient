@@ -15,8 +15,6 @@ public interface WebSocketChatEndPoint{
 	}
 	public void SendMessage(MessageDTO message,WebSocketSession session);
 	
-	public void sawMessage(WebSocketSession session);
-	
 	public void ChangeMessage(MessageDTO message,WebSocketSession session);
 	
 }

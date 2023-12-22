@@ -131,12 +131,12 @@
 	  </dependencyManagement>
         <modules>
         	<module>ChatAPP-commontPart</module>
-        	<module>ChatAPP-Authorization</module>
         	<module>chatAPP-Database</module>
         	<module>chatAPP-DTO</module>
         	<module>ChatAPP-HTTPendPoint</module>
         	<module>ChatAPP-WebSocket-EndPoint</module>
         	<module>ChatAPP-Chat</module>
         	<module>ChatAPP-WebSocket</module>
+        	<module>ChatAPP-security</module>
         </modules>
 </project>
