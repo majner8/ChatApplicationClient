@@ -5,18 +5,9 @@
     <artifactId>ChatAPP</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>ChatAPP-Chat</groupId>
-  <artifactId>ChatAPP-Chat</artifactId>
+  <groupId>ChatAPP-WebSocket</groupId>
+  <artifactId>ChatAPP-WebSocket</artifactId>
+  
   <dependencies>
-  	<dependency>
-  		<groupId>ChatAPP</groupId>
-  		<artifactId>chatAPP-DTO</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>ChatAPP</groupId>
-  		<artifactId>chatAPP-Database</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
   </dependencies>
 </project>
