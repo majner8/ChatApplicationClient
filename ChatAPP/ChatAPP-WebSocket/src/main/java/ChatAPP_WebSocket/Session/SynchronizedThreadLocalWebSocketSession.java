@@ -1,10 +1,12 @@
-package ChatAPP_WebSocket;
+package ChatAPP_WebSocket.Session;
 
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.ConcurrentWebSocketSessionDecorator;
+
+import ChatAPP_WebSocket.CustomHandshake;
 
 @Service
 public class SynchronizedThreadLocalWebSocketSession  {

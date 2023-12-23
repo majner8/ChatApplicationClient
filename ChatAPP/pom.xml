@@ -138,5 +138,6 @@
         	<module>ChatAPP-Chat</module>
         	<module>ChatAPP-WebSocket</module>
         	<module>ChatAPP-security</module>
+        	<module>ChatAPP-RabitMQ</module>
         </modules>
 </project>

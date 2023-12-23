@@ -1,4 +1,4 @@
-package ChatAPP_Authorization.JwtToken;
+package ChatAPP_Security.Authorization.JwtToken;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -13,7 +13,7 @@ import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-import ChatAPP_Authorization.SecurityProperties;
+import ChatAPP_Security.Authorization.SecurityProperties;
 import chatAPP_DTO.Authorization.TokenDTO;
 import chatAPP_database.User.UserEntity;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -38,7 +38,7 @@ public interface jwtTokenGenerator {
 	@Component
 	public final static class jwtTokengeneratorClass implements jwtToken.jwtTokenGenerator{
 		@Autowired
-		private ChatAPP_Authorization.SecurityProperties securityProperties;
+		private SecurityProperties securityProperties;
 
 
 		public TokenDTO generateAuthorizationToken(

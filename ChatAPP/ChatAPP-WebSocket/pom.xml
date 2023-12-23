@@ -19,5 +19,20 @@
   	<artifactId>chatAPP-Database</artifactId>
   	<version>0.0.1-SNAPSHOT</version>
   </dependency>
+  <dependency>
+  	<groupId>ChatAPP-security</groupId>
+  	<artifactId>ChatAPP-security</artifactId>
+  	<version>0.0.1-SNAPSHOT</version>
+  </dependency>
+  <dependency>
+  	<groupId>ChatAPP-Chat</groupId>
+  	<artifactId>ChatAPP-Chat</artifactId>
+  	<version>0.0.1-SNAPSHOT</version>
+  </dependency>
+  <dependency>
+  	<groupId>ChatAPP-RabitMQ</groupId>
+  	<artifactId>ChatAPP-RabitMQ</artifactId>
+  	<version>0.0.1-SNAPSHOT</version>
+  </dependency>
   </dependencies>
 </project>

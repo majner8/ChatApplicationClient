@@ -1,4 +1,4 @@
-package ChatAPP_Authorization.DeviceID;
+package ChatAPP_Security.Authorization.DeviceID;
 
 import java.util.Optional;
 
@@ -10,7 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
-import ChatAPP_Authorization.CustomSecurityContextHolder.CustomSecurityContextHolder;
+import ChatAPP_Security.Authorization.CustomSecurityContextHolder.CustomSecurityContextHolder;
 import chatAPP_DTO.User.UserDTO.UserAuthPasswordDTO;
 import chatAPP_DTO.User.UserDTO.UserComunicationDTO;
 import chatAPP_DTO.User.UserDTO.UserProfileRegistrationDTO;
