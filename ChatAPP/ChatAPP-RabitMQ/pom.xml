@@ -9,6 +9,11 @@
   <artifactId>ChatAPP-RabitMQ</artifactId>
   <name>ChatAPP-RabitMQ</name>
   <dependencies>
+	  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-amqp</artifactId>
+</dependency>
+
   	<dependency>
   		<groupId>ChatAPP</groupId>
   		<artifactId>chatAPP-DTO</artifactId>

@@ -7,12 +7,12 @@ import chatAPP_DTO.Message.MessageDTO;
 public interface PushMessageRabitMQInterface {
 
 
-	public void PushMessage(MessageDTO message,String EndPointWebSocketPath,long recipientId);
+	public void PushSentChatMessage(MessageDTO message,String EndPointWebSocketPath,long UserRecipientId);
 
-	public default void PushMessage(MessageDTO message,String EndPointWebSocketPath,List<Long> recipientsId) {
-		synchronized (recipientsId) {
-			recipientsId.forEach((id)->{
-				this.PushMessage(message, EndPointWebSocketPath, id);
+	public default void PushSentChatMessages(MessageDTO message,String EndPointWebSocketPath,List<Long> UserRecipientIds) {
+		synchronized (UserRecipientIds) {
+			UserRecipientIds.forEach((id)->{
+				this.PushSentChatMessage(message, EndPointWebSocketPath, id);
 			});
 		}
 		
