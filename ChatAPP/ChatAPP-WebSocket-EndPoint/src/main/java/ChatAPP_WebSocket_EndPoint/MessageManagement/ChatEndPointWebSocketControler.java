@@ -1,6 +1,7 @@
 package ChatAPP_WebSocket_EndPoint.MessageManagement;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -12,6 +13,7 @@ public class ChatEndPointWebSocketControler implements WebSocketChatEndPoint{
 	@Autowired
 	private ChatMessageService MessageService;
 	@Override
+	@MessageMapping()
 	public void SendMessage(MessageDTO message,WebSocketSession session) {
 
 	}

@@ -20,6 +20,7 @@ public class Log4j2 {
 	RequestLogAuthorization(MarkerManager.getMarker(""))
 	,
 	ObjectReferenceRemoving(MarkerManager.getMarker("")),
+	RabitMQ(MarkerManager.getMarker(""))
 
 	;
 		

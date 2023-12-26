@@ -56,8 +56,8 @@ public class ProcessChatMessageService {
 
 	private void PushMessageToRabitMQService(MessageDTO message,String WebSocketEndPointPath) {
 		//retrieved all memberIDOfChat
-		List<Long> memberID=this.chatManagement.getUserIDofMembers();
+		List<Long> membersID=this.chatManagement.getUserIDofMembers();
 		//push message to rabitMQ
-		this.rabitMQPush.PushMessage(message, WebSocketEndPointPath, memberID);
+		this.rabitMQPush.PushSentChatMessages(message, WebSocketEndPointPath, membersID);
 	}
 }
