@@ -34,7 +34,9 @@ public class rabitMQConsumer implements ChannelAwareMessageListener,GarbageColle
 	//deliveryTag, Channel of Message,TimeStamp
 	private LinkedHashMap<String,Fourth<Long,Channel,Long,RabitMQMessageType>> unAcknowledgeMessage;
 	
-	private final String WebSocketID=null;
+	private String WebSocketID=null;
+	
+	
 	
 	@Async
 	@Override
@@ -44,7 +46,6 @@ public class rabitMQConsumer implements ChannelAwareMessageListener,GarbageColle
 		RabitMQMessageType messageType=RabitMQMessageType.valueOf(MessageTypeName);
 		Fourth<Long,Channel,Long,RabitMQMessageType> properties=new Fourth<Long,Channel,Long,RabitMQMessageType>(message.getMessageProperties().getDeliveryTag(),channel,System.currentTimeMillis(),messageType);
 		this.unAcknowledgeMessage.put(messageID,properties);
-		
 		Object dto=this.convertRabitMQBodyToDTO(message.getBody(), messageType);
 		String WebSocketEndPoint=message.getMessageProperties().getHeader(this.properties.getMessagePropertiesWebSocketEndPointName());
 		this.wsSessionPublisher.SendConsumedMessage(WebSocketEndPoint,dto, messageID, this.WebSocketID);
@@ -83,6 +84,14 @@ public class rabitMQConsumer implements ChannelAwareMessageListener,GarbageColle
 		} catch (IOException e) {
 			Log4j2.log.error(Log4j2.MarkerLog.RabitMQ.getMarker(),"Problem with SendNegativeAkcnowledgement, deliveryTag "+ String.valueOf(develiryTag)+"   Exception:"+e);
 		}
+	}
+	
+	
+	public String getWebSocketID() {
+		return WebSocketID;
+	}
+	public void setWebSocketID(String webSocketID) {
+		WebSocketID = webSocketID;
 	}
 	
 }

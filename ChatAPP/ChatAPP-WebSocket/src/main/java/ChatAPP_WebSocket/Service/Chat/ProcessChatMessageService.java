@@ -1,4 +1,4 @@
-package ChatAPP_WebSocket.Service;
+package ChatAPP_WebSocket.Service.Chat;
 
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
