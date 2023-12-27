@@ -9,6 +9,9 @@ import org.springframework.amqp.rabbit.listener.api.ChannelAwareMessageListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 
 import ChatAPP_RabitMQ.RabitMQMessageType;
@@ -23,6 +26,10 @@ public class rabitMQConsumer implements ChannelAwareMessageListener,GarbageColle
 	private RabitMQProperties properties;
 	@Autowired
 	private RabitMQMessagePublisher wsSessionPublisher;
+	@Autowired
+	private ObjectMapper objectMapper;
+	@Autowired
+	private RabitMQMessageWasNotAcknowledge MessageWasNotAcknowledge;
 	
 	//deliveryTag, Channel of Message,TimeStamp
 	private LinkedHashMap<String,Fourth<Long,Channel,Long,RabitMQMessageType>> unAcknowledgeMessage;
@@ -37,10 +44,16 @@ public class rabitMQConsumer implements ChannelAwareMessageListener,GarbageColle
 		RabitMQMessageType messageType=RabitMQMessageType.valueOf(MessageTypeName);
 		Fourth<Long,Channel,Long,RabitMQMessageType> properties=new Fourth<Long,Channel,Long,RabitMQMessageType>(message.getMessageProperties().getDeliveryTag(),channel,System.currentTimeMillis(),messageType);
 		this.unAcknowledgeMessage.put(messageID,properties);
-		this.wsSessionPublisher.SendConsumedMessage(message.getBody(), messageID, this.WebSocketID);
+		
+		Object dto=this.convertRabitMQBodyToDTO(message.getBody(), messageType);
+		String WebSocketEndPoint=message.getMessageProperties().getHeader(this.properties.getMessagePropertiesWebSocketEndPointName());
+		this.wsSessionPublisher.SendConsumedMessage(WebSocketEndPoint,dto, messageID, this.WebSocketID);
+
 		
 	}
-	
+	private Object convertRabitMQBodyToDTO(byte[] body,RabitMQMessageType typeOfMessage) throws JsonParseException, JsonMappingException, IOException {
+		return this.objectMapper.readValue(body, typeOfMessage.getDtoClass());
+	}
 
 	@Async
 	@Override
@@ -59,7 +72,7 @@ public class rabitMQConsumer implements ChannelAwareMessageListener,GarbageColle
 			});
 			keyToRemove.forEach((K)->{
 				this.unAcknowledgeMessage.remove(K);
-				this.wsSessionPublisher.MessageDeliveryTimeoutExpire(this.WebSocketID,K);
+				this.MessageWasNotAcknowledge.MessageDeliveryTimeoutExpire(this.WebSocketID, K);
 			});
 		}
 	}
