@@ -35,7 +35,8 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 	public void onMessage(Message message, Channel channel) throws Exception {
 		MessageProperties prop=message.getMessageProperties();
 		String messageID=prop.getMessageId();
-		String MessageTypeName=prop.getHeader(this.properties.getMessagePropertiesWebSocketEndPointName());
+		String MessageTypeName=prop.getType();
+		String webSocketEndPoint=prop.getHeader(this.properties.getMessagePropertiesWebSocketEndPointName());
 		RabitMQMessageType messageType=RabitMQMessageType.valueOf(MessageTypeName);
 			//name is same as userdeviceID, userID+deviceID
 		String recipientID=prop.getConsumerQueue();
@@ -43,7 +44,7 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 		unAcknowledgeMessages messages=this.ListOfConnectedDevice.get(recipientID);
 		if(messages==null) {
 			//Consuming was stopped, have to returned consumed Message
-			new ChatAPP_RabitMQ.Listener.rabitMQListenerService.unAcknowledgeMessages.AcknowledgeMessage(prop.getDeliveryTag(),
+			new ChatAPP_RabitMQ.Listener.rabitMQListenerService.unAcknowledgeMessages.AcknowledgeMessage(messageID,prop.getDeliveryTag(),
 					channel,System.currentTimeMillis(),messageType.isShouldBeMessageRequired())
 			.NackMessage();
 			Log4j2.log.warn(Log4j2.MarkerLog.RabitMQ.getMarker(),
@@ -57,7 +58,7 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 		messages
 		.AddUnAcknodlegeMessage(messageID, channel, prop.getDeliveryTag(), messageType);
 		
-		this.relay.SendConsumedMessage(message.getBody(), messageType, recipientID);
+		this.relay.SendConsumedMessage(webSocketEndPoint,messageID,message.getBody(), messageType, recipientID);
 	}
 	
 	/**Metod verify, if time expiration of unAcknowledgeMessage
@@ -92,6 +93,7 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 
 		private void AddUnAcknodlegeMessage(String messageID,Channel channel,long deliveryTag,RabitMQMessageType messageTyp) {
 			AcknowledgeMessage message=new AcknowledgeMessage(
+					messageID,
 					deliveryTag,
 					channel,
 					System.currentTimeMillis(),
@@ -99,7 +101,7 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 			this.listOfMessage.put(messageID, message);
 		}
 		
-		private void PositiveAcknowledgement(String messageID) {
+		private void PositiveAcknowledgement(String messageID)  {
 			AcknowledgeMessage mes=this.listOfMessage.get(messageID);
 			if(mes==null) {
 				return;
@@ -107,10 +109,15 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 				try {
 					mes.AckMessage();
 				} catch (IOException e) {
+					Log4j2.log.error(Log4j2.MarkerLog.RabitMQ.getMarker(),
+							String.format(e+System.lineSeparator(),
+									"Cannot make PositiveAcknowledgement of message"+System.lineSeparator()+
+									"messageID: %s"+System.lineSeparator(), 
+									messageID));
 				}
-			
-			
-			this.listOfMessage.remove(messageID);
+				finally {
+					this.listOfMessage.remove(messageID);
+				}
 		}
 		private void NegativeAcknowledgementAllMessages() {
 			synchronized(this.listOfMessage) {
@@ -118,8 +125,12 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 					try {
 						V.NackMessage();
 					} catch (IOException e) {
+						Log4j2.log.error(Log4j2.MarkerLog.RabitMQ.getMarker(),
+								String.format(e+System.lineSeparator(),
+										"Cannot make negativeAcknowledgement of message"+System.lineSeparator()+
+										"messageID: %s"+System.lineSeparator(), 
+										K));	
 					}
-					
 				});
 			}
 		}
@@ -129,11 +140,18 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 			synchronized(this.listOfMessage) {
 				long currentTime=System.currentTimeMillis();
 				this.listOfMessage.forEach((K,V)->{
+					
 					if(V.doesMessageExpired(currentTime,properties)) {
+						//message expired have to be remove
 						expirationMessages.add(	Pair.of(K, V));
+						Log4j2.log.trace(Log4j2.MarkerLog.RabitMQ.getMarker(),
+								
+								"UnAcknowledgeMessage expired, will be send back toRabitMQ "+System.lineSeparator()
+								+"MessageID: "+K);
 					}
 				});
 			}
+			
 			expirationMessages.forEach((V)->{
 				try {
 					V.getSecond().NackMessage();
@@ -145,14 +163,16 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 			
 		}
 		private static final class AcknowledgeMessage{
+			private final String messageID;
 			private long deliveryTag;
 			private Channel rabitChannel;
 			private long timeStamp;
 			private boolean shouldBeMessageRequiredAfterExpiration;
 			private boolean wasMessageAlreadyAcknowledged=false;
 			
-			protected AcknowledgeMessage(long deliveryTag, Channel rabitChannel, long timeStamp,
+			protected AcknowledgeMessage(String messageID,long deliveryTag, Channel rabitChannel, long timeStamp,
 					boolean shouldBeMessageRequiredAfterExpiration) {
+				this.messageID=messageID;
 				this.deliveryTag = deliveryTag;
 				this.rabitChannel = rabitChannel;
 				this.timeStamp = timeStamp;
@@ -163,9 +183,15 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 			private boolean AckMessage() throws IOException {
 				synchronized(this) {
 					if(wasMessageAlreadyAcknowledged) {
+						Log4j2.log.warn(Log4j2.MarkerLog.RabitMQ.getMarker(),
+								String.format("MessageID: %s could not be Ack, because it was acknowledge before"
+								, this.messageID));
 						return false;
 					}
 					this.rabitChannel.basicAck(deliveryTag, false);
+					Log4j2.log.trace(Log4j2.MarkerLog.RabitMQ.getMarker(),
+							String.format("MessageID: %s was Ack"
+							, this.messageID));
 					wasMessageAlreadyAcknowledged=true;
 				}
 				return true;
@@ -176,10 +202,17 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 			private boolean NackMessage() throws IOException {
 				synchronized(this) {
 					if(wasMessageAlreadyAcknowledged) {
+						Log4j2.log.warn(Log4j2.MarkerLog.RabitMQ.getMarker(),
+								String.format("MessageID: %s could not be Nack, because it was acknowledge before"
+								, this.messageID));
 						return false;
 					}
 					this.rabitChannel.basicNack(deliveryTag, false, this.shouldBeMessageRequiredAfterExpiration);
 					wasMessageAlreadyAcknowledged=true;
+					Log4j2.log.trace(Log4j2.MarkerLog.RabitMQ.getMarker(),
+							String.format("MessageID: %s was Nack"+System.lineSeparator()
+							+"Was message required: %s"
+							, this.messageID,this.shouldBeMessageRequiredAfterExpiration));
 				}
 				return true;
 			}			
@@ -214,6 +247,9 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 	
 	@Scheduled()
 	public void Timer() {
+		Log4j2.log.debug(Log4j2.MarkerLog.RabitMQ.getMarker(),
+				String.format("Start expiration periodical check"));
+		
 		synchronized(this.ListOfConnectedDevice) {
 			this.ListOfConnectedDevice.forEach((K,V)->{
 				this.MessageTime(V);
