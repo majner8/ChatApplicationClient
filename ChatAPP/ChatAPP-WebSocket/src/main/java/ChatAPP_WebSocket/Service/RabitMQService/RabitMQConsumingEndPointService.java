@@ -2,7 +2,8 @@ package ChatAPP_WebSocket.Service.RabitMQService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ChatAPP_WebSocket.Session.ThreadLocalSimpMessageHeaderAccessor;
+import chatAPP_CommontPart.ThreadLocal.ThreadLocalSimpMessageHeaderAccessor;
+
 
 public class RabitMQConsumingEndPointService implements RabitMqConsumingServiceInterface{
 

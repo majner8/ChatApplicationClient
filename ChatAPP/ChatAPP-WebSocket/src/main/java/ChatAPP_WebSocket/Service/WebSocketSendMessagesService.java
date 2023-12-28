@@ -19,7 +19,6 @@ public class WebSocketSendMessagesService implements RabitMQMessagePublisher {
 	public void SendConsumedMessage(String webSocketEndPoint,Object dtoMessage, String acknowledgeMessageID, String userID) {
 		HashMap<String,Object>header=new HashMap<String,Object>();
 		header.put(this.attribute.getAcknowledgeIdHeaderName(), acknowledgeMessageID);
-		
 		this.SimpMessageTemplate.convertAndSendToUser(userID, webSocketEndPoint, dtoMessage, header);        
 	}
 

@@ -1,0 +1,223 @@
+package ChatAPP_RabitMQ.Listener;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.rabbit.listener.api.ChannelAwareMessageListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import com.rabbitmq.client.Channel;
+
+import ChatAPP_RabitMQ.RabitMQMessageType;
+import ChatAPP_RabitMQ.RabitMQProperties;
+import ChatAPP_RabitMQ.Consumer.RabbitMQConsumerControlInterface;
+import chatAPP_CommontPart.Log4j2.Log4j2;
+@Service
+public class rabitMQListenerService implements ChannelAwareMessageListener,RabbitMQConsumerControlInterface{
+
+	private final Map<String,unAcknowledgeMessages> ListOfConnectedDevice=Collections.synchronizedMap(
+			new HashMap<String,unAcknowledgeMessages>());
+	@Autowired
+	private RabitMQProperties properties;
+	@Autowired
+	private RabbitMQMessageRelayInterface relay;
+	@Override
+	public void onMessage(Message message, Channel channel) throws Exception {
+		MessageProperties prop=message.getMessageProperties();
+		String messageID=prop.getMessageId();
+		String MessageTypeName=prop.getHeader(this.properties.getMessagePropertiesWebSocketEndPointName());
+		RabitMQMessageType messageType=RabitMQMessageType.valueOf(MessageTypeName);
+			//name is same as userdeviceID, userID+deviceID
+		String recipientID=prop.getConsumerQueue();
+		
+		unAcknowledgeMessages messages=this.ListOfConnectedDevice.get(recipientID);
+		if(messages==null) {
+			//Consuming was stopped, have to returned consumed Message
+			new ChatAPP_RabitMQ.Listener.rabitMQListenerService.unAcknowledgeMessages.AcknowledgeMessage(prop.getDeliveryTag(),
+					channel,System.currentTimeMillis(),messageType.isShouldBeMessageRequired())
+			.NackMessage();
+			Log4j2.log.warn(Log4j2.MarkerLog.RabitMQ.getMarker(),
+					String.format(
+							"Cannot find unAcknowledgeMessages in Map. Messages was Nack and return to rabitMQ Queue"+System.lineSeparator()+
+							"Consumer Queue ID: %s "+System.lineSeparator()+
+							"returned MessageID: ", 
+							prop.getConsumerQueue(),prop.getMessageId()));
+			return;
+		}
+		messages
+		.AddUnAcknodlegeMessage(messageID, channel, prop.getDeliveryTag(), messageType);
+		
+		this.relay.SendConsumedMessage(message.getBody(), messageType, recipientID);
+	}
+	
+	/**Metod verify, if time expiration of unAcknowledgeMessage
+	 * Metod work async*/
+	@Async
+	private void MessageTime(unAcknowledgeMessages toChech) {
+		toChech.ExpirationCheck();
+	}
+	
+	private void AckMessage(String SessionID,String messageID) {
+		unAcknowledgeMessages mes=this.ListOfConnectedDevice.get(SessionID);
+		if(mes==null) {
+			Log4j2.log.warn(Log4j2.MarkerLog.RabitMQ.getMarker(),
+					String.format(
+							"Cannot find unAcknowledgeMessages instance"+System.lineSeparator()+
+							"userDeviceID: %s"+System.lineSeparator()+
+							"messageID: %s", 
+							SessionID,messageID));
+			return;
+		}
+		mes.PositiveAcknowledgement(messageID);
+	}
+	
+	private final class unAcknowledgeMessages {
+		private final String sessionID;
+		private final Map<String,AcknowledgeMessage>listOfMessage=
+				Collections.synchronizedMap(new HashMap<>());
+		
+		protected unAcknowledgeMessages(String sessionID) {
+			this.sessionID = sessionID;
+		}
+
+		private void AddUnAcknodlegeMessage(String messageID,Channel channel,long deliveryTag,RabitMQMessageType messageTyp) {
+			AcknowledgeMessage message=new AcknowledgeMessage(
+					deliveryTag,
+					channel,
+					System.currentTimeMillis(),
+					messageTyp.isShouldBeMessageRequired());
+			this.listOfMessage.put(messageID, message);
+		}
+		
+		private void PositiveAcknowledgement(String messageID) {
+			AcknowledgeMessage mes=this.listOfMessage.get(messageID);
+			if(mes==null) {
+				return;
+			}
+				try {
+					mes.AckMessage();
+				} catch (IOException e) {
+				}
+			
+			
+			this.listOfMessage.remove(messageID);
+		}
+		private void NegativeAcknowledgementAllMessages() {
+			synchronized(this.listOfMessage) {
+				this.listOfMessage.forEach((K,V)->{
+					try {
+						V.NackMessage();
+					} catch (IOException e) {
+					}
+					
+				});
+			}
+		}
+		
+		private void ExpirationCheck() {
+			List<Pair<String,AcknowledgeMessage>> expirationMessages=new ArrayList<>();
+			synchronized(this.listOfMessage) {
+				long currentTime=System.currentTimeMillis();
+				this.listOfMessage.forEach((K,V)->{
+					if(V.doesMessageExpired(currentTime,properties)) {
+						expirationMessages.add(	Pair.of(K, V));
+					}
+				});
+			}
+			expirationMessages.forEach((V)->{
+				try {
+					V.getSecond().NackMessage();
+					this.listOfMessage.remove(V.getFirst());
+				} catch (IOException e) {
+					
+				}
+			});
+			
+		}
+		private static final class AcknowledgeMessage{
+			private long deliveryTag;
+			private Channel rabitChannel;
+			private long timeStamp;
+			private boolean shouldBeMessageRequiredAfterExpiration;
+			private boolean wasMessageAlreadyAcknowledged=false;
+			
+			protected AcknowledgeMessage(long deliveryTag, Channel rabitChannel, long timeStamp,
+					boolean shouldBeMessageRequiredAfterExpiration) {
+				this.deliveryTag = deliveryTag;
+				this.rabitChannel = rabitChannel;
+				this.timeStamp = timeStamp;
+				this.shouldBeMessageRequiredAfterExpiration = shouldBeMessageRequiredAfterExpiration;
+			}
+			/**@return true-if Ack operation was sucessful
+			 * @return false, if Ack operation was not be sucesfull-acknowledgement has been done before */
+			private boolean AckMessage() throws IOException {
+				synchronized(this) {
+					if(wasMessageAlreadyAcknowledged) {
+						return false;
+					}
+					this.rabitChannel.basicAck(deliveryTag, false);
+					wasMessageAlreadyAcknowledged=true;
+				}
+				return true;
+			}
+
+			/**@return true-if Nack operation was sucessful
+			 * @return false, if Nack operation was not be sucesfull-acknowledgement has been done before */
+			private boolean NackMessage() throws IOException {
+				synchronized(this) {
+					if(wasMessageAlreadyAcknowledged) {
+						return false;
+					}
+					this.rabitChannel.basicNack(deliveryTag, false, this.shouldBeMessageRequiredAfterExpiration);
+					wasMessageAlreadyAcknowledged=true;
+				}
+				return true;
+			}			
+	
+			private boolean doesMessageExpired(long currentTime,RabitMQProperties properties) {
+			
+				return ((this.timeStamp-currentTime)>properties.getUnacknowledgedMessageTimeout());
+			}
+		}
+	}
+
+
+	@Override
+	public void startConsume(String userdeviceID) {
+		unAcknowledgeMessages mes=new unAcknowledgeMessages(userdeviceID);
+		this.ListOfConnectedDevice.put(userdeviceID, mes);
+	}
+
+
+	@Override
+	public void stopConsume(String userdeviceID,boolean DoesDeviceDisconect) {
+		if(!DoesDeviceDisconect) {
+			return;
+		}
+		unAcknowledgeMessages mes;
+		synchronized(this.ListOfConnectedDevice) {
+			mes=this.ListOfConnectedDevice.get(userdeviceID);
+			this.ListOfConnectedDevice.remove(userdeviceID);
+		}
+		mes.NegativeAcknowledgementAllMessages();
+	}
+	
+	@Scheduled()
+	public void Timer() {
+		synchronized(this.ListOfConnectedDevice) {
+			this.ListOfConnectedDevice.forEach((K,V)->{
+				this.MessageTime(V);
+			});
+		}
+	}
+}
