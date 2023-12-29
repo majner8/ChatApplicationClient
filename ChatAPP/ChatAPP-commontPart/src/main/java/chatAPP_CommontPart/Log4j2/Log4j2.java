@@ -17,7 +17,8 @@ public class Log4j2 {
 	),Validation(MarkerManager.getMarker(""))
 	,WebSocket(MarkerManager.getMarker("")),RequestLog(MarkerManager.getMarker("")),
 	Authorization(MarkerManager.getMarker("")),
-	RequestLogAuthorization(MarkerManager.getMarker(""))
+	RequestLogAuthorization(MarkerManager.getMarker("")),
+	Aspect(MarkerManager.getMarker(""))
 	,
 	ObjectReferenceRemoving(MarkerManager.getMarker("")),
 	RabitMQ(MarkerManager.getMarker(""))

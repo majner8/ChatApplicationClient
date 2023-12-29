@@ -1,17 +1,14 @@
 package ChatAPP_WebSocket.Service.Chat;
 
-import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.WebSocketSession;
 
 import ChatAPP_Chat.ChatManagement.ChatManagementInterface;
 import ChatAPP_RabitMQ.PushingMessages.PushMessageRabitMQInterface;
 import ChatAPP_Security.RequestPermision.MessageRequestPermision;
-import ChatAPP_WebSocket.Session.WebSocketSessionManagementInterface;
 import chatAPP_CommontPart.ThreadLocal.ThreadLocalSimpMessageHeaderAccessor;
 import chatAPP_DTO.Message.MessageDTO;
 import chatAPP_database.Chat.Messages.MessageEntity;

@@ -1,4 +1,4 @@
-package ChatAPP_WebSocket_EndPoint.MessageManagement;
+package ChatAPP_WebSocket_EndPoint.EndPoint.MessageManagement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,7 +20,6 @@ public class ChatEndPointWebSocketControler implements WebSocketChatEndPoint{
 	@Override
 	@MessageMapping()
 	public void SendMessage(MessageDTO message,SimpMessageHeaderAccessor session) {
-
 	}
 
 

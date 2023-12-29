@@ -45,12 +45,9 @@ public class StompMessageRelayService implements RabbitMQMessageRelayInterface {
 						+ "MessageID: "+messageID+System.lineSeparator()
 						+ "");
 			}
-		
-		
 	}
 	@Override
 	public void MessageTimeoutExpired(String recipientID, String messageID) {
-		// TODO Auto-generated method stub
-		
+		//have to be done 
 	}
 }
