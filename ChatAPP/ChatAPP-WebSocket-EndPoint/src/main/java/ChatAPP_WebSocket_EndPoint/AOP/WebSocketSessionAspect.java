@@ -17,7 +17,8 @@ public class WebSocketSessionAspect  {
 	@Autowired
 	private ThreadLocalSessionSimpMessageHeaderAccessor manipulation;
 	 @Around("execution(void ChatAPP_WebSocket_EndPoint.EndPoint.*.*(..))")
-	    public void manageWebSocketSession(ProceedingJoinPoint joinPoint) throws Throwable {
+	 /**Metod add WebSocket and callWebSocketPath */   
+	 public void manageWebSocketSession(ProceedingJoinPoint joinPoint) throws Throwable {
 		 if(Log4j2.log.isDebugEnabled()) {
 			 String message=String.format("running aspect Metod manageWebSocketSession"+System.lineSeparator()
 			 +"Evoked by: %s"
@@ -27,11 +28,10 @@ public class WebSocketSessionAspect  {
 		 }
 		 
 		 SimpMessageHeaderAccessor ses = null;
-		 
 		 for(Object x:joinPoint.getArgs()) {
 		 		if(x instanceof SimpMessageHeaderAccessor) {
 		 			ses=(SimpMessageHeaderAccessor)x;
-		 			break;
+		 
 		 		}
 		 	}
 		 if(ses==null)return;

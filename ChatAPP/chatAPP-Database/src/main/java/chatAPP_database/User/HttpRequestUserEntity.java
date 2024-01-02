@@ -5,7 +5,7 @@ import org.springframework.web.context.annotation.RequestScope;
 
 @Component
 @RequestScope
-public  final class HttpRequestUserEntity{
+public  class HttpRequestUserEntity{
 
 	private UserEntity userEntity;
 

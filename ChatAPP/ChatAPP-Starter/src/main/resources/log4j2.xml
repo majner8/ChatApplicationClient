@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="debug">
+    <Appenders>
+        <!-- Define Console Appender -->
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <!-- Setup root logger with console appender -->
+        <Root level="debug">
+            <AppenderRef ref="ConsoleAppender"/>
+        </Root>
+
+        <!-- Additional logger setups if needed -->
+        <!-- Example: Setting Hibernate logging to INFO level -->
+        <!--
+        <Logger name="org.hibernate" level="TRACE">
+            <AppenderRef ref="ConsoleAppender"/>
+        </Logger>
+        -->
+    </Loggers>
+</Configuration>
+

@@ -5,16 +5,17 @@ import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 
 
 
-
-public abstract interface CustomJpaRepository<K,T> extends JpaRepository<K,T>  {
+@NoRepositoryBean
+public abstract interface CustomJpaRepository<T,ID> extends JpaRepository<T,ID>  {
 
 	/** Metod return saved entity, aling by primaryKey
 	 * @throws RunTimeException EntityNotFoundException if message was not found with assign primaryKey */
-	default K findByPrimaryKey(T primaryKey)  {
-		Optional<K> entity=this.findById(primaryKey);
+	default T findByPrimaryKey(ID primaryKey)  {
+		Optional<T> entity=this.findById(primaryKey);
 		if(entity.isEmpty())throw new EntityNotFoundException();
 
 		return entity.get();

@@ -7,4 +7,9 @@
   </parent>
   <groupId>ChatAPP-commontPart</groupId>
   <artifactId>ChatAPP-commontPart</artifactId>
+  <dependencies><dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-amqp</artifactId>
+</dependency>
+</dependencies>
 </project>

@@ -4,16 +4,16 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
 import chatAPP_DTO.Message.MessageDTO;
 
 
 
-@Entity()
+@Entity(name=MessageEntity.messageEntityTableName)
 public class MessageEntity {
 	public static final String messageEntityTableName="messages";
-
-	public static final String chatIDColumnName="id";
+	public static final String chatIDColumnName="chat_id";
 	public static final String senderIDColumnName="sender_id";
 	public static final String messageIDColumnName="message_id";
 	public static final String messageColumnName="message";
@@ -32,6 +32,7 @@ public class MessageEntity {
 	@Column(name=MessageEntity.senderIDColumnName)
 	private long senderID;
 	//unique by client
+	@Id
 	@Column(name=MessageEntity.messageIDColumnName)
 	private String messageID;
 	@Column(name=MessageEntity.messageColumnName)
@@ -42,7 +43,7 @@ public class MessageEntity {
 	private boolean wasMessageRemoved=false;
 	@Column(name=MessageEntity.ColumnNamereferenctMessageID)
     private String referenctMessageID;
-	@Column(name=MessageEntity.ColumnNamereferenctMessageID)
+	@Column(name=MessageEntity.ColumnNameextendsAction)
     private MessageTypeOfAction TypeOfMessage;
 	
 	@javax.persistence.Version
@@ -85,18 +86,6 @@ public class MessageEntity {
 		mes.setVersion(this.Version);
 		return mes;
 	}
-	
-    
-	public long getVersion() {
-		return Version;
-	}
-
-
-
-
-	public void setVersion(long version) {
-		Version = version;
-	}
 
 
 
@@ -105,65 +94,53 @@ public class MessageEntity {
 		return order;
 	}
 
-	public void setOrder(long order) {
-		this.order = order;
-	}
+
+
 
 	public String getChatID() {
 		return chatID;
 	}
 
-	public void setChatID(String chatID) {
-		this.chatID = chatID;
-	}
+
+
 
 	public long getSenderID() {
 		return senderID;
 	}
 
-	public void setSenderID(long senderID) {
-		this.senderID = senderID;
-	}
+
+
 
 	public String getMessageID() {
 		return messageID;
 	}
 
-	public void setMessageID(String messageID) {
-		this.messageID = messageID;
-	}
+
+
 
 	public String getMessage() {
-		
 		return message;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+
+
 
 	public LocalDateTime getReceivedTime() {
 		return receivedTime;
 	}
 
-	public void setReceivedTime(LocalDateTime receivedTime) {
-		this.receivedTime = receivedTime;
-	}
+
+
 
 	public boolean isWasMessageRemoved() {
 		return wasMessageRemoved;
 	}
 
-	public void setWasMessageRemoved(boolean wasMessageRemoved) {
-		this.wasMessageRemoved = wasMessageRemoved;
-	}
+
+
 
 	public String getReferenctMessageID() {
 		return referenctMessageID;
-	}
-
-	public void setReferenctMessageID(String referenctMessageID) {
-		this.referenctMessageID = referenctMessageID;
 	}
 
 
@@ -176,12 +153,89 @@ public class MessageEntity {
 
 
 
+	public long getVersion() {
+		return Version;
+	}
+
+
+
+
+	public void setOrder(long order) {
+		this.order = order;
+	}
+
+
+
+
+	public void setChatID(String chatID) {
+		this.chatID = chatID;
+	}
+
+
+
+
+	public void setSenderID(long senderID) {
+		this.senderID = senderID;
+	}
+
+
+
+
+	public void setMessageID(String messageID) {
+		this.messageID = messageID;
+	}
+
+
+
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+
+
+
+	public void setReceivedTime(LocalDateTime receivedTime) {
+		this.receivedTime = receivedTime;
+	}
+
+
+
+
+	public void setWasMessageRemoved(boolean wasMessageRemoved) {
+		this.wasMessageRemoved = wasMessageRemoved;
+	}
+
+
+
+
+	public void setReferenctMessageID(String referenctMessageID) {
+		this.referenctMessageID = referenctMessageID;
+	}
+
+
+
+
 	public void setTypeOfMessage(MessageTypeOfAction typeOfMessage) {
 		TypeOfMessage = typeOfMessage;
 	}
+
+
+
+
+	public void setVersion(long version) {
+		Version = version;
+	}
 	
+   
 
-
-
+	public static interface MessageEntityProjection{
+		public long getOrder();
+		public String getChatID();
+		public long getSenderID();
+		public String getMessageID();
+		public String getMessage();
+		public LocalDateTime getReceivedTime();
+	}
 	
 }

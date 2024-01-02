@@ -13,7 +13,6 @@ import javax.persistence.Id;
 
 import chatAPP_CommontPart.Log4j2.Log4j2;
 
-
 @Entity
 public class UserEntity {
 

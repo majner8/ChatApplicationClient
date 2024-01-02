@@ -7,10 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ChatAPP_Chat.ChatManagement.ChatManagementInterface;
-import ChatAPP_RabitMQ.PushingMessages.PushMessageRabitMQInterface;
+import ChatAPP_RabitMQ.Producer.PushMessageRabitMQService;
 import ChatAPP_Security.RequestPermision.MessageRequestPermision;
 import chatAPP_CommontPart.ThreadLocal.ThreadLocalSimpMessageHeaderAccessor;
 import chatAPP_DTO.Message.MessageDTO;
+import chatAPP_DTO.Message.SawMessageDTO;
 import chatAPP_database.Chat.Messages.MessageEntity;
 import chatAPP_database.Chat.Messages.MessageRepositoryEntity;
 
@@ -26,9 +27,10 @@ public class ProcessChatMessageService {
 	@Autowired
 	private ChatManagementInterface chatManagement;
 	@Autowired
-	private PushMessageRabitMQInterface rabitMQPush;
+	private PushMessageRabitMQService rabitMQPush;
 
-	public void SendMessage(MessageDTO message,String WebSocketEndPointPath) {
+	/** */
+	public void SendMessage(MessageDTO message) {
 		//verify if user has permision to write into chat
 		//if not exception will be thrown and catch by global handler
 		this.SecurityVerification.verifyChatWritePermission(message.getSenderID(), this.sessionAttributeInterface.getSessionOwnerUserID(), message.getChatID());
@@ -37,9 +39,9 @@ public class ProcessChatMessageService {
 		this.messageRepo.saveAndFlush(entity);
 		message=entity.convertEntityToDTO();
 		
-		this.PushMessageToRabitMQService(message, WebSocketEndPointPath);
+		this.PushMessageToRabitMQService(message);
 	}
-	public void ChangeMessage(MessageDTO message,String WebSocketEndPointPath) {
+	public void ChangeMessage(MessageDTO message) {
 		//if message is not exist EntityWasNotFoundException would be thrown
 		MessageEntity entity=this.messageRepo.findByPrimaryKey(message.getMessageID());
 		//verify, if user has permision to change message(E.t.c it is owner of message)
@@ -49,13 +51,16 @@ public class ProcessChatMessageService {
 		this.messageRepo.saveAndFlush(entity);
 		message=entity.convertEntityToDTO();
 			
-		this.PushMessageToRabitMQService(message, WebSocketEndPointPath);
+		this.PushMessageToRabitMQService(message);
 	}
-
-	private void PushMessageToRabitMQService(MessageDTO message,String WebSocketEndPointPath) {
+	public void sawMessage(SawMessageDTO message) {
+		
+	}
+	
+	private void PushMessageToRabitMQService(MessageDTO message) {
 		//retrieved all memberIDOfChat
 		List<Long> membersID=this.chatManagement.getUserIDofMembers();
 		//push message to rabitMQ
-		this.rabitMQPush.PushSentChatMessages(message, WebSocketEndPointPath, membersID);
-	}
+		this.rabitMQPush.PushSentChatMessages(message, 
+				membersID);	}
 }

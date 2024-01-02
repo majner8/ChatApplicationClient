@@ -23,5 +23,10 @@
   		<artifactId>ChatAPP-RabitMQ</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
+  	<dependency>
+  		<groupId>ChatAPP-WebSocket</groupId>
+  		<artifactId>ChatAPP-WebSocket</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
   </dependencies>
 </project>

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
 import chatAPP_DTO.User.UserDTO.UserAuthPasswordDTO;
 
@@ -15,6 +16,7 @@ public class UserAuthEntity {
 	public final static String passwordEntityColumnName="password";
 	public final static String lastChangePasswordEntityColumnName="last_change_password";
 
+	@Id
 	@Column(name=UserAuthEntity.userIdEntityColumnName)
 	private long userId;
 	@Column(name=UserAuthEntity.passwordEntityColumnName)
