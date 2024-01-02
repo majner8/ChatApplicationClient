@@ -30,6 +30,24 @@ public interface ThreadLocalSimpMessageHeaderAccessor {
 	public SimpleMessageListenerContainer getSimpleMessageListenerContainer();
 
 	public static enum rabitMQMessageType{
+	Ahoj;
+		rabitMQMessageType(){
+			
+		}
+		public Class<?> getDtoClass() {
+			return DtoClass;
+		}
+
+
+		public boolean isShouldBeMessageRequired() {
+			return ShouldBeMessageRequired;
+		}
+
+		public Integer getPriority() {
+			return priority;
+		}
+
+
 		
 	}
 }

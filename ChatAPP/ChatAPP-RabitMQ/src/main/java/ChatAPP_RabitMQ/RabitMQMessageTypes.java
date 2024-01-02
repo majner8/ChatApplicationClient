@@ -2,7 +2,7 @@ package ChatAPP_RabitMQ;
 
 import chatAPP_DTO.Message.MessageDTO;
 
-public enum RabitMQMessageType {
+public enum RabitMQMessageTypes {
 	
 	SendChatMessage((Integer)5,false,MessageDTO.class),
 	UserDatabaseRequest((Integer)1,true,null);

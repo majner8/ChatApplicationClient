@@ -53,4 +53,22 @@ public class ThreadLocalSessionManagement implements ThreadLocalSessionSimpMessa
 		return null;
 	}
 
+	@Override
+	public int getRabitMQSendPriority() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public String getType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getCurrentProcessWebSocketDestination() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

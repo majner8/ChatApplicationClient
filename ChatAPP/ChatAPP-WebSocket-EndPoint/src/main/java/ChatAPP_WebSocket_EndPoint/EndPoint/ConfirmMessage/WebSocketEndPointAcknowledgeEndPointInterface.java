@@ -5,5 +5,5 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 
 public interface WebSocketEndPointAcknowledgeEndPointInterface {
 
-	public void ConfirmMessage(SimpMessageHeaderAccessor session,@DestinationVariable String path1);
+	public void ConfirmMessage(SimpMessageHeaderAccessor session,@DestinationVariable String messageIDToAck);
 }

@@ -6,15 +6,12 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ChatAPP_RabitMQ.RabitMQMessageType;
-import ChatAPP_RabitMQ.ConsumingMessageManagement.RabitMQMessagePublisher;
 import ChatAPP_RabitMQ.Listener.RabbitMQMessageRelayInterface;
 import ChatAPP_WebSocket.WebSocketHeaderAttributeName;
 import chatAPP_CommontPart.Log4j2.Log4j2;
+import chatAPP_CommontPart.ThreadLocal.ThreadLocalSimpMessageHeaderAccessor.rabitMQMessageType;
 
 public class StompMessageRelayService implements RabbitMQMessageRelayInterface {
 
@@ -27,7 +24,7 @@ public class StompMessageRelayService implements RabbitMQMessageRelayInterface {
 	
 	@Override
 	public void SendConsumedMessage(String webSocketEndPointPath,String messageID,byte[] bodyMessage, 
-			RabitMQMessageType MessageType, String recipientID) {
+			rabitMQMessageType MessageType, String recipientID) {
 			HashMap<String,Object>header=new HashMap<String,Object>();
 			Object dto;
 		
@@ -50,4 +47,5 @@ public class StompMessageRelayService implements RabbitMQMessageRelayInterface {
 	public void MessageTimeoutExpired(String recipientID, String messageID) {
 		//have to be done 
 	}
+	
 }

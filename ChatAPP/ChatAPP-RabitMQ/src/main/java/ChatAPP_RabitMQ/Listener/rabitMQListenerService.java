@@ -18,10 +18,10 @@ import org.springframework.stereotype.Service;
 
 import com.rabbitmq.client.Channel;
 
-import ChatAPP_RabitMQ.RabitMQMessageType;
 import ChatAPP_RabitMQ.RabitMQProperties;
 import ChatAPP_RabitMQ.Consumer.RabbitMQConsumerControlInterface;
 import chatAPP_CommontPart.Log4j2.Log4j2;
+import chatAPP_CommontPart.ThreadLocal.ThreadLocalSimpMessageHeaderAccessor.rabitMQMessageType;
 @Service
 public class rabitMQListenerService implements ChannelAwareMessageListener,RabbitMQConsumerControlInterface{
 
@@ -37,7 +37,7 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 		String messageID=prop.getMessageId();
 		String MessageTypeName=prop.getType();
 		String webSocketEndPoint=prop.getHeader(this.properties.getMessagePropertiesWebSocketEndPointName());
-		RabitMQMessageType messageType=RabitMQMessageType.valueOf(MessageTypeName);
+		rabitMQMessageType messageType=rabitMQMessageType.valueOf(MessageTypeName);
 			//name is same as userdeviceID, userID+deviceID
 		String recipientID=prop.getConsumerQueue();
 		
@@ -68,7 +68,7 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 		toChech.ExpirationCheck();
 	}
 	
-	private void AckMessage(String SessionID,String messageID) {
+	public void AckMessage(String SessionID,String messageID) {
 		unAcknowledgeMessages mes=this.ListOfConnectedDevice.get(SessionID);
 		if(mes==null) {
 			Log4j2.log.warn(Log4j2.MarkerLog.RabitMQ.getMarker(),
@@ -81,6 +81,19 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 		}
 		mes.PositiveAcknowledgement(messageID);
 	}
+	public void NackMessage(String SessionID,String messageID) {
+		unAcknowledgeMessages mes=this.ListOfConnectedDevice.get(SessionID);
+		if(mes==null) {
+			Log4j2.log.warn(Log4j2.MarkerLog.RabitMQ.getMarker(),
+					String.format(
+							"Cannot find unAcknowledgeMessages instance"+System.lineSeparator()+
+							"userDeviceID: %s"+System.lineSeparator()+
+							"messageID: %s", 
+							SessionID,messageID));
+			return;
+		}
+		mes.NegativeAcknowledgement(messageID);
+	}
 	
 	private final class unAcknowledgeMessages {
 		private final String sessionID;
@@ -91,7 +104,7 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 			this.sessionID = sessionID;
 		}
 
-		private void AddUnAcknodlegeMessage(String messageID,Channel channel,long deliveryTag,RabitMQMessageType messageTyp) {
+		private void AddUnAcknodlegeMessage(String messageID,Channel channel,long deliveryTag,rabitMQMessageType messageTyp) {
 			AcknowledgeMessage message=new AcknowledgeMessage(
 					messageID,
 					deliveryTag,
@@ -119,6 +132,25 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 					this.listOfMessage.remove(messageID);
 				}
 		}
+		private void NegativeAcknowledgement(String messageID)  {
+			AcknowledgeMessage mes=this.listOfMessage.get(messageID);
+			if(mes==null) {
+				return;
+			}
+				try {
+					mes.NackMessage();
+				} catch (IOException e) {
+					Log4j2.log.error(Log4j2.MarkerLog.RabitMQ.getMarker(),
+							String.format(e+System.lineSeparator(),
+									"Cannot make NegativeAcknowledgement of message"+System.lineSeparator()+
+									"messageID: %s"+System.lineSeparator(), 
+									messageID));
+				}
+				finally {
+					this.listOfMessage.remove(messageID);
+				}
+		}
+		
 		private void NegativeAcknowledgementAllMessages() {
 			synchronized(this.listOfMessage) {
 				this.listOfMessage.forEach((K,V)->{

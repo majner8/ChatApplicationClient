@@ -6,7 +6,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 
-import ChatAPP_RabitMQ.RabitMQMessageType;
 import ChatAPP_RabitMQ.RabitMQProperties;
 import chatAPP_CommontPart.ThreadLocal.ThreadLocalSimpMessageHeaderAccessor;
 import chatAPP_DTO.Message.MessageDTO;
@@ -31,13 +30,9 @@ public class PushMessageRabitMQService implements RabitMQMessageProducerInterfac
 			   messageProperties.setPriority(this.threadLocalWebSocketSession.getRabitMQSendPriority()); 
 			   return RBMQMessage;
 	        };
-	        this.PushMessageToRabitMQAsync(String.valueOf(UserRecipientId), message, messagePostProcessor);
-	        
-	}
-	@Async
-	private void PushMessageToRabitMQAsync(String queueName,Object message,MessagePostProcessor properties) {
-        this.rabbitTemplate.convertAndSend(queueName, message,properties);
 
+	        this.rabbitTemplate.convertAndSend(String.valueOf(UserRecipientId), message, messagePostProcessor);
+	        
 	}
 
 }
