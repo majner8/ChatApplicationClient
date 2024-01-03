@@ -10,44 +10,23 @@ public interface ThreadLocalSimpMessageHeaderAccessor {
 	
 	//will be count from called path
 	public int getRabitMQSendPriority();
-	/**Metod return string name of rabitMQMessageType */
-	public String getType();
-	public String getCurrentProcessWebSocketDestination();
+	public boolean haveToBeMessageRequired();
+	public String getProcessingWebSocketDestination();
 	/**Metod return unique ID for currect connected device
 	 * ID is contain deviceID+UserID */
 	public default String getConnectionID() 
 	{return this.getSimpMessageHeaderAccessor().getUser().getName();}
-	
 	public boolean IsUserConsumingNow();
 	
-	
+	//with package
+	public String getDTOClassName();
 	
 	/**Metod set to attribute of session
 	 * @return false-if operation could not be sucesfull, because SimpleMessageListenerContainer instance already exist
 	 * otherwise true */
 	public boolean setSimpleMessageListenerContainer(SimpleMessageListenerContainer container);
-	
 	public SimpleMessageListenerContainer getSimpleMessageListenerContainer();
 
-	public static enum rabitMQMessageType{
-	Ahoj;
-		rabitMQMessageType(){
-			
-		}
-		public Class<?> getDtoClass() {
-			return DtoClass;
-		}
-
-
-		public boolean isShouldBeMessageRequired() {
-			return ShouldBeMessageRequired;
-		}
-
-		public Integer getPriority() {
-			return priority;
-		}
-
-
-		
-	}
+	
 }
+

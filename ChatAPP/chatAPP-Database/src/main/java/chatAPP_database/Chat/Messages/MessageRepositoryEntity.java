@@ -27,12 +27,7 @@ public interface MessageRepositoryEntity extends CustomJpaRepository<MessageEnti
     	Pageable page=PageRequest.of((int)startPage,(int)(size+difference),Sort.by(MessageEntity.JPQLorderName));
     	return this.findByChatID(chatID, page);
     }
-    /**Metod return list of first */
-    default List<MessageEntity>getUserMessageOverview(long UserID,
-    		int offSetBegin,int offSetEnd){
-    	
-    	return null;
-    }
+    
 	public Optional<MessageEntity> findByChatIDAndOrder(String chatID,long order);
 	
 	@Query(value=
@@ -46,9 +41,9 @@ public interface MessageRepositoryEntity extends CustomJpaRepository<MessageEnti
 			+ " select * from messages m"
 			+ " where order_of_message and chat_id in(select * from newest_message)"
 			+ " order by(select order_of_message from messages)ASC"
-			+ " limit 15;" ,nativeQuery = true
+			+ " limit :offsetstart,:offsetend;" ,nativeQuery = true
 			)	
-	public List<MessageEntity> getQuickUserSynchronizationMessage(long userID);
+	public List<MessageEntity> getQuickUserSynchronizationMessage(long userID,int offsetstart,int offsetend);
 	
 	/**QuickSynchronization projection */
 	public static interface QuickSynchronization extends MessageEntityProjection{

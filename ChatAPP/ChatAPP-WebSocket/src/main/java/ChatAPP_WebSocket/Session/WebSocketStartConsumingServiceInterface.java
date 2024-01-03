@@ -4,7 +4,7 @@ public interface WebSocketStartConsumingServiceInterface {
 
 	/**Metod start consuming message.
 	 * Metod add container to WebSocketSession
-	 * @return if attemp was sucesfull */
+	 * @return return false-if queue had to be created, and server start quick synchronization */
 	public boolean StartConsumingMessage();
 	public boolean StopConsumingMessage();
 }

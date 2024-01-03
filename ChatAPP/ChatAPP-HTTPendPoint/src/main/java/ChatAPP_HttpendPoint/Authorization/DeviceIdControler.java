@@ -5,7 +5,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
-import ChatAPP_Authorization.DeviceID.deviceIDService;
+import ChatAPP_Security.Authorization.DeviceID.deviceIDService;
+
 
 public class DeviceIdControler implements DeviceIDEndPoint{
 

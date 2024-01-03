@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import chatAPP_DTO.Message.ChatInformationDTO;
 import chatAPP_DTO.Message.MessageDTO;
-import chatAPP_DTO.Message.UserChatOverViewDTO;
 
 public interface htppChatEndPoint {
 
@@ -18,11 +17,10 @@ public interface htppChatEndPoint {
 			@PathVariable long offSetStart,
 /*have to be some limit security*/		@PathVariable long offSetEnd);
 	
-	@GetMapping("/UserID/{offSetStart}/{offSetEnd}")
-	public ResponseEntity<UserChatOverViewDTO> loadUserChatOverview(
-			@PathVariable long UserID,
-			@PathVariable long offSetStart,
-			@PathVariable long offSetEnd
+	@GetMapping("/{offSetStart}/{offSetEnd}")
+	public ResponseEntity<List<MessageDTO>> loadUserChatOverview(
+			@PathVariable int offSetStart,
+			@PathVariable int offSetEnd
 			);
 	@GetMapping("/chatID")
 	public ResponseEntity<ChatInformationDTO> getChatInformation(

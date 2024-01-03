@@ -140,5 +140,6 @@
         	<module>ChatAPP-security</module>
         	<module>ChatAPP-RabitMQ</module>
         	<module>ChatAPP-Starter</module>
+        	<module>ChatAPP-HttpEndPoint-Service</module>
         </modules>
 </project>

@@ -4,6 +4,7 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import ChatAPP_RabitMQ.Queue.RabbitMQQueueManager.CustomRabitMQQueue;
@@ -25,19 +26,22 @@ public class WebSocketStartConsumingRabitMQMessageService implements WebSocketSt
 	public boolean StartConsumingMessage() {		
 		if(this.simpMessage.IsUserConsumingNow()) {
 			this.makeWarmLog(true);
-			return false;}		
+			throw new AccessDeniedException("WebSocket consuming");
+			}		
 		  SimpleMessageListenerContainer container=new SimpleMessageListenerContainer(this.RabitMQconnectionFactory);
 		  if(!this.simpMessage.setSimpleMessageListenerContainer(container)) {
-			  this.makeWarmLog(true); 
-			  return false;}
+			  this.makeWarmLog(true);
+			  throw new AccessDeniedException("WebSocket consuming");
+			  }
 		  CustomRabitMQQueue que=this.MqManagement.getDeviceQueueName();
 		  container.addQueueNames(que.getQueueName());
+		  container.start();
 		  if(que.isWasQueueCreated()) {
 			  this.makeAsyncQuickSynchronization();
+			  return true;
 		  }
-		  container.start();
 		  
-		return true;
+		return false;
 	}
 	@Async
 	private void makeAsyncQuickSynchronization() {

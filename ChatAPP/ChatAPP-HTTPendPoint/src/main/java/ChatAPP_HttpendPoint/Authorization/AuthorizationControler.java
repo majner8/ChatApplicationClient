@@ -1,5 +1,6 @@
 package ChatAPP_HttpendPoint.Authorization;
 
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.OptimisticLockException;
 import javax.validation.Valid;
 
@@ -10,14 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
-import ChatAPP_Authorization.CustomSecurityContextHolder.CustomSecurityContextHolder;
-import ChatAPP_Authorization.DeviceID.AuthorizationService;
-import ChatAPP_Authorization.JwtToken.jwtToken;
+import ChatAPP_Security.Authorization.CustomSecurityContextHolder.CustomSecurityContextHolder;
+import ChatAPP_Security.Authorization.DeviceID.AuthorizationService;
+import ChatAPP_Security.Authorization.JwtToken.jwtToken;
 import chatAPP_CommontPart.Log4j2.Log4j2;
 import chatAPP_DTO.Authorization.TokenDTO;
 import chatAPP_DTO.User.UserDTO.UserAuthorizationDTO;
 import chatAPP_DTO.User.UserDTO.UserProfileRegistrationDTO;
-import chatAPP_database.Exception.InvalidDataException;
 import chatAPP_database.User.HttpRequestUserEntity;
 
 @RequestMapping()
@@ -48,6 +48,7 @@ public class AuthorizationControler implements AuthorizationEndPoint {
 		catch(DataIntegrityViolationException e) {
 			//email or password was created after  chech, but before this request was process
 			Log4j2.log.warn(Log4j2.MarkerLog.Authorization.getMarker(),"Email or Phone has been registred yet");
+			
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 		Log4j2.log.info(Log4j2.MarkerLog.Authorization.getMarker(),"User was registred");
@@ -97,13 +98,15 @@ public class AuthorizationControler implements AuthorizationEndPoint {
 			//just inform user
 			status=HttpStatus.CONFLICT;
 			Log4j2.log.info(Log4j2.MarkerLog.Authorization.getMarker(),"FinishRegistratrion task was not sucesfull, registration was finished before");
-		} catch (InvalidDataException.EntityWasNotFound e) {
+		} catch (EntityNotFoundException e) {
 			Log4j2.log.warn(Log4j2.MarkerLog.Database.getMarker(),"User not found with ID: during finish registeration process");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with ID: "+userID+System.lineSeparator()
             +"Try make register again, if problem persist contact administrator");
 		}
-		
-		Log4j2.log.debug(Log4j2.MarkerLog.Authorization.getMarker(),"I am generating fully authorizated token");
+		if(Log4j2.log.isDebugEnabled()) {
+			Log4j2.log.debug(Log4j2.MarkerLog.Authorization.getMarker(),"I am generating fully authorizated token");
+		}
+
 		TokenDTO token=
 				this.jwtTokenGenerator.generateAuthorizationToken(deviceID, this.userEntityScope.getUserEntity());
 		return ResponseEntity.status(status)

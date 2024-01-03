@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import chatAPP_DTO.Message.ChatInformationDTO;
+import chatAPP_DTO.Message.UserChatOverViewDTO;
+
 @Entity()
 public class ChatEntity {
 	public static final String chatEntityTableName="chats";
@@ -26,6 +29,9 @@ public class ChatEntity {
 	@OneToMany(mappedBy="chat")
 	private Set<UserChats> chat;
 	
+	public ChatInformationDTO convertEntityToDTO() {
+		
+	}
 	public String getDefaultChatName() {
 		return defaultChatName;
 	}

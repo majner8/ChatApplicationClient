@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ChatAPP_RabitMQ.Listener.RabbitMQMessageRelayInterface;
 import ChatAPP_WebSocket.WebSocketHeaderAttributeName;
 import chatAPP_CommontPart.Log4j2.Log4j2;
-import chatAPP_CommontPart.ThreadLocal.ThreadLocalSimpMessageHeaderAccessor.rabitMQMessageType;
 
 public class StompMessageRelayService implements RabbitMQMessageRelayInterface {
 
@@ -23,29 +22,31 @@ public class StompMessageRelayService implements RabbitMQMessageRelayInterface {
 	private ObjectMapper jsonMapper;
 	
 	@Override
-	public void SendConsumedMessage(String webSocketEndPointPath,String messageID,byte[] bodyMessage, 
-			rabitMQMessageType MessageType, String recipientID) {
-			HashMap<String,Object>header=new HashMap<String,Object>();
-			Object dto;
-		
-			try {
-				dto = this.jsonMapper.readValue(bodyMessage, MessageType.getDtoClass());
-				header.put(this.attribute.getAcknowledgeIdHeaderName(), messageID);
-				this.SimpMessageTemplate.convertAndSendToUser(recipientID, webSocketEndPointPath, dto,header);
-			
-			} catch (IOException e) {
-				Log4j2.log.error(Log4j2.MarkerLog.WebSocket.getMarker(),e
-						+ ""+System.lineSeparator()
-						+ "Cannot convert consumed rabitMQ message, to dto object."+System.lineSeparator()
-						+ "Sending process failed"+System.lineSeparator()
-						+ "connectedUserDeviceID: "+recipientID+System.lineSeparator()
-						+ "MessageID: "+messageID+System.lineSeparator()
-						+ "");
-			}
-	}
-	@Override
 	public void MessageTimeoutExpired(String recipientID, String messageID) {
 		//have to be done 
+	}
+	@Override
+	public void SendConsumedMessage(String webSocketEndPointPath, String messageID, byte[] bodyMessage,
+			Class<?> DToClass, String recipientID) {
+		HashMap<String,Object>header=new HashMap<String,Object>();
+		Object dto;
+	
+		try {
+			
+			dto = this.jsonMapper.readValue(bodyMessage, DToClass);
+			header.put(this.attribute.getAcknowledgeIdHeaderName(), messageID);
+			this.SimpMessageTemplate.convertAndSendToUser(recipientID, webSocketEndPointPath, dto,header);
+		
+		} catch (IOException e) {
+			Log4j2.log.error(Log4j2.MarkerLog.WebSocket.getMarker(),e
+					+ ""+System.lineSeparator()
+					+ "Cannot convert consumed rabitMQ message, to dto object."+System.lineSeparator()
+					+ "Sending process failed"+System.lineSeparator()
+					+ "connectedUserDeviceID: "+recipientID+System.lineSeparator()
+					+ "MessageID: "+messageID+System.lineSeparator()
+					+ "");
+		}
+		
 	}
 	
 }

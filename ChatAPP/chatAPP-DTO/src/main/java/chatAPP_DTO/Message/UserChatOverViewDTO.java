@@ -13,4 +13,6 @@ public class UserChatOverViewDTO {
 	private long order;
 	
 	
+	
+	
 }

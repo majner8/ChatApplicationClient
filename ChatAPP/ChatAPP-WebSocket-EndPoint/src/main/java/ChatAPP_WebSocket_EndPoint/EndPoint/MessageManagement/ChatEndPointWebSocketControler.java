@@ -28,13 +28,13 @@ public class ChatEndPointWebSocketControler implements WebSocketChatEndPoint{
 
 	@Override
 	public void ChangeMessage(MessageDTO message,SimpMessageHeaderAccessor session) {
-		
+		this.MessageService.ChangeMessage(message);
 	}
 
 
 	@Override
 	public void sawMessage(SawMessageDTO message, SimpMessageHeaderAccessor session) {
-		
+		this.MessageService.sawMessage(message);
 	}
 
 }

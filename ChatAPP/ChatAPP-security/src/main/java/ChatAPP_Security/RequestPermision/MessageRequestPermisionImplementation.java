@@ -14,4 +14,18 @@ public class MessageRequestPermisionImplementation implements MessageRequestPerm
 		
 	}
 
+	
+
+	@Override
+	public void verifyGetQuickUserOverViewPermision(long SenderID, int offSetStart, int offSetEnd) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void verifyUserAccestPermisionToChat(long userID, String chatID) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

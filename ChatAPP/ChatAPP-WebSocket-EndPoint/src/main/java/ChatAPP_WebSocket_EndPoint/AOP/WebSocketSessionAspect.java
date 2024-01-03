@@ -19,6 +19,10 @@ public class WebSocketSessionAspect  {
 	 @Around("execution(void ChatAPP_WebSocket_EndPoint.EndPoint.*.*(..))")
 	 /**Metod add WebSocket and callWebSocketPath */   
 	 public void manageWebSocketSession(ProceedingJoinPoint joinPoint) throws Throwable {
+		 this.makeItAsync(joinPoint);
+	 }
+	 
+	 private void makeItAsync(ProceedingJoinPoint joinPoint) {
 		 if(Log4j2.log.isDebugEnabled()) {
 			 String message=String.format("running aspect Metod manageWebSocketSession"+System.lineSeparator()
 			 +"Evoked by: %s"
@@ -38,12 +42,17 @@ public class WebSocketSessionAspect  {
 		 	this.manipulation.setSimpMessageHeaderAccessor(ses);
 		 	
 		 	try {
-				joinPoint.proceed();
+				try {
+					joinPoint.proceed();
+				} catch (Throwable e) {
+					 Log4j2.log.error(Log4j2.MarkerLog.Aspect.getMarker(),"Error during processing WebSocketEndPoint"+System.lineSeparator()
+					 +e);					
+				}
 			}
 		 	finally {
 		 		this.manipulation.clear();
 		 	}
 		 
-	    }
+	 }
 	
 }

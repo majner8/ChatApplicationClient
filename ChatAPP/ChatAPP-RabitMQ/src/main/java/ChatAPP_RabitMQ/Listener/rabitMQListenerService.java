@@ -21,7 +21,6 @@ import com.rabbitmq.client.Channel;
 import ChatAPP_RabitMQ.RabitMQProperties;
 import ChatAPP_RabitMQ.Consumer.RabbitMQConsumerControlInterface;
 import chatAPP_CommontPart.Log4j2.Log4j2;
-import chatAPP_CommontPart.ThreadLocal.ThreadLocalSimpMessageHeaderAccessor.rabitMQMessageType;
 @Service
 public class rabitMQListenerService implements ChannelAwareMessageListener,RabbitMQConsumerControlInterface{
 
@@ -35,17 +34,16 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 	public void onMessage(Message message, Channel channel) throws Exception {
 		MessageProperties prop=message.getMessageProperties();
 		String messageID=prop.getMessageId();
-		String MessageTypeName=prop.getType();
 		String webSocketEndPoint=prop.getHeader(this.properties.getMessagePropertiesWebSocketEndPointName());
-		rabitMQMessageType messageType=rabitMQMessageType.valueOf(MessageTypeName);
 			//name is same as userdeviceID, userID+deviceID
 		String recipientID=prop.getConsumerQueue();
+		boolean haveToBeMessageRequired=prop.getHeader(this.properties.getHaveToBeMessageRequiredHeaderName());
 		
 		unAcknowledgeMessages messages=this.ListOfConnectedDevice.get(recipientID);
 		if(messages==null) {
 			//Consuming was stopped, have to returned consumed Message
 			new ChatAPP_RabitMQ.Listener.rabitMQListenerService.unAcknowledgeMessages.AcknowledgeMessage(messageID,prop.getDeliveryTag(),
-					channel,System.currentTimeMillis(),messageType.isShouldBeMessageRequired())
+					channel,System.currentTimeMillis(),haveToBeMessageRequired)
 			.NackMessage();
 			Log4j2.log.warn(Log4j2.MarkerLog.RabitMQ.getMarker(),
 					String.format(
@@ -56,9 +54,18 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 			return;
 		}
 		messages
-		.AddUnAcknodlegeMessage(messageID, channel, prop.getDeliveryTag(), messageType);
-		
-		this.relay.SendConsumedMessage(webSocketEndPoint,messageID,message.getBody(), messageType, recipientID);
+		.AddUnAcknodlegeMessage(messageID, channel, prop.getDeliveryTag(), haveToBeMessageRequired);
+		Class<?>dtoClass;
+		try {
+			dtoClass = Class.forName(prop.getType());
+		} catch (ClassNotFoundException e) {
+			Log4j2.log.fatal(Log4j2.MarkerLog.RabitMQ.getMarker(),String.format("Cannot load DTO class from consumed Message DTO className %s"
+					+ System.lineSeparator()+" "+e, prop.getType()));
+			//send NegativeAcknowledge
+			this.NackMessage(recipientID, messageID);
+			return;
+		}
+		this.relay.SendConsumedMessage(webSocketEndPoint,messageID,message.getBody(), dtoClass, recipientID);
 	}
 	
 	/**Metod verify, if time expiration of unAcknowledgeMessage
@@ -104,13 +111,13 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 			this.sessionID = sessionID;
 		}
 
-		private void AddUnAcknodlegeMessage(String messageID,Channel channel,long deliveryTag,rabitMQMessageType messageTyp) {
+		private void AddUnAcknodlegeMessage(String messageID,Channel channel,long deliveryTag,boolean haveToBeMessageRequired) {
 			AcknowledgeMessage message=new AcknowledgeMessage(
 					messageID,
 					deliveryTag,
 					channel,
 					System.currentTimeMillis(),
-					messageTyp.isShouldBeMessageRequired());
+					haveToBeMessageRequired);
 			this.listOfMessage.put(messageID, message);
 		}
 		
