@@ -42,7 +42,7 @@ public class ThreadLocalSessionManagement implements ThreadLocalSessionSimpMessa
 	}
 	@Override
 	public void setSimpMessageHeaderAccessor(SimpMessageHeaderAccessor par, WebSocketEndPointAndMessageType mesType) {
-		
+		this.session.set(Triple.of(par, mesType, Long.valueOf(par.getUser().getName())));
 	}
 	@Override
 	public long getSessionOwnerUserID() {

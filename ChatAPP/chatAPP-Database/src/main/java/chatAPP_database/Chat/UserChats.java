@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import chatAPP_DTO.Message.ChatInformationDTO.UserChatInformationDTO;
+
 
 
 @Entity()
@@ -45,6 +47,17 @@ public class UserChats {
 	//@Column(name=UserChats.joinChatColumnName)
 	@JoinColumn(name="chat",referencedColumnName=ChatEntity.chatIDColumnName)
 	private ChatEntity chat;
+	
+	public UserChatInformationDTO convertEntityToDTO() {
+		UserChatInformationDTO x=new UserChatInformationDTO();
+		x.setChatName(chatName);
+		x.setLastSeenMessageID(lastSeenMessageID);
+		x.setMemberFrom(memberFrom);
+		x.setMemberUntil(memberUntil);
+		x.setUserID(this.primaryKey.getUserID());
+		x.setUserNickName(userNickName);
+		return x;
+	}
     @Embeddable
 	public static class CompositePrimaryKey implements Serializable{
 

@@ -9,6 +9,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Component;
 
+import chatAPP_CommontPart.EndPoint.WebSocketEndPointAndMessageType;
 import chatAPP_CommontPart.Log4j2.Log4j2;
 import chatAPP_CommontPart.ThreadLocal.ThreadLocalSessionSimpMessageHeaderAccessor;
 
@@ -16,8 +17,6 @@ import chatAPP_CommontPart.ThreadLocal.ThreadLocalSessionSimpMessageHeaderAccess
 @Component
 @Aspect
 public class WebSocketSessionAspect  {
-	@Autowired
-	private WebSocketSessionConfig config;
 	@Autowired
 	private ThreadLocalSessionSimpMessageHeaderAccessor manipulation;
     @Pointcut("execution(void *.*(..)) && @annotation(MessageMapping)")
@@ -45,7 +44,8 @@ public class WebSocketSessionAspect  {
 		 	}
 		 if(ses==null)return;
 		 
-		 this.manipulation.setSimpMessageHeaderAccessor(ses,this.config.getWebSocketSessionThreadLocalMessageAttribute(map.value()));
+		 
+		 this.manipulation.setSimpMessageHeaderAccessor(ses,WebSocketEndPointAndMessageType.getWebSocketEndPointAndMessageTypeByEndPoint(String.join("", map.value())));
 		 	
 		 	try {
 				try {

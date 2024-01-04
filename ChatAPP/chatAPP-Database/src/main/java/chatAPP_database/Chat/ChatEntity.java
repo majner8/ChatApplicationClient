@@ -1,6 +1,7 @@
 package chatAPP_database.Chat;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,7 +31,14 @@ public class ChatEntity {
 	private Set<UserChats> chat;
 	
 	public ChatInformationDTO convertEntityToDTO() {
-		
+		ChatInformationDTO x=new ChatInformationDTO();
+		x.setChatID(this.ChatID);
+		x.setCreatedByUserID(this.createdByUserID);
+		x.setDefaultChatName(this.defaultChatName);
+		x.setUser(this.chat.stream().map((E)->{
+			return E.convertEntityToDTO();
+		}).collect(Collectors.toList()));
+		return x;
 	}
 	public String getDefaultChatName() {
 		return defaultChatName;

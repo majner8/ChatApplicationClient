@@ -12,7 +12,7 @@ public  class ChatInformationDTO {
 	private String defaultChatName;
 	private String ChatID;
 	
-	private List<UserChatInformation> user;
+	private List<UserChatInformationDTO> user;
 	
 	
 
@@ -52,19 +52,19 @@ public  class ChatInformationDTO {
 
 
 
-	public List<UserChatInformation> getUser() {
+	public List<UserChatInformationDTO> getUser() {
 		return user;
 	}
 
 
 
-	public void setUser(List<UserChatInformation> user) {
+	public void setUser(List<UserChatInformationDTO> user) {
 		this.user = user;
 	}
 
 
 
-		public static class UserChatInformation{
+		public static class UserChatInformationDTO{
 			private String userNickName;
 			private LocalDateTime memberFrom;
 			private LocalDateTime memberUntil;
