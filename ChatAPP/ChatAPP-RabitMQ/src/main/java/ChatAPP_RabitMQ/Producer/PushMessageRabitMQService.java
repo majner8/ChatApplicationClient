@@ -25,11 +25,9 @@ public class PushMessageRabitMQService implements RabitMQMessageProducerInterfac
 		   MessagePostProcessor messagePostProcessor = RBMQMessage -> {
 			   MessageProperties messageProperties =new MessageProperties();
 			   messageProperties.setMessageId(message.getMessageID());
-			   messageProperties.setHeader(this.rabitMQProperties.getMessagePropertiesWebSocketEndPointName(), this.threadLocalWebSocketSession.getProcessingWebSocketDestination());
-			   messageProperties.setHeader(this.rabitMQProperties.getHaveToBeMessageRequiredHeaderName(), this.threadLocalWebSocketSession.haveToBeMessageRequired());
-			   //as type, it is send type of appropriate DTO class
-			   messageProperties.setType(this.threadLocalWebSocketSession.getDTOClassName());
-			   messageProperties.setPriority(this.threadLocalWebSocketSession.getRabitMQSendPriority()); 
+	
+			   messageProperties.setType(this.threadLocalWebSocketSession.getMessageType().name());
+			   messageProperties.setPriority(this.threadLocalWebSocketSession.getRabitMQPriority()); 
 			   return RBMQMessage;
 	        };
 

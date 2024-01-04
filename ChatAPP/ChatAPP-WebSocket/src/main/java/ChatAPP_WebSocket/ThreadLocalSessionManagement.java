@@ -5,6 +5,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
 
+import chatAPP_CommontPart.EndPoint.WebSocketEndPointAndMessageType;
 import chatAPP_CommontPart.ThreadLocal.ThreadLocalSessionSimpMessageHeaderAccessor;
 import chatAPP_CommontPart.ThreadLocal.ThreadLocalSimpMessageHeaderAccessor;
 
@@ -12,12 +13,12 @@ import chatAPP_CommontPart.ThreadLocal.ThreadLocalSimpMessageHeaderAccessor;
 public class ThreadLocalSessionManagement implements ThreadLocalSessionSimpMessageHeaderAccessor,ThreadLocalSimpMessageHeaderAccessor  {
 
 	private final String ContainerListenerHeaderName="AMQListener";
-	private ThreadLocal<Pair<SimpMessageHeaderAccessor,Long>> session=new ThreadLocal<>();
+	private ThreadLocal<Pair<SimpMessageHeaderAccessor,LocalClass>> session=new ThreadLocal<>();
 	
 	private SimpMessageHeaderAccessor getFirst() {
 		return this.session.get().getFirst();
 	}
-	private long getSecond() {
+	private LocalClass getSecond() {
 		return this.session.get().getSecond();
 	}
 	@Override
@@ -26,14 +27,23 @@ public class ThreadLocalSessionManagement implements ThreadLocalSessionSimpMessa
 		this.session.remove();
 	}
 
-	@Override
-	public void setSimpMessageHeaderAccessor(SimpMessageHeaderAccessor par) {
-		// TODO Auto-generated method stub
-		this.session.set(Pair.of(par,Long.parseLong(par.getUser().getName())));
-	}
 
-	public static class 
-	
+	private static class LocalClass{
+		private final WebSocketEndPointAndMessageType mesType;
+		private final long userID;
+		
+		protected LocalClass(WebSocketEndPointAndMessageType mesType, long userID) {
+			this.mesType = mesType;
+			this.userID = userID;
+		}
+		public WebSocketEndPointAndMessageType getMesType() {
+			return mesType;
+		}
+		public long getUserID() {
+			return userID;
+		}
+		
+	} 
 	
 	@Override
 	public boolean setSimpleMessageListenerContainer(SimpleMessageListenerContainer container) {
@@ -44,10 +54,17 @@ public class ThreadLocalSessionManagement implements ThreadLocalSessionSimpMessa
 		}
 		return true;
 	}
+	@Override
+	public void setSimpMessageHeaderAccessor(SimpMessageHeaderAccessor par,
+			WebSocketSessionThreadLocalMessageAttribute attribute) {
+		// TODO Auto-generated method stub
+		this.session.set(Pair.of(par,Long.parseLong(par.getUser().getName())));
+
+	}
 	
 	@Override
 	public long getSessionOwnerUserID() {
-		return this.getSecond();
+		return this.getSecond().getUserID();
 	}
 
 	@Override
@@ -71,24 +88,10 @@ public class ThreadLocalSessionManagement implements ThreadLocalSessionSimpMessa
 		return (SimpleMessageListenerContainer)this.getFirst().getHeader(this.ContainerListenerHeaderName);
 	}
 
-	@Override
-	public int getRabitMQSendPriority() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	
 
 	@Override
-	public boolean haveToBeMessageRequired() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
 	public String getProcessingWebSocketDestination() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public String getDTOClassName() {
 		// TODO Auto-generated method stub
 		return null;
 	}

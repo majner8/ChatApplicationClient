@@ -11,7 +11,6 @@ import chatAPP_DTO.Message.MessageDTO;
 import chatAPP_DTO.Message.SawMessageDTO;
 @Async
 public class ChatEndPointWebSocketControler implements WebSocketChatEndPoint{
-
 	public static final String SendMessagePath="";
 	public static final String sawMessagePath="";
 	public static final String changeMessagePath="";

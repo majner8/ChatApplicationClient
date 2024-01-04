@@ -20,7 +20,8 @@ public class Log4j2 {
 	Aspect(MarkerManager.getMarker(""))
 	,
 	ObjectReferenceRemoving(MarkerManager.getMarker("")),
-	RabitMQ(MarkerManager.getMarker(""))
+	RabitMQ(MarkerManager.getMarker("")),
+	StartApp(MarkerManager.getMarker(""))
 
 	;
 		

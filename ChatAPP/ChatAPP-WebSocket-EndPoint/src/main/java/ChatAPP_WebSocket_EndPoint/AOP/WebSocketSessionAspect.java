@@ -3,7 +3,9 @@ package ChatAPP_WebSocket_EndPoint.AOP;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Component;
 
@@ -15,14 +17,18 @@ import chatAPP_CommontPart.ThreadLocal.ThreadLocalSessionSimpMessageHeaderAccess
 @Aspect
 public class WebSocketSessionAspect  {
 	@Autowired
+	private WebSocketSessionConfig config;
+	@Autowired
 	private ThreadLocalSessionSimpMessageHeaderAccessor manipulation;
-	 @Around("execution(void ChatAPP_WebSocket_EndPoint.EndPoint.*.*(..))")
-	 /**Metod add WebSocket and callWebSocketPath */   
-	 public void manageWebSocketSession(ProceedingJoinPoint joinPoint) throws Throwable {
-		 this.makeItAsync(joinPoint);
-	 }
+    @Pointcut("execution(void *.*(..)) && @annotation(MessageMapping)")
+	public void MessageMappingCalled() {};
+	
+	@Around("execution(MessageMappingCalled())")
+	public void ProcessMessageMapping(ProceedingJoinPoint joinPoint,MessageMapping map)throws Throwable {
+		 this.makeItAsync(joinPoint,map);
+	}
 	 
-	 private void makeItAsync(ProceedingJoinPoint joinPoint) {
+	 private void makeItAsync(ProceedingJoinPoint joinPoint,MessageMapping map) {
 		 if(Log4j2.log.isDebugEnabled()) {
 			 String message=String.format("running aspect Metod manageWebSocketSession"+System.lineSeparator()
 			 +"Evoked by: %s"
@@ -35,11 +41,11 @@ public class WebSocketSessionAspect  {
 		 for(Object x:joinPoint.getArgs()) {
 		 		if(x instanceof SimpMessageHeaderAccessor) {
 		 			ses=(SimpMessageHeaderAccessor)x;
-		 
 		 		}
 		 	}
 		 if(ses==null)return;
-		 	this.manipulation.setSimpMessageHeaderAccessor(ses);
+		 
+		 this.manipulation.setSimpMessageHeaderAccessor(ses,this.config.getWebSocketSessionThreadLocalMessageAttribute(map.value()));
 		 	
 		 	try {
 				try {

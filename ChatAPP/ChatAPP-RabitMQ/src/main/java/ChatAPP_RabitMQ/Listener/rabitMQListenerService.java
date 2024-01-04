@@ -20,6 +20,7 @@ import com.rabbitmq.client.Channel;
 
 import ChatAPP_RabitMQ.RabitMQProperties;
 import ChatAPP_RabitMQ.Consumer.RabbitMQConsumerControlInterface;
+import chatAPP_CommontPart.EndPoint.WebSocketEndPointAndMessageType;
 import chatAPP_CommontPart.Log4j2.Log4j2;
 @Service
 public class rabitMQListenerService implements ChannelAwareMessageListener,RabbitMQConsumerControlInterface{
@@ -32,17 +33,17 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 	private RabbitMQMessageRelayInterface relay;
 	@Override
 	public void onMessage(Message message, Channel channel) throws Exception {
-		MessageProperties prop=message.getMessageProperties();
-		String messageID=prop.getMessageId();
-		String webSocketEndPoint=prop.getHeader(this.properties.getMessagePropertiesWebSocketEndPointName());
+		MessageProperties properties=message.getMessageProperties();
+		String messageID=properties.getMessageId();
+		WebSocketEndPointAndMessageType type=WebSocketEndPointAndMessageType.valueOf(properties.getType());
+		String webSocketEndPoint=type.getPath();
 			//name is same as userdeviceID, userID+deviceID
-		String recipientID=prop.getConsumerQueue();
-		boolean haveToBeMessageRequired=prop.getHeader(this.properties.getHaveToBeMessageRequiredHeaderName());
-		
+		String recipientID=properties.getConsumerQueue();
+		boolean haveToBeMessageRequired=type.isHaveToBeMessageRequired();
 		unAcknowledgeMessages messages=this.ListOfConnectedDevice.get(recipientID);
 		if(messages==null) {
 			//Consuming was stopped, have to returned consumed Message
-			new ChatAPP_RabitMQ.Listener.rabitMQListenerService.unAcknowledgeMessages.AcknowledgeMessage(messageID,prop.getDeliveryTag(),
+			new ChatAPP_RabitMQ.Listener.rabitMQListenerService.unAcknowledgeMessages.AcknowledgeMessage(messageID,properties.getDeliveryTag(),
 					channel,System.currentTimeMillis(),haveToBeMessageRequired)
 			.NackMessage();
 			Log4j2.log.warn(Log4j2.MarkerLog.RabitMQ.getMarker(),
@@ -50,21 +51,12 @@ public class rabitMQListenerService implements ChannelAwareMessageListener,Rabbi
 							"Cannot find unAcknowledgeMessages in Map. Messages was Nack and return to rabitMQ Queue"+System.lineSeparator()+
 							"Consumer Queue ID: %s "+System.lineSeparator()+
 							"returned MessageID: ", 
-							prop.getConsumerQueue(),prop.getMessageId()));
+							properties.getConsumerQueue(),properties.getMessageId()));
 			return;
 		}
 		messages
-		.AddUnAcknodlegeMessage(messageID, channel, prop.getDeliveryTag(), haveToBeMessageRequired);
-		Class<?>dtoClass;
-		try {
-			dtoClass = Class.forName(prop.getType());
-		} catch (ClassNotFoundException e) {
-			Log4j2.log.fatal(Log4j2.MarkerLog.RabitMQ.getMarker(),String.format("Cannot load DTO class from consumed Message DTO className %s"
-					+ System.lineSeparator()+" "+e, prop.getType()));
-			//send NegativeAcknowledge
-			this.NackMessage(recipientID, messageID);
-			return;
-		}
+		.AddUnAcknodlegeMessage(messageID, channel, properties.getDeliveryTag(), haveToBeMessageRequired);
+		Class<?>dtoClass=type.getDtoClass();
 		this.relay.SendConsumedMessage(webSocketEndPoint,messageID,message.getBody(), dtoClass, recipientID);
 	}
 	
