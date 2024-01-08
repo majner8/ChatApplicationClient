@@ -16,8 +16,6 @@ public enum WebSocketEndPointAndMessageType {
 	chat_sawMessage(""),
 	chat_changeMessage("");
 
-	
-	
 	private static Map<String,WebSocketEndPointAndMessageType> map;
 
 	WebSocketEndPointAndMessageType(String value){
@@ -29,7 +27,8 @@ public enum WebSocketEndPointAndMessageType {
 		if(Log4j2.log.isTraceEnabled()) {
 			Log4j2.log.trace(Log4j2.MarkerLog.StartApp.getMarker(),"WebSocketEndPointAndMessageType: I am starting init and loaded WebSocketEndPointPath");
 		}
-		Properties pr=new Properties();		
+		Properties pr=new Properties();
+		
 		for(WebSocketEndPointAndMessageType x:WebSocketEndPointAndMessageType.values()) {
 			map.put(x.getPath(), x);
 			boolean b=Boolean.getBoolean(pr.getProperty(x.name()));
