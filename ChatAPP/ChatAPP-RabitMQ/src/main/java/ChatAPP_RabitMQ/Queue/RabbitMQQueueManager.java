@@ -21,6 +21,7 @@ public class RabbitMQQueueManager implements RabbitMQQueueManagerInterface {
 	private TopicExchange topicExchange; //have to be created bean
 	@Override
 	public CustomRabitMQQueue getDeviceQueueName() {
+		//connectionID same as queueID
 		String queueName=this.simpMessage.getConnectionID();
 		if(this.amqpAdmin.getQueueInfo(queueName)!=null) {
 			return new CustomRabitMQQueue(queueName,false);

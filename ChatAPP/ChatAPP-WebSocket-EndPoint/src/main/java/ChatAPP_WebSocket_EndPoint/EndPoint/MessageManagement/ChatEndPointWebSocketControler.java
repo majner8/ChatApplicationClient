@@ -7,30 +7,28 @@ import org.springframework.scheduling.annotation.Async;
 
 import ChatAPP_Chat.Service.ChatMessageService;
 import ChatAPP_WebSocket.Service.Chat.ProcessChatMessageService;
+import ChatAPP_WebSocket_EndPoint.WebSocketEndPointPath;
 import chatAPP_DTO.Message.MessageDTO;
 import chatAPP_DTO.Message.SawMessageDTO;
 @Async
 public class ChatEndPointWebSocketControler implements WebSocketChatEndPoint{
-	public static final String SendMessagePath="";
-	public static final String sawMessagePath="";
-	public static final String changeMessagePath="";
 
 	
 	@Autowired
 	private ProcessChatMessageService MessageService;
 	@Override
-	@MessageMapping()
+	@MessageMapping(WebSocketEndPointPath.Chat_SendMessagePath)
 	public void SendMessage(MessageDTO message,SimpMessageHeaderAccessor session) {
 		this.MessageService.SendMessage(message);
 	}
 
-
+	@MessageMapping(WebSocketEndPointPath.Chat_changeMessagePath)
 	@Override
 	public void ChangeMessage(MessageDTO message,SimpMessageHeaderAccessor session) {
 		this.MessageService.ChangeMessage(message);
 	}
 
-
+	@MessageMapping(WebSocketEndPointPath.Chat_sawMessagePath)
 	@Override
 	public void sawMessage(SawMessageDTO message, SimpMessageHeaderAccessor session) {
 		this.MessageService.sawMessage(message);

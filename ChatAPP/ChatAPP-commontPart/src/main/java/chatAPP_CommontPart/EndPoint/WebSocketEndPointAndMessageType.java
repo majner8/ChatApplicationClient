@@ -9,17 +9,16 @@ import java.util.Properties;
 import chatAPP_CommontPart.Log4j2.Log4j2;
 
 public enum WebSocketEndPointAndMessageType {
-	config_startConsuming(""),
-	config_stopConsuming(""),
-	acknowledgeEndPoint_confirmMessage(""),
-	chat_sendMessage(""),
-	chat_sawMessage(""),
-	chat_changeMessage("");
+	config_startConsuming(),
+	config_stopConsuming(),
+	acknowledgeEndPoint_confirmMessage(),
+	chat_sendMessage(),
+	chat_sawMessage(),
+	chat_changeMessage();
 
 	private static Map<String,WebSocketEndPointAndMessageType> map;
 
-	WebSocketEndPointAndMessageType(String value){
-		this.path=value;
+	WebSocketEndPointAndMessageType(){
 	}
 	
 	static {
@@ -27,25 +26,13 @@ public enum WebSocketEndPointAndMessageType {
 		if(Log4j2.log.isTraceEnabled()) {
 			Log4j2.log.trace(Log4j2.MarkerLog.StartApp.getMarker(),"WebSocketEndPointAndMessageType: I am starting init and loaded WebSocketEndPointPath");
 		}
-		Properties pr=new Properties();
+		WebSocketProperties pr=new WebSocketProperties();
 		
 		for(WebSocketEndPointAndMessageType x:WebSocketEndPointAndMessageType.values()) {
-			map.put(x.getPath(), x);
-			boolean b=Boolean.getBoolean(pr.getProperty(x.name()));
-			int rabitPri=Integer.parseInt(pr.getProperty(x.name()));
-			Class<?>DTO=null;
-			String dtoName=pr.getProperty(pr.getProperty(x.name()));
-			try {
-				
-				DTO=Class.forName(dtoName);
-			} catch (ClassNotFoundException e) {
-				Log4j2.log.error(Log4j2.MarkerLog.StartApp.getMarker(),
-						String.format("Error during init value in WebSocketEndPointAndMessageType"+System.lineSeparator()
-								+ "Cannot found DTO class"+System.lineSeparator()
-								+ "enum name: %s"+System.lineSeparator()
-								+ "Properties DTO name: %s", x.name(),dtoName));
-			}
-			
+			String path=pr.getEndPointPathName(x);
+			boolean b=pr.haveToBeMessageRequired(x);
+			int rabitPri=pr.getRabitMQPriry(x);
+			Class<?>DTO=pr.getDTOClass(x);
 			x.setDtoClass(DTO);
 			x.setHaveToBeMessageRequired(b);
 			x.setRabitMQPriority(rabitPri);
@@ -114,6 +101,51 @@ public enum WebSocketEndPointAndMessageType {
 		return map.get(calledEndPoint);
 	}
 	
-	
+	public static class WebSocketProperties{
+		private final Properties propertyFile;
+		private final String propertiesPreflix="";
+		private final String propertiesHaveToBeRequiredValue="HaveToBeRequired";
+		private final String propertiesEndPointhPathValue="EndPointhPath";
+		private final String propertiesAMQPrioryValue="AMQPriory";
+		private final String propertiesDToClassNameValue="DToClassName";
+
+		public WebSocketProperties() {
+			Properties pr=new Properties();
+
+		}
+		
+		private String JoinPath(String pathSuflix,WebSocketEndPointAndMessageType mes) {
+			return String.join(".", this.propertiesPreflix+mes.name()+pathSuflix);
+		}
+		public boolean haveToBeMessageRequired(WebSocketEndPointAndMessageType mes) {
+			String propPath=this.JoinPath(this.propertiesHaveToBeRequiredValue, mes);
+			return Boolean.valueOf(this.propertyFile.getProperty(propPath));
+		}
+		public int getRabitMQPriry(WebSocketEndPointAndMessageType mes) {
+			String propPath=this.JoinPath(this.propertiesAMQPrioryValue, mes);
+			return Integer.parseInt(this.propertyFile.getProperty(propPath));
+
+		}
+		public Class<?> getDTOClass(WebSocketEndPointAndMessageType mes){
+			String propPath=this.JoinPath(this.propertiesDToClassNameValue, mes);
+			Class<?>DTO=null;
+			try {
+				
+				DTO=Class.forName(propPath);
+			} catch (ClassNotFoundException e) {
+				Log4j2.log.error(Log4j2.MarkerLog.StartApp.getMarker(),
+						String.format("Error during init value in WebSocketEndPointAndMessageType"+System.lineSeparator()
+								+ "Cannot found DTO class"+System.lineSeparator()
+								+ "enum name: %s"+System.lineSeparator()
+								+ "Properties DTO path: %s", mes.name(),propPath));
+			}
+			return DTO;
+		}
+		public String getEndPointPathName(WebSocketEndPointAndMessageType mes) {
+			String propPath=this.JoinPath(this.propertiesEndPointhPathValue, mes);
+			return this.propertyFile.getProperty(propPath);
+		}
+		
+	}
 }
 
