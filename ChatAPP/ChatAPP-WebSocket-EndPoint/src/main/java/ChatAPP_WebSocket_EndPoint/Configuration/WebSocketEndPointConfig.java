@@ -1,6 +1,7 @@
 package ChatAPP_WebSocket_EndPoint.Configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 
 import ChatAPP_WebSocket.Service.RabitMQService.RabitMQConsumingEndPointService;
@@ -15,8 +16,8 @@ public class WebSocketEndPointConfig implements WebSocketEndPointConfigInterface
 	private RabitMQConsumingEndPointService service;
 	@MessageMapping(WebSocketEndPointPath.Config_StartConsumingPath)
 	@Override
-	public void StartConsumingMessage() {
-		this.service.StartConsuming();
+	public void StartConsumingMessage(@DestinationVariable int offSetStart,@DestinationVariable int offSetEnd)  {
+		this.service.StartConsuming(offSetStart,offSetEnd);
 	}
 
 	@Override
@@ -24,5 +25,7 @@ public class WebSocketEndPointConfig implements WebSocketEndPointConfigInterface
 		// TODO Auto-generated method stub
 		
 	}
+
+	
 
 }

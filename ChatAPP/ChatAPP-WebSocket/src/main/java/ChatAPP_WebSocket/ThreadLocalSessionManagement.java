@@ -1,12 +1,11 @@
 package ChatAPP_WebSocket;
 
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.data.util.Pair;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
 
 import chatAPP_CommontPart.Data.Util.Triple;
-import chatAPP_CommontPart.EndPoint.WebSocketEndPointAndMessageType;
+import chatAPP_CommontPart.Properties.WebSocketProperties.WebSocketEndPointAndMessageType;
 import chatAPP_CommontPart.ThreadLocal.ThreadLocalSessionSimpMessageHeaderAccessor;
 import chatAPP_CommontPart.ThreadLocal.ThreadLocalSimpMessageHeaderAccessor;
 
@@ -77,6 +76,7 @@ public class ThreadLocalSessionManagement implements ThreadLocalSessionSimpMessa
 		// TODO Auto-generated method stub
 		return this.getSecond();
 	}
+	
 	
 
 

@@ -2,7 +2,8 @@ package chatAPP_CommontPart.ThreadLocal;
 
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 
-import chatAPP_CommontPart.EndPoint.WebSocketEndPointAndMessageType;
+import chatAPP_CommontPart.Properties.WebSocketProperties.WebSocketEndPointAndMessageType;
+
 
 public interface ThreadLocalSessionSimpMessageHeaderAccessor {
 

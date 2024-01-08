@@ -3,7 +3,8 @@ package chatAPP_CommontPart.ThreadLocal;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 
-import chatAPP_CommontPart.EndPoint.WebSocketEndPointAndMessageType;
+import chatAPP_CommontPart.Properties.WebSocketProperties.WebSocketEndPointAndMessageType;
+
 
 public interface ThreadLocalSimpMessageHeaderAccessor {
 

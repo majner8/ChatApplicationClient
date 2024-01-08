@@ -32,21 +32,21 @@ public interface MessageRepositoryEntity extends CustomJpaRepository<MessageEnti
 	
 	@Query(value=
 			" with userAccest as ( select chat_id from user_chats  "
-			+ " where user_id= :userID and member_until=null)"
+			+ " where user_id= :userID and member_until is null)"
 			+", newest_message as("
 			+ " SELECT chat_id, MAX(order_of_message) from"
 			+ "messages"
 			+ "where chat_id in (select chat_id from userAccest)"
-			+ " GROUP BY chat_id )"
+			+ " GROUP BY chat_id "
+			+ ""
+			+ ")"
+			
 			+ " select * from messages m"
 			+ " where order_of_message and chat_id in(select * from newest_message)"
-			+ " order by(select order_of_message from messages)ASC"
+			+ " order by(select order_of_message from messages)DESC"
 			+ " limit :offsetstart,:offsetend;" ,nativeQuery = true
 			)	
 	public List<MessageEntity> getQuickUserSynchronizationMessage(long userID,int offsetstart,int offsetend);
 	
-	/**QuickSynchronization projection */
-	public static interface QuickSynchronization extends MessageEntityProjection{
-		
-	}
+	
 }

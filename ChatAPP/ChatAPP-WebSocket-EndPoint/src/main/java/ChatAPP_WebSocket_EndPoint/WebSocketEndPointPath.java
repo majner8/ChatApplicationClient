@@ -1,7 +1,6 @@
 package ChatAPP_WebSocket_EndPoint;
 
 
-import chatAPP_CommontPart.EndPoint.WebSocketEndPointAndMessageType;
 
 public class WebSocketEndPointPath  {
 

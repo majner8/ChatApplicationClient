@@ -2,6 +2,7 @@ package ChatAPP_RabitMQ.Producer;
 
 import java.util.List;
 
+import chatAPP_CommontPart.Properties.WebSocketProperties.WebSocketEndPointAndMessageType;
 import chatAPP_DTO.Message.MessageDTO;
 
 public interface RabitMQMessageProducerInterface {
@@ -14,7 +15,16 @@ public interface RabitMQMessageProducerInterface {
 			UserRecipientIds.forEach((id)->{
 				this.PushSentChatMessage(message, id);
 			});
-		}	
+		}
+		
+	}
+	public void PushMessageFromAsyncProcess(MessageDTO message,String queueName,WebSocketEndPointAndMessageType mesType);
+	public default void PushMessageFromAsyncProcess(List<MessageDTO> messages,String queueName,WebSocketEndPointAndMessageType mesType) {
+		synchronized(messages) {
+			messages.forEach((m)->{
+				this.PushMessageFromAsyncProcess(m, queueName, mesType);
+			});
+		}
 	}
 	
 }
